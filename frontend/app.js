@@ -151,7 +151,7 @@ function renderGrid() {
         <span class="text-2xl">${cfg.icon}</span>
       </div>
 
-      <div class="space-y-1.5 text-xs text-slate-300">
+      <div class="space-y-1.5 text-xs text-slate-300 mb-3">
         <div class="flex items-center justify-between">
           <span class="text-slate-400">Durum:</span>
           <span class="font-semibold">${cfg.title}</span>
@@ -164,6 +164,13 @@ function renderGrid() {
           <span class="text-slate-400">Son İletişim:</span>
           <span class="font-mono text-slate-400">${formatLastSeen(pc.lastSeen)}</span>
         </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-700/50 flex items-center justify-between">
+        <span class="text-[11px] text-slate-400 font-mono">${pc.ip || ''}</span>
+        <button onclick="event.stopPropagation(); showPCLocationOnKroki('${pc.id}')" class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/40 transition-all flex items-center gap-1 shadow-sm">
+          📍 Konumu Göster
+        </button>
       </div>
     `;
 
@@ -268,6 +275,49 @@ function updateKrokiColors() {
       el.classList.add('ws-offline');
     }
   });
+}
+
+function showPCLocationOnKroki(pcId) {
+  const pc = pcs.find(p => p.id === pcId || p.hostname === pcId || p.friendlyName === pcId);
+  if (!pc) return;
+
+  closeModal();
+
+  // 1. Activate Kroki Tab
+  document.querySelectorAll(".room-tab").forEach(t => {
+    t.classList.remove("bg-cyan-500", "text-white", "active");
+    t.classList.add("bg-slate-800", "text-slate-300");
+  });
+  const krokiTab = document.querySelector('.room-tab[data-room="KROKI"]');
+  if (krokiTab) {
+    krokiTab.classList.remove("bg-slate-800", "text-slate-300");
+    krokiTab.classList.add("bg-cyan-500", "text-white", "active");
+  }
+
+  document.getElementById("pc-grid-container")?.classList.add("hidden");
+  document.getElementById("kroki-container")?.classList.remove("hidden");
+
+  updateKrokiColors();
+
+  // 2. Target Workstation Element
+  let targetWsId = null;
+  for (const [wsId, name] of Object.entries(KROKI_MAP)) {
+    if (name === pc.friendlyName || name === pc.hostname) {
+      targetWsId = wsId;
+      break;
+    }
+  }
+
+  // Clear previous active sonar highlights
+  document.querySelectorAll('.ws-aktif').forEach(el => el.classList.remove('ws-aktif'));
+
+  if (targetWsId) {
+    const wsEl = document.getElementById(targetWsId);
+    if (wsEl) {
+      wsEl.classList.add('ws-aktif');
+      wsEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    }
+  }
 }
 
 function renderAll() {
@@ -381,8 +431,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Modals close buttons
+  // Modals close & locate buttons
   document.getElementById("modal-close")?.addEventListener("click", closeModal);
+  document.getElementById("modal-locate-btn")?.addEventListener("click", () => {
+    if (selectedPc) showPCLocationOnKroki(selectedPc.id);
+  });
   document.getElementById("auth-modal-close")?.addEventListener("click", closeAuthModal);
   document.getElementById("auth-btn")?.addEventListener("click", openAuthModal);
 
