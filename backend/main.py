@@ -142,6 +142,8 @@ async def api_get_heartbeat(
 async def get_computers():
     return state_manager.get_all_computers()
 
+import email_service
+
 @app.post("/api/register")
 async def register(payload: UserRegister):
     email = payload.email.lower().strip()
@@ -171,7 +173,18 @@ async def register(payload: UserRegister):
     await db.sync_to_telegram()
     await db.log_event_to_channel("👤 Yeni Kullanıcı Kaydı", f"E-Posta: <code>{email}</code>\nDoğrulama Kodu: <b>{code}</b>")
     
-    return {"success": True, "message": "Kayıt başarılı. Lütfen doğrulama kodunu girin.", "verification_code_demo": code}
+    # Attempt to send verification code via SMTP email
+    email_sent = email_service.send_verification_email(email, code)
+    
+    res = {
+        "success": True, 
+        "message": f"Kayıt başarılı. 6 haneli doğrulama kodunuz {email} adresine gönderildi.",
+        "email_sent": email_sent
+    }
+    if not email_sent:
+        res["verification_code_demo"] = code
+        
+    return res
 
 @app.post("/api/verify")
 async def verify_code(payload: UserVerify):
