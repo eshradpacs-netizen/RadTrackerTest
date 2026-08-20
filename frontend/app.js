@@ -217,43 +217,29 @@ function checkAuthStatus() {
 }
 
 function openAuthModal() {
-  document.getElementById("auth-modal").classList.remove("hidden");
-  document.getElementById("auth-modal").classList.add("flex");
-  showLoginTab();
+  const modal = document.getElementById("auth-modal");
+  if (modal) {
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  }
 }
 
 function closeAuthModal() {
-  document.getElementById("auth-modal").classList.add("hidden");
-  document.getElementById("auth-modal").classList.remove("flex");
-  document.getElementById("auth-error").classList.add("hidden");
-}
-
-function showLoginTab() {
-  document.getElementById("form-login").classList.remove("hidden");
-  document.getElementById("form-register").classList.add("hidden");
-  document.getElementById("form-verify").classList.add("hidden");
-  document.getElementById("tab-login").className = "w-1/2 py-2 text-cyan-400 border-b-2 border-cyan-500 font-semibold";
-  document.getElementById("tab-register").className = "w-1/2 py-2 text-slate-400 border-b-2 border-transparent";
-}
-
-function showRegisterTab() {
-  document.getElementById("form-register").classList.remove("hidden");
-  document.getElementById("form-login").classList.add("hidden");
-  document.getElementById("form-verify").classList.add("hidden");
-  document.getElementById("tab-register").className = "w-1/2 py-2 text-cyan-400 border-b-2 border-cyan-500 font-semibold";
-  document.getElementById("tab-login").className = "w-1/2 py-2 text-slate-400 border-b-2 border-transparent";
-}
-
-function showVerifyTab() {
-  document.getElementById("form-verify").classList.remove("hidden");
-  document.getElementById("form-login").classList.add("hidden");
-  document.getElementById("form-register").classList.add("hidden");
+  const modal = document.getElementById("auth-modal");
+  if (modal) {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+  const errBox = document.getElementById("auth-error");
+  if (errBox) errBox.classList.add("hidden");
 }
 
 function showAuthError(msg) {
   const errBox = document.getElementById("auth-error");
-  errBox.innerText = msg;
-  errBox.classList.remove("hidden");
+  if (errBox) {
+    errBox.innerText = msg;
+    errBox.classList.remove("hidden");
+  }
 }
 
 // Event Listeners
