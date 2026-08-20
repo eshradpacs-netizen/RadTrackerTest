@@ -11,16 +11,16 @@ from email.mime.multipart import MIMEMultipart
 
 logger = logging.getLogger("email_service")
 
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-SMTP_USER = os.getenv("SMTP_USER", "")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
-SMTP_FROM = os.getenv("SMTP_FROM", SMTP_USER or "noreply@radtracker.org")
-
 def send_verification_email(to_email: str, code: str) -> bool:
     """Sends a 6-digit verification code to the target email address via SMTP."""
-    if not SMTP_USER or not SMTP_PASSWORD:
-        logger.warning("SMTP_USER or SMTP_PASSWORD not set. Email notification skipped (demo code logged).")
+    smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))
+    smtp_user = os.getenv("SMTP_USER", "").strip()
+    smtp_password = os.getenv("SMTP_PASSWORD", "").strip().replace(" ", "")
+    smtp_from = os.getenv("SMTP_FROM", smtp_user or "noreply@radtracker.org")
+    
+    if not smtp_user or not smtp_password:
+        logger.warning(f"SMTP_USER or SMTP_PASSWORD not set in env. (USER={bool(smtp_user)}, PASS={bool(smtp_password)})")
         return False
 
     subject = "🏥 RadTracker - 6 Haneli E-Posta Doğrulama Kodunuz"
@@ -28,9 +28,7 @@ def send_verification_email(to_email: str, code: str) -> bool:
     html_content = f"""
     <!DOCTYPE html>
     <html>
-    <head>
-      <meta charset="utf-8">
-    </head>
+    <head><meta charset="utf-8"></head>
     <body style="font-family: Arial, sans-serif; background-color: #0f172a; color: #f8fafc; padding: 20px;">
       <div style="max-width: 500px; margin: 0 auto; background-color: #1e293b; border-radius: 16px; padding: 24px; border: 1px solid #334155;">
         <div style="text-align: center; margin-bottom: 20px;">
@@ -56,14 +54,19 @@ def send_verification_email(to_email: str, code: str) -> bool:
     try:
         msg = MIMEMultipart("alternative")
         msg["Subject"] = subject
-        msg["From"] = f"RadTracker <{SMTP_FROM}>"
+        msg["From"] = f"RadTracker <{smtp_from}>"
         msg["To"] = to_email
         msg.attach(MIMEText(html_content, "html", "utf-8"))
 
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            server.login(SMTP_USER, SMTP_PASSWORD)
-            server.sendmail(SMTP_FROM, [to_email], msg.as_string())
+        if smtp_port == 465:
+            with smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=15) as server:
+                server.login(smtp_user, smtp_password)
+                server.sendmail(smtp_from, [to_email], msg.as_string())
+        else:
+            with smtplib.SMTP(smtp_server, smtp_port, timeout=15) as server:
+                server.starttls()
+                server.login(smtp_user, smtp_password)
+                server.sendmail(smtp_from, [to_email], msg.as_string())
             
         logger.info(f"Verification email successfully sent to {to_email}")
         return True
