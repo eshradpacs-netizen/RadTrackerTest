@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderGrid();
   });
 
-  // Room tab filter
+  // Room tab filter & Kroki toggle
   document.querySelectorAll(".room-tab").forEach(tab => {
     tab.addEventListener("click", () => {
       document.querySelectorAll(".room-tab").forEach(t => {
@@ -366,8 +366,18 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       tab.classList.remove("bg-slate-800", "text-slate-300");
       tab.classList.add("bg-cyan-500", "text-white", "active");
-      activeRoom = tab.getAttribute("data-room");
-      renderGrid();
+
+      const targetRoom = tab.getAttribute("data-room");
+      if (targetRoom === "KROKI") {
+        document.getElementById("pc-grid-container")?.classList.add("hidden");
+        document.getElementById("kroki-container")?.classList.remove("hidden");
+        updateKrokiColors();
+      } else {
+        document.getElementById("kroki-container")?.classList.add("hidden");
+        document.getElementById("pc-grid-container")?.classList.remove("hidden");
+        activeRoom = targetRoom;
+        renderGrid();
+      }
     });
   });
 
