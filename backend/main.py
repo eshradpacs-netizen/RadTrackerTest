@@ -145,6 +145,15 @@ async def get_computers():
 @app.post("/api/register")
 async def register(payload: UserRegister):
     email = payload.email.lower().strip()
+    
+    # 1. Enforce Whitelist check: Email MUST exist in allowed_emails list!
+    allowed_list = db.state.get("allowed_emails", [])
+    if allowed_list and email not in [e.lower() for e in allowed_list]:
+        raise HTTPException(
+            status_code=403, 
+            detail="Bu e-posta adresi yetkili kayıtlı asistan hekimler listesinde yer almamaktadır. Lütfen sistem yöneticiniz ile iletişime geçin."
+        )
+        
     if email in db.state["users"]:
         raise HTTPException(status_code=400, detail="Bu e-posta adresi zaten kayıtlı.")
         

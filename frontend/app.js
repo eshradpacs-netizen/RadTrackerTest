@@ -200,13 +200,19 @@ let pendingEmail = "";
 function checkAuthStatus() {
   const token = localStorage.getItem("radtracker_token");
   const email = localStorage.getItem("radtracker_email");
+  const mainContent = document.getElementById("main-content");
+  
   if (token && email) {
-    document.getElementById("user-banner").classList.remove("hidden");
+    document.getElementById("user-banner")?.classList.remove("hidden");
     document.getElementById("user-email-label").innerText = `Doğrulanmış Hekim (${email})`;
     document.getElementById("auth-btn-label").innerText = email.split('@')[0];
+    if (mainContent) mainContent.classList.remove("hidden");
+    closeAuthModal();
   } else {
-    document.getElementById("user-banner").classList.add("hidden");
+    document.getElementById("user-banner")?.classList.add("hidden");
     document.getElementById("auth-btn-label").innerText = "Giriş / Doğrula";
+    if (mainContent) mainContent.classList.add("hidden"); // Hide main dashboard behind Auth Gate!
+    openAuthModal();
   }
 }
 

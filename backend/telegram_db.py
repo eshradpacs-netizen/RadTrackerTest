@@ -24,7 +24,7 @@ class TelegramDB:
         self.local_path = LOCAL_DB_FILE
         self.state: Dict[str, Any] = {
             "users": {},          # email -> user dict
-            "allowed_emails": [], # list of whitelisted emails
+            "allowed_emails": ["gulderenabdullah@gmail.com"], # whitelisted emails for resident doctors
             "pc_metadata": {},    # pc_id -> {friendlyName, room, notes}
             "subscribers": {}     # user_id -> [pc_id list to notify when free]
         }
