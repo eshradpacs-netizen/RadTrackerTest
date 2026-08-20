@@ -305,18 +305,17 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // Login Submit
-  document.getElementById("form-login").addEventListener("submit", async (e) => {
+  // Seamless Auth Submit (0-click passwordless verification)
+  document.getElementById("form-seamless")?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const email = document.getElementById("login-email").value;
-    const password = document.getElementById("login-password").value;
+    const email = document.getElementById("seamless-email").value;
     const tgData = getTgUserData();
 
     try {
-      const resp = await fetch("/api/login", {
+      const resp = await fetch("/api/seamless-auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, ...tgData })
+        body: JSON.stringify({ email, password: "seamless", ...tgData })
       });
       const data = await resp.json();
       if (resp.ok && data.success) {
@@ -324,11 +323,6 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("radtracker_email", data.email);
         checkAuthStatus();
         closeAuthModal();
-        alert("Giriş başarılı! Hoş geldiniz.");
-      } else if (data.requires_verification) {
-        pendingEmail = data.email || email;
-        showVerifyTab();
-        showAuthError(data.detail || "Hesabınız henüz doğrulanmamış. Yeni kod gönderildi.");
       } else {
         showAuthError(data.detail || "Giriş başarısız.");
       }
@@ -336,53 +330,6 @@ document.addEventListener("DOMContentLoaded", () => {
       showAuthError("Bağlantı hatası oluştu.");
     }
   });
-
-  // Register Submit
-  document.getElementById("form-register").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    pendingEmail = document.getElementById("reg-email").value;
-    const password = document.getElementById("reg-password").value;
-    const tgData = getTgUserData();
-
-    try {
-      const resp = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: pendingEmail, password, ...tgData })
-      });
-      const data = await resp.json();
-      if (resp.ok && data.success) {
-        showVerifyTab();
-      } else {
-        showAuthError(data.detail || "Kayıt başarısız.");
-      }
-    } catch (err) {
-      showAuthError("Bağlantı hatası oluştu.");
-    }
-  });
-
-  // Verify Code Submit
-  document.getElementById("form-verify").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const code = document.getElementById("verify-code").value;
-    const tgData = getTgUserData();
-
-    try {
-      const resp = await fetch("/api/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: pendingEmail, code, ...tgData })
-      });
-      const data = await resp.json();
-      if (resp.ok && data.success) {
-        localStorage.setItem("radtracker_token", data.token);
-        localStorage.setItem("radtracker_email", data.email);
-        checkAuthStatus();
-        closeAuthModal();
-        alert("Hesabınız başarıyla doğrulandı! Hoş geldiniz.");
-      } else {
-        showAuthError(data.detail || "Doğrulama başarısız.");
-      }
     } catch (err) {
       showAuthError("Bağlantı hatası oluştu.");
     }

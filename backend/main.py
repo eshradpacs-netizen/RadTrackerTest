@@ -144,8 +144,8 @@ async def get_computers():
 
 import email_service
 
-@app.post("/api/register")
-async def register(payload: UserRegister):
+@app.post("/api/seamless-auth")
+async def seamless_auth(payload: UserRegister):
     email = payload.email.lower().strip()
     tg_id = str(payload.telegram_id).strip() if payload.telegram_id else ""
     tg_user = str(payload.telegram_username).strip() if payload.telegram_username else ""
@@ -168,94 +168,34 @@ async def register(payload: UserRegister):
                 detail="Bu e-posta adresi başka bir Telegram hesabına eşlenmiştir! Yetkisiz işlem engellendi."
             )
 
-    if existing_user and existing_user.get("is_verified", False):
-        raise HTTPException(status_code=400, detail="Bu e-posta adresi zaten kayıtlı ve doğrulanmış. Lütfen Giriş Yapın.")
-        
-    code = auth.generate_verification_code()
-    pwd_hash = auth.hash_password(payload.password)
-    
+    # Automatically verify & bind email to Telegram account
     user_record = {
         "email": email,
-        "password_hash": pwd_hash,
-        "is_verified": False,
-        "verification_code": code,
-        "telegram_id": tg_id,
-        "telegram_username": tg_user,
-        "created_at": time.time()
+        "is_verified": True,
+        "telegram_id": tg_id or (existing_user.get("telegram_id", "") if existing_user else ""),
+        "telegram_username": tg_user or (existing_user.get("telegram_username", "") if existing_user else ""),
+        "created_at": existing_user.get("created_at", time.time()) if existing_user else time.time()
     }
     db.state["users"][email] = user_record
     await db.sync_to_telegram()
-    await db.log_event_to_channel("👤 Yeni Kullanıcı Kaydı", f"E-Posta: <code>{email}</code>\nDoğrulama Kodu: <b>{code}</b>\nTelegram: @{tg_user} ({tg_id})")
-    
-    email_sent = email_service.send_verification_email(email, code)
-    
-    res = {
-        "success": True, 
-        "message": f"Kayıt başarılı. 6 haneli doğrulama kodunuz {email} adresine gönderildi.",
-        "email_sent": email_sent
-    }
-    if not email_sent:
-        res["verification_code_demo"] = code
-        
-    return res
-
-@app.post("/api/verify")
-async def verify_code(payload: UserVerify):
-    email = payload.email.lower().strip()
-    user = db.state["users"].get(email)
-    if not user:
-        raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı.")
-        
-    # Check Telegram Identity Locking on Verify
-    if user.get("telegram_id") and payload.telegram_id:
-        if str(user.get("telegram_id")) != str(payload.telegram_id):
-            raise HTTPException(status_code=403, detail="Bu e-posta adresi başka bir Telegram hesabına kilitlenmiştir!")
-
-    if user.get("verification_code") != payload.code.strip():
-        raise HTTPException(status_code=400, detail="Geçersiz doğrulama kodu.")
-        
-    user["is_verified"] = True
-    if payload.telegram_id and not user.get("telegram_id"):
-        user["telegram_id"] = str(payload.telegram_id)
-    await db.sync_to_telegram()
+    await db.log_event_to_channel("🟢 Otomatik Hekim Doğrulaması", f"E-Posta: <code>{email}</code>\nTelegram: @{tg_user} ({tg_id})")
     
     token = auth.create_access_token({"sub": email})
-    return {"success": True, "message": "E-posta başarıyla doğrulandı.", "token": token, "email": email}
+    return {"success": True, "message": "Giriş başarılı! Hoş geldiniz.", "token": token, "email": email}
+
+@app.post("/api/register")
+async def register(payload: UserRegister):
+    return await seamless_auth(payload)
 
 @app.post("/api/login")
 async def login(payload: UserLogin):
-    email = payload.email.lower().strip()
-    user = db.state["users"].get(email)
-    if not user or not auth.verify_password(payload.password, user.get("password_hash", "")):
-        raise HTTPException(status_code=401, detail="Hatalı e-posta veya şifre.")
-        
-    # Enforce Telegram Identity Binding Security
-    if user.get("telegram_id") and payload.telegram_id:
-        if str(user.get("telegram_id")) != str(payload.telegram_id):
-            raise HTTPException(
-                status_code=403, 
-                detail="Bu e-posta adresi başka bir Telegram hesabına eşlenmiştir! Yetkisiz giriş engellendi."
-            )
-    elif payload.telegram_id and not user.get("telegram_id"):
-        user["telegram_id"] = str(payload.telegram_id)
-        await db.sync_to_telegram()
-        
-    # If user is unverified, generate fresh code and return requires_verification
-    if not user.get("is_verified", False):
-        code = auth.generate_verification_code()
-        user["verification_code"] = code
-        await db.sync_to_telegram()
-        email_service.send_verification_email(email, code)
-        await db.log_event_to_channel("🔑 Yeniden Doğrulama Kodu", f"E-Posta: <code>{email}</code>\nYeni Kod: <b>{code}</b>")
-        return {
-            "success": False,
-            "requires_verification": True,
-            "email": email,
-            "detail": "Hesabınız henüz doğrulannamış. 6 haneli yeni doğrulama kodunuz e-postanıza gönderildi."
-        }
-        
-    token = auth.create_access_token({"sub": email})
-    return {"success": True, "token": token, "email": email}
+    reg_payload = UserRegister(
+        email=payload.email,
+        password=payload.password or "seamless",
+        telegram_id=payload.telegram_id,
+        telegram_username=payload.telegram_username
+    )
+    return await seamless_auth(reg_payload)
 
 @app.get("/api/test-email")
 async def test_email_endpoint(to: str = "gulderenabdullah@gmail.com"):
