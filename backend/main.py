@@ -210,6 +210,10 @@ async def test_email_endpoint(to: str = "gulderenabdullah@gmail.com"):
     res = email_service.debug_send_email(to, "123456")
     return res
 
+@app.get("/api/version")
+async def get_version_endpoint():
+    return {"version": "2.0.0-kroki-live", "timestamp": time.time()}
+
 # Instantiate Services
 chat_service = ChatService(db, state_manager.ws_manager)
 pc_notes_service = PCNotesService(db, state_manager.ws_manager)
