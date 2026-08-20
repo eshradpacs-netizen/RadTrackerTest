@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>RadTracker - Telegram Mini App & Web Dashboard</title>
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css?v=999">
+</head>
+<body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative">
+
+  <!-- Header Section -->
+  <header class="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-cyan-500/20">
+          RT
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            RadTracker <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Telegram-DB v1</span>
+          </h1>
+          <p class="text-xs text-slate-400">Radyoloji PC & Asistan Canlı Takip Paneli</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span id="ws-indicator" class="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span> Canlı (0ms)
+        </span>
+        <button id="auth-btn" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-white hover:opacity-90 transition-all flex items-center gap-1">
+          🔐 <span id="auth-btn-label">Giriş Yap</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- User Verification Status Banner -->
+  <section id="user-banner" class="max-w-7xl mx-auto px-4 pt-3 hidden">
+    <div class="glass-card rounded-xl p-3 border border-cyan-500/30 flex items-center justify-between bg-cyan-500/10 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">🟢</span>
+        <div>
+          <p id="user-email-label" class="font-bold text-cyan-300">Doğrulanmış Hekim</p>
+          <p class="text-slate-400">Tüm bildirim ve takip yetkileri aktif.</p>
+        </div>
+      </div>
+      <button id="logout-btn" class="text-xs text-slate-400 hover:text-white underline font-semibold">Çıkış Yap</button>
+    </div>
+  </section>
+
+  <!-- Seamless Auth Card (Visible by default when unauthenticated) -->
+  <section id="auth-container" class="max-w-md mx-auto px-4 py-12">
+    <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-6 space-y-4 shadow-2xl">
+      <div class="text-center space-y-1">
+        <h2 class="text-xl font-bold text-white flex items-center justify-center gap-2">
+          🏥 Hekim Doğrulama & Giriş
+        </h2>
+        <p class="text-xs text-slate-400">Canlı takip panelini açmak için yetkili e-posta adresinizi giriniz.</p>
+      </div>
+
+      <form id="form-seamless" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Kurumsal / Hastane E-Postası</label>
+          <input type="email" id="seamless-email" required placeholder="asistan@hastane.gov.tr" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+        </div>
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 font-bold text-white hover:opacity-90 transition-all text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20">
+          ⚡ Doğrula & Canlı Paneli Aç
+        </button>
+      </form>
+
+      <div id="auth-error" class="hidden text-xs text-red-400 bg-red-500/10 p-3 rounded-xl border border-red-500/20 text-center font-medium"></div>
+    </div>
+  </section>
+
+  <!-- Main Dashboard Content (Protected by Auth Gate) -->
+  <div id="main-content" class="hidden">
+    <!-- Live Stats Summary Bar -->
+    <section class="max-w-7xl mx-auto px-4 py-4">
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div class="glass-card rounded-xl p-3 flex items-center justify-between border border-emerald-500/20">
+          <div>
+            <p class="text-xs text-slate-400">Boşta (Kullanılabilir)</p>
+            <p id="stat-idle" class="text-xl font-bold text-emerald-400">0</p>
+          </div>
+          <span class="text-2xl">🟢</span>
+        </div>
+        <div class="glass-card rounded-xl p-3 flex items-center justify-between border border-red-500/20">
+          <div>
+            <p class="text-xs text-slate-400">Dolu (Aktif)</p>
+            <p id="stat-active" class="text-xl font-bold text-red-400">0</p>
+          </div>
+          <span class="text-2xl">🔴</span>
+        </div>
+        <div class="glass-card rounded-xl p-3 flex items-center justify-between border border-orange-500/20">
+          <div>
+            <p class="text-xs text-slate-400">Öğle Arası</p>
+            <p id="stat-lunch" class="text-xl font-bold text-orange-400">0</p>
+          </div>
+          <span class="text-2xl">🍱</span>
+        </div>
+        <div class="glass-card rounded-xl p-3 flex items-center justify-between border border-slate-700">
+          <div>
+            <p class="text-xs text-slate-400">Çevrimdışı / Kapalı</p>
+            <p id="stat-offline" class="text-xl font-bold text-slate-400">0</p>
+          </div>
+          <span class="text-2xl">⚪</span>
+        </div>
+        <div class="glass-card rounded-xl p-3 flex items-center justify-between border border-fuchsia-500/20 col-span-2 sm:col-span-1">
+          <div>
+            <p class="text-xs text-slate-400">Şüpheli Aktivite</p>
+            <p id="stat-suspicious" class="text-xl font-bold text-fuchsia-400">0</p>
+          </div>
+          <span class="text-2xl">⚠️</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter, View Mode Toggle & Search Controls -->
+    <section class="max-w-7xl mx-auto px-4 py-2 flex flex-col md:flex-row items-center justify-between gap-3">
+      <!-- Search Bar -->
+      <div class="relative w-full md:w-72">
+        <input type="text" id="search-input" placeholder="PC adı, asistan veya IP ara..." class="w-full bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-cyan-500 transition-colors">
+        <span class="absolute right-3 top-2.5 text-slate-400 text-sm">🔍</span>
+      </div>
+
+      <!-- Room Filter & Kroki Tabs -->
+      <div id="room-tabs" class="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 scrollbar-none">
+        <button class="room-tab active px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-cyan-500 text-white transition-all" data-room="ALL">🎴 Tüm Odalar (45)</button>
+        <button class="room-tab px-3.5 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-cyan-500 to-indigo-600 text-white shadow border border-cyan-400/40 transition-all" data-room="KROKI">🗺️ Kroki Haritası</button>
+        <button class="room-tab px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all" data-room="Cassiopeia">Cassiopeia</button>
+        <button class="room-tab px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all" data-room="Orion">Orion</button>
+        <button class="room-tab px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all" data-room="Andromeda">Andromeda</button>
+        <button class="room-tab px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all" data-room="Lyra">Lyra</button>
+        <button class="room-tab px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all" data-room="Vega">Vega</button>
+        <button class="room-tab px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all" data-room="Cygnus">Cygnus</button>
+        <button class="room-tab px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all" data-room="Perseus">Perseus</button>
+        <button class="room-tab px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all" data-room="Sirius">Sirius</button>
+        <button class="room-tab px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all" data-room="Aquila">Aquila</button>
+      </div>
+    </section>
+
+    <!-- Real-Time Computer Card Grid -->
+    <main id="pc-grid-container" class="max-w-7xl mx-auto px-4 py-4">
+      <div id="pc-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <!-- Computer Cards rendered dynamically by app.js -->
+      </div>
+    </main>
+
+    <!-- Interactive PACS Kroki Floor Map View -->
+    <main id="kroki-container" class="max-w-7xl mx-auto px-4 py-4 hidden">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 mb-3 text-center">
+        <h3 class="text-sm font-bold text-cyan-400">🗺️ PACS Raporlama Odaları Fiziksel Yerleşim Krokisi</h3>
+        <p class="text-xs text-slate-400">Masaların üzerindeki renkler canlı bilgisayar durumlarını gösterir. Masaya dokunarak not ekleyebilirsiniz.</p>
+      </div>
+
+      <div class="kroki-wrapper">
+        <div class="sol-panel">
+          <div class="pacs-blok blok-teal-sag">
+            <div class="bos-ws"></div><div class="ws" id="ws-t-07" title="Cassiopeia-β">7</div>
+            <div class="ws" id="ws-t-05" title="Cassiopeia-α">5</div><div class="ws" id="ws-t-06" title="Cassiopeia-β">6</div>
+            <div class="bos-ws"></div><div class="ws" id="ws-t-04" title="Orion α">4</div>
+            <div class="bos-ws"></div><div class="ws" id="ws-t-03" title="Orion β">3</div>
+            <div class="ws" id="ws-t-01" title="Orion γ">1</div><div class="ws" id="ws-t-02" title="Orion δ">2</div>
+          </div>
+
+          <div class="pacs-blok blok-teal-sol">
+            <div class="ws" id="ws-t-09" title="Orion ε">9</div><div class="ws" id="ws-t-08" title="Orion ζ">8</div>
+            <div class="ws" id="ws-t-10" title="Orion η">10</div><div class="ws" id="ws-t-11" title="Orion θ">11</div>
+          </div>
+
+          <div class="pacs-blok blok-pink">
+            <div class="ws" id="ws-pi-01" title="Andromeda α">1</div>
+          </div>
+
+          <div class="koridor-1">Koridor 1</div>
+
+          <div class="pacs-blok blok-blue">
+            <div class="ws" id="ws-b-01" title="Andromeda β">1</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-10" title="Andromeda θ">10</div>
+            <div class="ws" id="ws-b-02" title="Andromeda γ">2</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-09" title="Andromeda η">9</div>
+            <div class="ws" id="ws-b-03" title="Andromeda δ">3</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-08" title="Andromeda ζ">8</div>
+            <div class="ws" id="ws-b-04" title="Andromeda ε">4</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-07" title="Lyra α">7</div>
+            <div class="ws" id="ws-b-05" title="Lyra β">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-06" title="Lyra γ">6</div>
+          </div>
+        </div>
+
+        <div class="ana-koridor">
+          Ana<br>Koridor
+        </div>
+
+        <div class="sag-panel">
+          <div class="pacs-blok blok-yellow">
+            <div class="ws" id="ws-y-05" title="Vega α">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-04" title="Vega ε">4</div>
+            <div class="ws" id="ws-y-06" title="Vega ζ">6</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-03" title="Vega η">3</div>
+            <div class="ws" id="ws-y-07" title="Vega θ">7</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-02" title="Vega-ι">2</div>
+            <div class="ws" id="ws-y-08" title="Vega-κ">8</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-01" title="Vega-λ">1</div>
+          </div>
+
+          <div class="pacs-blok blok-purple">
+            <div class="ws" id="ws-p-05" title="Cygnus-α">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-04" title="Cygnus-β">4</div>
+            <div class="ws" id="ws-p-06" title="Cygnus-γ">6</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-03" title="Cygnus-δ">3</div>
+            <div class="ws" id="ws-p-07" title="Cygnus-ε">7</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-02" title="Cygnus-ζ">2</div>
+            <div class="ws" id="ws-p-08" title="Cygnus-η">8</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-01" title="Cygnus-θ">1</div>
+          </div>
+
+          <div class="koridor-2">Koridor 2</div>
+
+          <div class="pacs-blok blok-peach">
+            <div class="bos-ws"></div><div class="ws" id="ws-pe-03" title="Perseus - γ">3</div>
+            <div class="ws" id="ws-pe-01" title="Perseus - α">1</div><div class="ws" id="ws-pe-02" title="Perseus - β">2</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Computer Detail Modal -->
+  <div id="detail-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 space-y-4 relative shadow-2xl">
+      <button id="modal-close" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
+      <div class="flex items-center space-x-3">
+        <div id="modal-status-icon" class="text-3xl">🟢</div>
+        <div>
+          <h2 id="modal-title" class="text-lg font-bold text-white">Cassiopeia-α</h2>
+          <p id="modal-room" class="text-xs text-cyan-400 font-medium">Cassiopeia Odası</p>
+        </div>
+      </div>
+      <div class="space-y-2 text-sm text-slate-300 bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+        <p class="flex justify-between"><span class="text-slate-400">Aktif Kullanıcı:</span> <span id="modal-user" class="font-semibold text-white">Ahmet Y.</span></p>
+        <p class="flex justify-between"><span class="text-slate-400">Makine Adı:</span> <span id="modal-hostname" class="font-mono text-xs">desktop-2t9o3va</span></p>
+        <p class="flex justify-between"><span class="text-slate-400">IP Adresi:</span> <span id="modal-ip" class="font-mono text-xs">10.86.166.8</span></p>
+        <p class="flex justify-between"><span class="text-slate-400">Boşta Kalma Süresi:</span> <span id="modal-idle" class="font-semibold text-emerald-400">0 sn</span></p>
+        <p class="flex justify-between"><span class="text-slate-400">Son İletişim:</span> <span id="modal-lastseen" class="text-xs text-slate-300">Anlık</span></p>
+      </div>
+
+      <!-- PC Notes & Tags Section -->
+      <div class="space-y-1.5 pt-2 border-t border-slate-800">
+        <label class="block text-xs font-semibold text-slate-300">📝 Bilgisayar Notu / Etiket</label>
+        <textarea id="modal-notes-input" rows="2" placeholder="Örn: Sol monitör kalibre edilecek..." class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500"></textarea>
+        <button id="modal-save-note-btn" class="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-cyan-400 font-semibold rounded-xl text-xs transition-colors">
+          💾 Notu Kaydet
+        </button>
+      </div>
+
+      <button id="modal-locate-btn" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow">
+        📍 Krokide Yerini Göster
+      </button>
+
+      <button id="modal-subscribe-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 font-semibold text-white shadow-lg hover:from-cyan-400 hover:to-indigo-500 transition-all flex items-center justify-center gap-2">
+        🔔 Bu Bilgisayar Boşalınca Telegram'dan Bildirim Al
+      </button>
+    </div>
+  </div>
+
+  <!-- Floating Live Chat Trigger Button -->
+  <button id="chat-toggle-btn" class="fixed bottom-5 right-5 z-40 bg-gradient-to-r from-cyan-500 to-indigo-600 text-white font-bold p-3.5 rounded-full shadow-2xl hover:scale-105 transition-all flex items-center gap-2 text-sm border border-cyan-400/30">
+    💬 <span class="hidden sm:inline">Hekim Sohbeti</span>
+  </button>
+
+  <!-- Live Chat Drawer / Modal -->
+  <div id="chat-drawer" class="fixed bottom-16 right-4 sm:right-6 z-50 w-full max-w-sm bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-2xl shadow-2xl hidden flex-col overflow-hidden h-[420px]">
+    <div class="p-3 bg-slate-800/90 border-b border-slate-700 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-base">💬</span>
+        <span class="font-bold text-sm text-white">Radyoloji Nöbetçi Hekim Sohbeti</span>
+      </div>
+      <button id="chat-close-btn" class="text-slate-400 hover:text-white font-bold text-lg px-2">✕</button>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="chat-messages-container" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs">
+      <!-- Messages rendered dynamically -->
+    </div>
+
+    <!-- Message Input Bar -->
+    <form id="chat-form" class="p-2 bg-slate-800/80 border-t border-slate-700 flex gap-2">
+      <input type="text" id="chat-input" required placeholder="Mesajınızı yazın..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+      <button type="submit" class="px-3.5 py-2 bg-cyan-500 hover:bg-cyan-600 text-white font-bold rounded-xl text-xs transition-colors">
+        Gönder
+      </button>
+    </form>
+  </div>
+
+  <script src="app.js?v=999"></script>
+</body>
+</html>

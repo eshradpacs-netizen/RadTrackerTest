@@ -310,7 +310,9 @@ async def add_no_cache_headers(request: Request, call_next):
 # -----------------------------------------------------------------------------
 from fastapi.responses import FileResponse
 
-frontend_dir = os.path.join(os.path.dirname(__file__), "..", "frontend")
+frontend_dir = os.path.join(os.path.dirname(__file__), "frontend")
+if not os.path.exists(os.path.join(frontend_dir, "index.html")):
+    frontend_dir = os.path.join(os.path.dirname(__file__), "..", "frontend")
 
 @app.get("/")
 @app.get("/index.html")
