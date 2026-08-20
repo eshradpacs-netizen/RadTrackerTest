@@ -18,6 +18,9 @@ from master_mapping import MASTER_PC_MAPPING, resolve_agent_id
 from telegram_db import db
 from state_manager import state_manager
 from telegram_bot import telegram_bot
+from chat_service import ChatService
+from pc_notes_service import PCNotesService
+from analytics_service import AnalyticsService
 from schemas import HeartbeatPayload, UserRegister, UserVerify, UserLogin, MetadataUpdate
 import auth
 
@@ -207,18 +210,87 @@ async def test_email_endpoint(to: str = "gulderenabdullah@gmail.com"):
     res = email_service.debug_send_email(to, "123456")
     return res
 
+# Instantiate Services
+chat_service = ChatService(db, state_manager.ws_manager)
+pc_notes_service = PCNotesService(db, state_manager.ws_manager)
+analytics_service = AnalyticsService(db, state_manager)
+
 # -----------------------------------------------------------------------------
-# 4. Telegram Webhook Endpoint
+# 6. Live Chat, PC Notes, Analytics & Admin Panel Endpoints
 # -----------------------------------------------------------------------------
-@app.post("/api/telegram/webhook")
-async def telegram_webhook(request: Request):
-    try:
-        update = await request.json()
-        await telegram_bot.handle_update(update, state_manager)
-        return {"ok": True}
-    except Exception as e:
-        logger.error(f"Error handling Telegram update: {e}")
-        return {"ok": False}
+@app.get("/api/chat/messages")
+async def get_public_chat_messages(limit: int = 50):
+    return {"success": True, "messages": chat_service.get_public_history(limit)}
+
+@app.post("/api/chat/send")
+async def send_public_chat_message(payload: Dict[str, Any]):
+    email = payload.get("email", "anonymous@hastane.com")
+    text = payload.get("text", "")
+    if not text:
+        raise HTTPException(status_code=400, detail="Mesaj boş olamaz.")
+    msg = await chat_service.send_public_message(email, text)
+    return {"success": True, "message": msg}
+
+@app.get("/api/chat/private")
+async def get_private_chat_messages(email1: str, email2: str):
+    return {"success": True, "messages": chat_service.get_private_history(email1, email2)}
+
+@app.post("/api/chat/private")
+async def send_private_chat_message(payload: Dict[str, Any]):
+    sender = payload.get("sender_email", "")
+    recipient = payload.get("recipient_email", "")
+    text = payload.get("text", "")
+    if not sender or not recipient or not text:
+        raise HTTPException(status_code=400, detail="Gönderen, alıcı ve mesaj zorunludur.")
+    msg = await chat_service.send_private_message(sender, recipient, text)
+    return {"success": True, "message": msg}
+
+@app.get("/api/pc/notes")
+async def get_pc_notes():
+    return {"success": True, "notes": pc_notes_service.get_all_notes()}
+
+@app.post("/api/pc/notes")
+async def update_pc_note(payload: Dict[str, Any]):
+    pc_id = payload.get("pc_id", "")
+    notes = payload.get("notes", "")
+    friendly_name = payload.get("friendlyName", None)
+    room = payload.get("room", None)
+    author = payload.get("author", "Hekim")
+    if not pc_id:
+        raise HTTPException(status_code=400, detail="pc_id zorunludur.")
+    res = await pc_notes_service.update_pc_note(pc_id, notes, friendly_name, room, author)
+    return {"success": True, "metadata": res}
+
+@app.get("/api/analytics")
+async def get_analytics_summary():
+    return {"success": True, "analytics": analytics_service.get_analytics_summary()}
+
+@app.get("/api/admin/users")
+async def admin_get_users():
+    return {
+        "success": True, 
+        "users": db.state.get("users", {}),
+        "allowed_emails": db.state.get("allowed_emails", [])
+    }
+
+@app.post("/api/admin/whitelist/add")
+async def admin_add_whitelist(payload: Dict[str, Any]):
+    email = payload.get("email", "").lower().strip()
+    if not email:
+        raise HTTPException(status_code=400, detail="E-Posta boş olamaz.")
+    allowed = db.state.setdefault("allowed_emails", [])
+    if email not in [e.lower() for e in allowed]:
+        allowed.append(email)
+        await db.sync_to_telegram()
+    return {"success": True, "allowed_emails": allowed}
+
+@app.post("/api/admin/whitelist/remove")
+async def admin_remove_whitelist(payload: Dict[str, Any]):
+    email = payload.get("email", "").lower().strip()
+    allowed = db.state.setdefault("allowed_emails", [])
+    db.state["allowed_emails"] = [e for e in allowed if e.lower() != email]
+    await db.sync_to_telegram()
+    return {"success": True, "allowed_emails": db.state["allowed_emails"]}
 
 # Add strict No-Cache middleware to prevent browser/Telegram caching of HTML, JS, CSS
 @app.middleware("http")
