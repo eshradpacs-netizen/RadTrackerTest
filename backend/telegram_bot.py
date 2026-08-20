@@ -67,6 +67,12 @@ class TelegramBotController:
             await self.cmd_subscribe(chat_id, text, state_mgr)
         elif text.startswith("/kod") or text.startswith("/code"):
             await self.cmd_kod(chat_id)
+        elif text.startswith("/ekle"):
+            await self.cmd_add_email(chat_id, text)
+        elif text.startswith("/cikar") or text.startswith("/sil"):
+            await self.cmd_remove_email(chat_id, text)
+        elif text.startswith("/listele") or text.startswith("/liste"):
+            await self.cmd_list_emails(chat_id)
         elif text.startswith("/admin"):
             await self.cmd_admin(chat_id, state_mgr)
 
@@ -195,13 +201,56 @@ class TelegramBotController:
 
     async def cmd_admin(self, chat_id: int, state_mgr):
         """Admin menu for Telegram DB management."""
+        from telegram_db import db
+        allowed = db.state.get("allowed_emails", [])
         text = (
             "<b>⚙️ TELEGRAM-DB YÖNETİCİ MENÜSÜ</b>\n\n"
-            f"• <b>Toplam Kayıtlı PC:</b> {len(state_mgr.computers)}\n"
+            f"• <b>Yetkili Hekim Sayısı:</b> {len(allowed)}\n"
+            f"• <b>Toplam Takip Edilen PC:</b> {len(state_mgr.computers)}\n"
             f"• <b>Veritabanı Durumu:</b> Telegram-DB (Bulut Senkronize)\n\n"
-            "Veritabanını manuel senkronize etmek için <code>/syncdb</code> yazabilirsiniz."
+            "<b>Komutlar:</b>\n"
+            "• <code>/listele</code> : Yetkili e-posta listesini gösterir.\n"
+            "• <code>/ekle dr.ahmet@hastane.gov.tr</code> : Yeni hekim ekler.\n"
+            "• <code>/cikar dr.ahmet@hastane.gov.tr</code> : Hekim yetkisini kaldırır.\n"
         )
         await self.send_message(chat_id, text)
+
+    async def cmd_add_email(self, chat_id: int, text: str):
+        from telegram_db import db
+        parts = text.split()
+        if len(parts) < 2:
+            await self.send_message(chat_id, "❌ Lütfen e-posta yazın.\nKullanım: <code>/ekle dr.ahmet@hastane.gov.tr</code>")
+            return
+        new_email = parts[1].lower().strip()
+        allowed = db.state.setdefault("allowed_emails", [])
+        if new_email in [e.lower() for e in allowed]:
+            await self.send_message(chat_id, f"⚠️ <code>{new_email}</code> zaten yetkili listede var.")
+            return
+        allowed.append(new_email)
+        await db.sync_to_telegram()
+        await self.send_message(chat_id, f"✅ <b>BAŞARILI!</b> <code>{new_email}</code> yetkili asistan hekim listesine eklendi. Artık sisteme kayıt olabilir ve giriş yapabilir.")
+
+    async def cmd_remove_email(self, chat_id: int, text: str):
+        from telegram_db import db
+        parts = text.split()
+        if len(parts) < 2:
+            await self.send_message(chat_id, "❌ Lütfen e-posta yazın.\nKullanım: <code>/cikar dr.ahmet@hastane.gov.tr</code>")
+            return
+        rem_email = parts[1].lower().strip()
+        allowed = db.state.setdefault("allowed_emails", [])
+        db.state["allowed_emails"] = [e for e in allowed if e.lower() != rem_email]
+        await db.sync_to_telegram()
+        await self.send_message(chat_id, f"🗑️ <code>{rem_email}</code> yetkili listeden çıkarıldı ve erişimi kısıtlandı.")
+
+    async def cmd_list_emails(self, chat_id: int):
+        from telegram_db import db
+        allowed = db.state.get("allowed_emails", [])
+        if not allowed:
+            await self.send_message(chat_id, "📜 Yetkili e-posta listesi şu an boş.")
+            return
+        email_items = "\n".join([f"• <code>{e}</code>" for e in allowed])
+        msg = f"📜 <b>YETKİLİ ASİSTAN HEKİM E-POSTA LİSTESİ ({len(allowed)} Hekim):</b>\n\n{email_items}\n\n<i>Bu listedeki hekimler sisteme kayıt olabilir ve giriş yapabilir.</i>"
+        await self.send_message(chat_id, msg)
 
     async def notify_pc_free(self, pc: Dict[str, Any]):
         """Sends push notification to users subscribed to this PC when it becomes free."""
