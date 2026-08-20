@@ -314,6 +314,10 @@ document.addEventListener("DOMContentLoaded", () => {
         checkAuthStatus();
         closeAuthModal();
         alert("Giriş başarılı! Hoş geldiniz.");
+      } else if (data.requires_verification) {
+        pendingEmail = data.email || email;
+        showVerifyTab();
+        showAuthError(data.detail || "Hesabınız henüz doğrulanmamış. Yeni kod gönderildi.");
       } else {
         showAuthError(data.detail || "Giriş başarısız.");
       }

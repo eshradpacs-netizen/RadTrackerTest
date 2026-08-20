@@ -156,8 +156,9 @@ async def register(payload: UserRegister):
             detail="Bu e-posta adresi yetkili kayıtlı asistan hekimler listesinde yer almamaktadır. Lütfen sistem yöneticiniz ile iletişime geçin."
         )
         
-    if email in db.state["users"]:
-        raise HTTPException(status_code=400, detail="Bu e-posta adresi zaten kayıtlı.")
+    existing_user = db.state["users"].get(email)
+    if existing_user and existing_user.get("is_verified", False):
+        raise HTTPException(status_code=400, detail="Bu e-posta adresi zaten kayıtlı ve doğrulanmış. Lütfen Giriş Yapın.")
         
     code = auth.generate_verification_code()
     pwd_hash = auth.hash_password(payload.password)
@@ -207,8 +208,20 @@ async def login(payload: UserLogin):
     user = db.state["users"].get(email)
     if not user or not auth.verify_password(payload.password, user.get("password_hash", "")):
         raise HTTPException(status_code=401, detail="Hatalı e-posta veya şifre.")
+        
+    # If user is unverified, generate fresh code and return requires_verification
     if not user.get("is_verified", False):
-        raise HTTPException(status_code=403, detail="E-posta henüz doğrulanmamış.")
+        code = auth.generate_verification_code()
+        user["verification_code"] = code
+        await db.sync_to_telegram()
+        email_service.send_verification_email(email, code)
+        await db.log_event_to_channel("🔑 Yeniden Doğrulama Kodu", f"E-Posta: <code>{email}</code>\nYeni Kod: <b>{code}</b>")
+        return {
+            "success": False,
+            "requires_verification": True,
+            "email": email,
+            "detail": "Hesabınız henüz doğrulannamış. 6 haneli yeni doğrulama kodunuz e-postanıza gönderildi."
+        }
         
     token = auth.create_access_token({"sub": email})
     return {"success": True, "token": token, "email": email}
