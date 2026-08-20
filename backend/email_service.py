@@ -1,19 +1,46 @@
 """
-Radiology PC Tracker v1 - Email Service (SMTP & Verification Mailer)
-Sends HTML verification emails via SMTP (Gmail, Outlook, Custom Hospital Mail, Sendgrid).
+Radiology PC Tracker v1 - Email Service (SMTP & HTTP API Mailer)
+Sends HTML verification emails via Resend HTTP API (Port 443 - Never Blocked) or SMTP with Dual-Port fallback.
 """
 
 import os
 import smtplib
 import logging
-import traceback
+import httpx
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 logger = logging.getLogger("email_service")
 
+def send_via_resend_api(api_key: str, to_email: str, subject: str, html_content: str) -> bool:
+    """Sends email via Resend HTTP API over standard HTTPS Port 443 (Bypasses all cloud SMTP port blocks)."""
+    try:
+        url = "https://api.resend.com/emails"
+        headers = {
+            "Authorization": f"Bearer {api_key.strip()}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "from": "RadTracker <onboarding@resend.dev>",
+            "to": [to_email],
+            "subject": subject,
+            "html": html_content
+        }
+        with httpx.Client(timeout=12.0) as client:
+            resp = client.post(url, json=payload, headers=headers)
+            if resp.status_code in [200, 201]:
+                logger.info(f"Resend HTTP API email successfully sent to {to_email}!")
+                return True
+            else:
+                logger.warning(f"Resend HTTP API returned status {resp.status_code}: {resp.text}")
+                return False
+    except Exception as e:
+        logger.error(f"Resend HTTP API exception: {e}")
+        return False
+
 def debug_send_email(to_email: str, code: str = "123456") -> dict:
-    """Detailed diagnostic email sender for debugging SMTP issues on cloud platforms."""
+    """Detailed diagnostic email sender for debugging on cloud platforms."""
+    resend_api_key = os.getenv("RESEND_API_KEY", "").strip()
     smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com").strip()
     smtp_port_raw = os.getenv("SMTP_PORT", "587").strip()
     try:
@@ -26,17 +53,11 @@ def debug_send_email(to_email: str, code: str = "123456") -> dict:
     smtp_from = os.getenv("SMTP_FROM", smtp_user or "noreply@radtracker.org").strip()
 
     logs = []
+    logs.append(f"Resend API Key: {'[SET]' if resend_api_key else '[NOT SET]'}")
     logs.append(f"SMTP Server: {smtp_server}")
     logs.append(f"SMTP Port (env): {smtp_port}")
     logs.append(f"SMTP User: {'[SET: ' + smtp_user + ']' if smtp_user else '[NOT SET]'}")
     logs.append(f"SMTP Pass: {'[SET (length ' + str(len(smtp_password)) + ')]' if smtp_password else '[NOT SET]'}")
-
-    if not smtp_user or not smtp_password:
-        return {
-            "success": False,
-            "reason": "SMTP_USER or SMTP_PASSWORD is missing in Environment Variables.",
-            "logs": logs
-        }
 
     subject = "🏥 RadTracker - 6 Haneli E-Posta Doğrulama Kodunuz"
     
@@ -64,46 +85,50 @@ def debug_send_email(to_email: str, code: str = "123456") -> dict:
     </html>
     """
 
+    # 1. Try Resend HTTP API if configured (Port 443 - Guaranteed to work on cloud)
+    if resend_api_key:
+        logs.append("Attempting Resend HTTP API (Port 443)...")
+        if send_via_resend_api(resend_api_key, to_email, subject, html_content):
+            logs.append(f"SUCCESS: Email sent to {to_email} via Resend HTTP API!")
+            return {"success": True, "method": "Resend HTTP API", "logs": logs}
+        else:
+            logs.append("Resend HTTP API attempt failed. Falling back to SMTP...")
+
+    # 2. Try SMTP fallback
+    if not smtp_user or not smtp_password:
+        return {
+            "success": False,
+            "reason": "Neither RESEND_API_KEY nor (SMTP_USER + SMTP_PASSWORD) are set in Environment Variables.",
+            "logs": logs
+        }
+
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = f"RadTracker <{smtp_from}>"
     msg["To"] = to_email
     msg.attach(MIMEText(html_content, "html", "utf-8"))
 
-    # Try configured port, then alternate port (587 vs 465 vs 25)
-    ports_to_try = [smtp_port]
-    if 465 not in ports_to_try:
-        ports_to_try.append(465)
-    if 587 not in ports_to_try:
-        ports_to_try.append(587)
-
+    ports_to_try = [smtp_port, 465 if smtp_port != 465 else 587]
     for port in ports_to_try:
         try:
-            logs.append(f"Trying connection to {smtp_server}:{port}...")
+            logs.append(f"Trying SMTP connection to {smtp_server}:{port}...")
             if port == 465:
-                with smtplib.SMTP_SSL(smtp_server, port, timeout=12) as server:
-                    logs.append(f"SSL Connected to {smtp_server}:{port}. Logging in...")
+                with smtplib.SMTP_SSL(smtp_server, port, timeout=10) as server:
                     server.login(smtp_user, smtp_password)
-                    logs.append("Login successful! Sending mail...")
                     server.sendmail(smtp_from, [to_email], msg.as_string())
             else:
-                with smtplib.SMTP(smtp_server, port, timeout=12) as server:
-                    server.ehlo()
+                with smtplib.SMTP(smtp_server, port, timeout=10) as server:
                     server.starttls()
-                    server.ehlo()
-                    logs.append(f"TLS Started on {smtp_server}:{port}. Logging in...")
                     server.login(smtp_user, smtp_password)
-                    logs.append("Login successful! Sending mail...")
                     server.sendmail(smtp_from, [to_email], msg.as_string())
 
-            logs.append(f"SUCCESS: Email sent to {to_email} via port {port}!")
-            return {"success": True, "port_used": port, "logs": logs}
+            logs.append(f"SUCCESS: Email sent to {to_email} via SMTP port {port}!")
+            return {"success": True, "method": f"SMTP port {port}", "logs": logs}
         except Exception as err:
             err_str = f"Port {port} error: {type(err).__name__} - {str(err)}"
             logs.append(err_str)
-            logger.warning(err_str)
 
-    return {"success": False, "reason": "All SMTP connection attempts failed.", "logs": logs}
+    return {"success": False, "reason": "All email sending attempts failed (Cloud socket port blocked).", "logs": logs}
 
 
 def send_verification_email(to_email: str, code: str) -> bool:
