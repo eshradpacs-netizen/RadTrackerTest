@@ -220,6 +220,15 @@ async def telegram_webhook(request: Request):
         logger.error(f"Error handling Telegram update: {e}")
         return {"ok": False}
 
+# Add strict No-Cache middleware to prevent browser/Telegram caching of HTML, JS, CSS
+@app.middleware("http")
+async def add_no_cache_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
 # -----------------------------------------------------------------------------
 # 5. Serve Frontend & Telegram Mini App Static Files
 # -----------------------------------------------------------------------------
@@ -233,7 +242,11 @@ frontend_dir = os.path.join(os.path.dirname(__file__), "..", "frontend")
 async def serve_index():
     index_path = os.path.join(frontend_dir, "index.html")
     if os.path.exists(index_path):
-        return FileResponse(index_path)
+        return FileResponse(index_path, headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+            "Expires": "0"
+        })
     raise HTTPException(status_code=404, detail="index.html not found")
 
 if os.path.exists(frontend_dir):
