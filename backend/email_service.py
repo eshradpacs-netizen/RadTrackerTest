@@ -1,6 +1,6 @@
 """
-Radiology PC Tracker v1 - Email Service (SMTP & HTTP API Mailer)
-Sends HTML verification emails via Resend HTTP API (Port 443 - Never Blocked) or SMTP with Dual-Port fallback.
+Radiology PC Tracker v1 - Email Service (Multi-Provider HTTP API & SMTP Mailer)
+Sends HTML verification emails via Brevo, Resend, or SMTP.
 """
 
 import os
@@ -12,8 +12,34 @@ from email.mime.multipart import MIMEMultipart
 
 logger = logging.getLogger("email_service")
 
+def send_via_brevo_api(api_key: str, to_email: str, subject: str, html_content: str) -> bool:
+    """Sends email via Brevo (Sendinblue) HTTP API (300 free mails/day to ANY email address)."""
+    try:
+        url = "https://api.brevo.com/v3/smtp/email"
+        headers = {
+            "api-key": api_key.strip(),
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "sender": {"name": "RadTracker Radyoloji", "email": "radtracker@hastane.org"},
+            "to": [{"email": to_email}],
+            "subject": subject,
+            "htmlContent": html_content
+        }
+        with httpx.Client(timeout=12.0) as client:
+            resp = client.post(url, json=payload, headers=headers)
+            if resp.status_code in [200, 201]:
+                logger.info(f"Brevo HTTP API email successfully sent to {to_email}!")
+                return True
+            else:
+                logger.warning(f"Brevo HTTP API returned status {resp.status_code}: {resp.text}")
+                return False
+    except Exception as e:
+        logger.error(f"Brevo HTTP API exception: {e}")
+        return False
+
 def send_via_resend_api(api_key: str, to_email: str, subject: str, html_content: str) -> bool:
-    """Sends email via Resend HTTP API over standard HTTPS Port 443 (Bypasses all cloud SMTP port blocks)."""
+    """Sends email via Resend HTTP API over standard HTTPS Port 443."""
     try:
         url = "https://api.resend.com/emails"
         headers = {
@@ -39,7 +65,8 @@ def send_via_resend_api(api_key: str, to_email: str, subject: str, html_content:
         return False
 
 def debug_send_email(to_email: str, code: str = "123456") -> dict:
-    """Detailed diagnostic email sender for debugging on cloud platforms."""
+    """Detailed diagnostic email sender supporting Brevo, Resend, and SMTP."""
+    brevo_api_key = os.getenv("BREVO_API_KEY", "").strip()
     resend_api_key = os.getenv("RESEND_API_KEY", "").strip()
     smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com").strip()
     smtp_port_raw = os.getenv("SMTP_PORT", "587").strip()
@@ -53,11 +80,10 @@ def debug_send_email(to_email: str, code: str = "123456") -> dict:
     smtp_from = os.getenv("SMTP_FROM", smtp_user or "noreply@radtracker.org").strip()
 
     logs = []
+    logs.append(f"Target Email: {to_email}")
+    logs.append(f"Brevo API Key: {'[SET]' if brevo_api_key else '[NOT SET]'}")
     logs.append(f"Resend API Key: {'[SET]' if resend_api_key else '[NOT SET]'}")
-    logs.append(f"SMTP Server: {smtp_server}")
-    logs.append(f"SMTP Port (env): {smtp_port}")
     logs.append(f"SMTP User: {'[SET: ' + smtp_user + ']' if smtp_user else '[NOT SET]'}")
-    logs.append(f"SMTP Pass: {'[SET (length ' + str(len(smtp_password)) + ')]' if smtp_password else '[NOT SET]'}")
 
     subject = "🏥 RadTracker - 6 Haneli E-Posta Doğrulama Kodunuz"
     
@@ -85,20 +111,29 @@ def debug_send_email(to_email: str, code: str = "123456") -> dict:
     </html>
     """
 
-    # 1. Try Resend HTTP API if configured (Port 443 - Guaranteed to work on cloud)
+    # 1. Try Brevo HTTP API first if set (Unlimited recipient sending)
+    if brevo_api_key:
+        logs.append("Attempting Brevo HTTP API...")
+        if send_via_brevo_api(brevo_api_key, to_email, subject, html_content):
+            logs.append(f"SUCCESS: Email sent to {to_email} via Brevo HTTP API!")
+            return {"success": True, "method": "Brevo HTTP API", "logs": logs}
+        else:
+            logs.append("Brevo HTTP API attempt failed. Trying Resend...")
+
+    # 2. Try Resend HTTP API if set
     if resend_api_key:
-        logs.append("Attempting Resend HTTP API (Port 443)...")
+        logs.append("Attempting Resend HTTP API...")
         if send_via_resend_api(resend_api_key, to_email, subject, html_content):
             logs.append(f"SUCCESS: Email sent to {to_email} via Resend HTTP API!")
             return {"success": True, "method": "Resend HTTP API", "logs": logs}
         else:
             logs.append("Resend HTTP API attempt failed. Falling back to SMTP...")
 
-    # 2. Try SMTP fallback
+    # 3. Try SMTP fallback
     if not smtp_user or not smtp_password:
         return {
             "success": False,
-            "reason": "Neither RESEND_API_KEY nor (SMTP_USER + SMTP_PASSWORD) are set in Environment Variables.",
+            "reason": "Neither Brevo, Resend, nor SMTP credentials worked.",
             "logs": logs
         }
 
@@ -128,8 +163,7 @@ def debug_send_email(to_email: str, code: str = "123456") -> dict:
             err_str = f"Port {port} error: {type(err).__name__} - {str(err)}"
             logs.append(err_str)
 
-    return {"success": False, "reason": "All email sending attempts failed (Cloud socket port blocked).", "logs": logs}
-
+    return {"success": False, "reason": "All email sending attempts failed.", "logs": logs}
 
 def send_verification_email(to_email: str, code: str) -> bool:
     """Wrapper function used by main.py."""
