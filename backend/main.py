@@ -226,6 +226,12 @@ async def login(payload: UserLogin):
     token = auth.create_access_token({"sub": email})
     return {"success": True, "token": token, "email": email}
 
+@app.get("/api/test-email")
+async def test_email_endpoint(to: str = "gulderenabdullah@gmail.com"):
+    """Diagnostic route to test SMTP email sending and view exact logs."""
+    res = email_service.debug_send_email(to, "123456")
+    return res
+
 # -----------------------------------------------------------------------------
 # 4. Telegram Webhook Endpoint
 # -----------------------------------------------------------------------------
