@@ -202,6 +202,7 @@ function checkAuthStatus() {
   const email = localStorage.getItem("radtracker_email");
   const mainContent = document.getElementById("main-content");
   const authContainer = document.getElementById("auth-container");
+  const authBtn = document.getElementById("auth-btn");
   
   if (token && email) {
     document.getElementById("user-banner")?.classList.remove("hidden");
@@ -211,13 +212,12 @@ function checkAuthStatus() {
     if (document.getElementById("auth-btn-label")) {
       document.getElementById("auth-btn-label").innerText = email.split('@')[0];
     }
+    if (authBtn) authBtn.classList.remove("hidden");
     if (mainContent) mainContent.classList.remove("hidden");
     if (authContainer) authContainer.classList.add("hidden");
   } else {
     document.getElementById("user-banner")?.classList.add("hidden");
-    if (document.getElementById("auth-btn-label")) {
-      document.getElementById("auth-btn-label").innerText = "Giriş Yap";
-    }
+    if (authBtn) authBtn.classList.add("hidden");
     if (mainContent) mainContent.classList.add("hidden");
     if (authContainer) authContainer.classList.remove("hidden");
   }
