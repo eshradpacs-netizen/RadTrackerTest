@@ -24,7 +24,7 @@ class TelegramDB:
         self.local_path = LOCAL_DB_FILE
         self.state: Dict[str, Any] = {
             "users": {},          # email -> user dict
-            "allowed_emails": ["gulderenabdullah@gmail.com"], # whitelisted emails for resident doctors
+            "allowed_emails": ["gulderenabdullah@gmail.com", "eshradpacs@gmail.com"], # whitelisted emails for resident doctors
             "pc_metadata": {},    # pc_id -> {friendlyName, room, notes}
             "subscribers": {}     # user_id -> [pc_id list to notify when free]
         }
@@ -46,6 +46,12 @@ class TelegramDB:
                         logger.info("Loaded Telegram-DB state from local storage.")
         except Exception as e:
             logger.error(f"Error loading local DB: {e}")
+
+        # Ensure default whitelisted emails exist
+        allowed = self.state.setdefault("allowed_emails", [])
+        for default_e in ["gulderenabdullah@gmail.com", "eshradpacs@gmail.com"]:
+            if default_e not in [e.lower() for e in allowed]:
+                allowed.append(default_e)
 
     def save_local(self):
         """Saves current state to local JSON fallback file."""
