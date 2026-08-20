@@ -66,6 +66,10 @@ async def background_ttl_monitor():
 
 @app.on_event("startup")
 async def startup_event():
+    allowed = db.state.setdefault("allowed_emails", [])
+    for default_e in ["gulderenabdullah@gmail.com", "eshradpacs@gmail.com"]:
+        if default_e not in [e.lower() for e in allowed]:
+            allowed.append(default_e)
     asyncio.create_task(background_ttl_monitor())
     asyncio.create_task(telegram_bot.start_polling(state_manager))
     logger.info("Radiology PC Tracker v1 Backend Started.")
