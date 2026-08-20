@@ -327,5 +327,27 @@ async def serve_index():
         })
     raise HTTPException(status_code=404, detail="index.html not found")
 
+@app.get("/app.js")
+async def serve_app_js():
+    js_path = os.path.join(frontend_dir, "app.js")
+    if os.path.exists(js_path):
+        return FileResponse(js_path, media_type="application/javascript", headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+            "Expires": "0"
+        })
+    raise HTTPException(status_code=404, detail="app.js not found")
+
+@app.get("/styles.css")
+async def serve_styles_css():
+    css_path = os.path.join(frontend_dir, "styles.css")
+    if os.path.exists(css_path):
+        return FileResponse(css_path, media_type="text/css", headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+            "Expires": "0"
+        })
+    raise HTTPException(status_code=404, detail="styles.css not found")
+
 if os.path.exists(frontend_dir):
     app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
