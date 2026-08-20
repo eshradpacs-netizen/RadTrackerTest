@@ -336,9 +336,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await resp.json();
       if (resp.ok && data.success) {
         showVerifyTab();
-        if (data.verification_code_demo) {
-          alert(`Test Doğrulama Kodunuz: ${data.verification_code_demo}`);
-        }
       } else {
         showAuthError(data.detail || "Kayıt başarısız.");
       }
