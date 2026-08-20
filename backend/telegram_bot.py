@@ -65,6 +65,8 @@ class TelegramBotController:
             await self.cmd_rooms(chat_id, state_mgr)
         elif text.startswith("/takip"):
             await self.cmd_subscribe(chat_id, text, state_mgr)
+        elif text.startswith("/kod") or text.startswith("/code"):
+            await self.cmd_kod(chat_id)
         elif text.startswith("/admin"):
             await self.cmd_admin(chat_id, state_mgr)
 
@@ -217,6 +219,26 @@ class TelegramBotController:
         
         # Clear subscriptions for this PC after notification
         self.subscriptions[pc_id] = []
+
+    async def cmd_kod(self, chat_id: int):
+        """Sends the latest verification code directly to the Telegram chat!"""
+        from telegram_db import db
+        users = db.state.get("users", {})
+        
+        # Find unverified users or last registered code
+        unverified = [u for u in users.values() if not u.get("is_verified", False)]
+        if not unverified:
+            all_users = list(users.values())
+            if all_users:
+                last_u = all_users[-1]
+                msg = f"🔑 <b>Son Kayıtlı Doğrulama Kodu:</b>\n\nE-Posta: <code>{last_u.get('email')}</code>\nKod: <b>{last_u.get('verification_code')}</b>\nDurum: {'🟢 Doğrulanmış' if last_u.get('is_verified') else '🟡 Doğrulama Bekliyor'}"
+            else:
+                msg = "Henüz kayıtlı kullanıcı bulunmuyor."
+        else:
+            last_unv = unverified[-1]
+            msg = f"🔑 <b>Doğrulama Kodunuz:</b>\n\nE-Posta: <code>{last_unv.get('email')}</code>\nKodunuz: <code style='font-size:22px; color:#38bdf8;'>{last_unv.get('verification_code')}</code>\n\n<i>Bu kodu Telegram Mini App ekranındaki kutucuğa girerek onaylayabilirsiniz.</i>"
+            
+        await self.send_message(chat_id, msg)
 
     async def start_polling(self, state_mgr):
         """Starts Telegram Bot Long Polling loop for zero-config local testing."""
