@@ -224,18 +224,17 @@ function checkAuthStatus() {
 }
 
 function openAuthModal() {
-  const modal = document.getElementById("auth-modal");
-  if (modal) {
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
+  const authContainer = document.getElementById("auth-container");
+  if (authContainer) {
+    authContainer.classList.remove("hidden");
+    document.getElementById("seamless-email")?.focus();
   }
 }
 
 function closeAuthModal() {
-  const modal = document.getElementById("auth-modal");
-  if (modal) {
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
+  const authContainer = document.getElementById("auth-container");
+  if (authContainer) {
+    authContainer.classList.add("hidden");
   }
   const errBox = document.getElementById("auth-error");
   if (errBox) errBox.classList.add("hidden");
