@@ -255,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
   checkAuthStatus();
 
   // Search input
-  document.getElementById("search-input").addEventListener("input", (e) => {
+  document.getElementById("search-input")?.addEventListener("input", (e) => {
     searchQuery = e.target.value;
     renderGrid();
   });
@@ -275,9 +275,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Modals close buttons
-  document.getElementById("modal-close").addEventListener("click", closeModal);
-  document.getElementById("auth-modal-close").addEventListener("click", closeAuthModal);
-  document.getElementById("auth-btn").addEventListener("click", openAuthModal);
+  document.getElementById("modal-close")?.addEventListener("click", closeModal);
+  document.getElementById("auth-modal-close")?.addEventListener("click", closeAuthModal);
+  document.getElementById("auth-btn")?.addEventListener("click", openAuthModal);
 
   document.getElementById("logout-btn")?.addEventListener("click", () => {
     localStorage.removeItem("radtracker_token");
