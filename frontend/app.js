@@ -278,10 +278,6 @@ document.addEventListener("DOMContentLoaded", () => {
     checkAuthStatus();
   });
 
-  // Auth Tabs
-  document.getElementById("tab-login").addEventListener("click", showLoginTab);
-  document.getElementById("tab-register").addEventListener("click", showRegisterTab);
-
   // Helper to extract Telegram WebApp User
   function getTgUserData() {
     const tgUser = tgApp?.initDataUnsafe?.user || {};
@@ -312,10 +308,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         showAuthError(data.detail || "Giriş başarısız.");
       }
-    } catch (err) {
-      showAuthError("Bağlantı hatası oluştu.");
-    }
-  });
     } catch (err) {
       showAuthError("Bağlantı hatası oluştu.");
     }
