@@ -121,8 +121,14 @@
       </div>
     </section>
 
-    <!-- Filter & Search Controls -->
+    <!-- Filter, View Mode Toggle & Search Controls -->
     <section class="max-w-7xl mx-auto px-4 py-2 flex flex-col md:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2 w-full md:w-auto">
+        <!-- View Mode Switcher -->
+        <button id="view-card-btn" class="px-3 py-2 text-xs font-bold rounded-xl bg-cyan-500 text-white shadow transition-all">🎴 Kart Görünümü</button>
+        <button id="view-kroki-btn" class="px-3 py-2 text-xs font-bold rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700">🗺️ Kroki Yerleşim Planı</button>
+      </div>
+
       <!-- Search Bar -->
       <div class="relative w-full md:w-72">
         <input type="text" id="search-input" placeholder="PC adı, asistan veya IP ara..." class="w-full bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-cyan-500 transition-colors">
@@ -145,9 +151,70 @@
     </section>
 
     <!-- Real-Time Computer Card Grid -->
-    <main class="max-w-7xl mx-auto px-4 py-4">
+    <main id="pc-grid-container" class="max-w-7xl mx-auto px-4 py-4">
       <div id="pc-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <!-- Computer Cards rendered dynamically by app.js -->
+      </div>
+    </main>
+
+    <!-- Interactive PACS Kroki Floor Map View -->
+    <main id="kroki-container" class="max-w-7xl mx-auto px-4 py-4 hidden">
+      <div class="kroki-wrapper">
+        <div class="sol-panel">
+          <div class="pacs-blok blok-teal-sag">
+            <div class="bos-ws"></div><div class="ws" id="ws-t-07" title="Cassiopeia-β">7</div>
+            <div class="ws" id="ws-t-05" title="Cassiopeia-α">5</div><div class="ws" id="ws-t-06" title="Cassiopeia-β">6</div>
+            <div class="bos-ws"></div><div class="ws" id="ws-t-04" title="Orion α">4</div>
+            <div class="bos-ws"></div><div class="ws" id="ws-t-03" title="Orion β">3</div>
+            <div class="ws" id="ws-t-01" title="Orion γ">1</div><div class="ws" id="ws-t-02" title="Orion δ">2</div>
+          </div>
+
+          <div class="pacs-blok blok-teal-sol">
+            <div class="ws" id="ws-t-09" title="Orion ε">9</div><div class="ws" id="ws-t-08" title="Orion ζ">8</div>
+            <div class="ws" id="ws-t-10" title="Orion η">10</div><div class="ws" id="ws-t-11" title="Orion θ">11</div>
+          </div>
+
+          <div class="pacs-blok blok-pink">
+            <div class="ws" id="ws-pi-01" title="Andromeda α">1</div>
+          </div>
+
+          <div class="koridor-1">Koridor 1</div>
+
+          <div class="pacs-blok blok-blue">
+            <div class="ws" id="ws-b-01" title="Andromeda β">1</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-10" title="Andromeda θ">10</div>
+            <div class="ws" id="ws-b-02" title="Andromeda γ">2</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-09" title="Andromeda η">9</div>
+            <div class="ws" id="ws-b-03" title="Andromeda δ">3</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-08" title="Andromeda ζ">8</div>
+            <div class="ws" id="ws-b-04" title="Andromeda ε">4</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-07" title="Lyra α">7</div>
+            <div class="ws" id="ws-b-05" title="Lyra β">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-06" title="Lyra γ">6</div>
+          </div>
+        </div>
+
+        <div class="ana-koridor">
+          Ana<br>Koridor
+        </div>
+
+        <div class="sag-panel">
+          <div class="pacs-blok blok-yellow">
+            <div class="ws" id="ws-y-05" title="Vega α">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-04" title="Vega ε">4</div>
+            <div class="ws" id="ws-y-06" title="Vega ζ">6</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-03" title="Vega η">3</div>
+            <div class="ws" id="ws-y-07" title="Vega θ">7</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-02" title="Vega-ι">2</div>
+            <div class="ws" id="ws-y-08" title="Vega-κ">8</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-01" title="Vega-λ">1</div>
+          </div>
+
+          <div class="pacs-blok blok-purple">
+            <div class="ws" id="ws-p-05" title="Cygnus-α">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-04" title="Cygnus-β">4</div>
+            <div class="ws" id="ws-p-06" title="Cygnus-γ">6</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-03" title="Cygnus-δ">3</div>
+            <div class="ws" id="ws-p-07" title="Cygnus-ε">7</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-02" title="Cygnus-ζ">2</div>
+            <div class="ws" id="ws-p-08" title="Cygnus-η">8</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-01" title="Cygnus-θ">1</div>
+          </div>
+
+          <div class="koridor-2">Koridor 2</div>
+
+          <div class="pacs-blok blok-peach">
+            <div class="bos-ws"></div><div class="ws" id="ws-pe-03" title="Perseus - γ">3</div>
+            <div class="ws" id="ws-pe-01" title="Perseus - α">1</div><div class="ws" id="ws-pe-02" title="Perseus - β">2</div>
+          </div>
+        </div>
       </div>
     </main>
   </div>

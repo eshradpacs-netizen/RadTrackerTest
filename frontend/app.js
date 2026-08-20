@@ -202,9 +202,78 @@ function closeModal() {
   document.getElementById("detail-modal").classList.remove("flex");
 }
 
+const KROKI_MAP = {
+  'ws-t-05': 'Cassiopeia-α',
+  'ws-t-07': 'Cassiopeia-β',
+  'ws-t-06': 'Cassiopeia-β',
+  'ws-t-04': 'Orion α',
+  'ws-t-03': 'Orion β',
+  'ws-t-01': 'Orion γ',
+  'ws-t-02': 'Orion δ',
+  'ws-t-09': 'Orion ε',
+  'ws-t-08': 'Orion ζ',
+  'ws-t-10': 'Orion η',
+  'ws-t-11': 'Orion θ',
+  'ws-pi-01': 'Andromeda α',
+  'ws-b-01': 'Andromeda β',
+  'ws-b-02': 'Andromeda γ',
+  'ws-b-03': 'Andromeda δ',
+  'ws-b-04': 'Andromeda ε',
+  'ws-b-08': 'Andromeda ζ',
+  'ws-b-09': 'Andromeda η',
+  'ws-b-10': 'Andromeda θ',
+  'ws-b-07': 'Lyra α',
+  'ws-b-05': 'Lyra β',
+  'ws-b-06': 'Lyra γ',
+  'ws-y-05': 'Vega α',
+  'ws-y-04': 'Vega ε',
+  'ws-y-06': 'Vega ζ',
+  'ws-y-03': 'Vega η',
+  'ws-y-07': 'Vega θ',
+  'ws-y-02': 'Vega-ι',
+  'ws-y-08': 'Vega-κ',
+  'ws-y-01': 'Vega-λ',
+  'ws-p-05': 'Cygnus-α',
+  'ws-p-04': 'Cygnus-β',
+  'ws-p-06': 'Cygnus-γ',
+  'ws-p-03': 'Cygnus-δ',
+  'ws-p-07': 'Cygnus-ε',
+  'ws-p-02': 'Cygnus-ζ',
+  'ws-p-08': 'Cygnus-η',
+  'ws-p-01': 'Cygnus-θ',
+  'ws-pe-01': 'Perseus - α',
+  'ws-pe-02': 'Perseus - β',
+  'ws-pe-03': 'Perseus - γ'
+};
+
+function updateKrokiColors() {
+  Object.keys(KROKI_MAP).forEach(wsId => {
+    const el = document.getElementById(wsId);
+    if (!el) return;
+
+    const friendly = KROKI_MAP[wsId];
+    const pc = pcs.find(p => p.friendlyName === friendly || p.hostname === friendly);
+
+    el.classList.remove('ws-idle', 'ws-active', 'ws-lunch-break', 'ws-offline');
+
+    if (pc) {
+      const st = pc.status || 'offline';
+      if (st === 'idle') el.classList.add('ws-idle');
+      else if (st === 'active') el.classList.add('ws-active');
+      else if (st === 'lunch-break') el.classList.add('ws-lunch-break');
+      else el.classList.add('ws-offline');
+
+      el.onclick = () => openModal(pc);
+    } else {
+      el.classList.add('ws-offline');
+    }
+  });
+}
+
 function renderAll() {
   renderStats();
   renderGrid();
+  updateKrokiColors();
 }
 
 // Auth & Verification Modal Handlers
@@ -265,6 +334,22 @@ function showAuthError(msg) {
 document.addEventListener("DOMContentLoaded", () => {
   connectWebSocket();
   checkAuthStatus();
+
+  // View mode switcher (Kart vs Kroki Planı)
+  document.getElementById("view-card-btn")?.addEventListener("click", () => {
+    document.getElementById("pc-grid-container")?.classList.remove("hidden");
+    document.getElementById("kroki-container")?.classList.add("hidden");
+    document.getElementById("view-card-btn").className = "px-3 py-2 text-xs font-bold rounded-xl bg-cyan-500 text-white shadow transition-all";
+    document.getElementById("view-kroki-btn").className = "px-3 py-2 text-xs font-bold rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700";
+  });
+
+  document.getElementById("view-kroki-btn")?.addEventListener("click", () => {
+    document.getElementById("kroki-container")?.classList.remove("hidden");
+    document.getElementById("pc-grid-container")?.classList.add("hidden");
+    document.getElementById("view-kroki-btn").className = "px-3 py-2 text-xs font-bold rounded-xl bg-cyan-500 text-white shadow transition-all";
+    document.getElementById("view-card-btn").className = "px-3 py-2 text-xs font-bold rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700";
+    updateKrokiColors();
+  });
 
   // Search input
   document.getElementById("search-input")?.addEventListener("input", (e) => {
