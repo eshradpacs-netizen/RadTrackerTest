@@ -12,7 +12,7 @@ from email.mime.multipart import MIMEMultipart
 logger = logging.getLogger("email_service")
 
 def send_verification_email(to_email: str, code: str) -> bool:
-    """Sends a 6-digit verification code to the target email address via SMTP."""
+    """Sends a 6-digit verification code to the target email address via SMTP with dual-port fallback."""
     smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
     smtp_user = os.getenv("SMTP_USER", "").strip()
@@ -51,25 +51,31 @@ def send_verification_email(to_email: str, code: str) -> bool:
     </html>
     """
 
-    try:
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = subject
-        msg["From"] = f"RadTracker <{smtp_from}>"
-        msg["To"] = to_email
-        msg.attach(MIMEText(html_content, "html", "utf-8"))
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = subject
+    msg["From"] = f"RadTracker <{smtp_from}>"
+    msg["To"] = to_email
+    msg.attach(MIMEText(html_content, "html", "utf-8"))
 
-        if smtp_port == 465:
-            with smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=15) as server:
-                server.login(smtp_user, smtp_password)
-                server.sendmail(smtp_from, [to_email], msg.as_string())
-        else:
-            with smtplib.SMTP(smtp_server, smtp_port, timeout=15) as server:
-                server.starttls()
-                server.login(smtp_user, smtp_password)
-                server.sendmail(smtp_from, [to_email], msg.as_string())
-            
-        logger.info(f"Verification email successfully sent to {to_email}")
-        return True
-    except Exception as e:
-        logger.error(f"Failed to send verification email to {to_email}: {e}")
-        return False
+    # Try configured port first, then fallback port (465 SSL vs 587 TLS)
+    ports_to_try = [smtp_port, 465 if smtp_port != 465 else 587]
+    for port in ports_to_try:
+        try:
+            logger.info(f"Attempting SMTP connection to {smtp_server}:{port}...")
+            if port == 465:
+                with smtplib.SMTP_SSL(smtp_server, port, timeout=12) as server:
+                    server.login(smtp_user, smtp_password)
+                    server.sendmail(smtp_from, [to_email], msg.as_string())
+            else:
+                with smtplib.SMTP(smtp_server, port, timeout=12) as server:
+                    server.starttls()
+                    server.login(smtp_user, smtp_password)
+                    server.sendmail(smtp_from, [to_email], msg.as_string())
+                
+            logger.info(f"Verification email successfully sent to {to_email} via port {port}!")
+            return True
+        except Exception as e:
+            logger.warning(f"SMTP connection to {smtp_server}:{port} failed: {e}")
+
+    logger.error(f"All SMTP port attempts (587 & 465) failed for {to_email}.")
+    return False
