@@ -16,14 +16,19 @@ class HeartbeatPayload(BaseModel):
 class UserRegister(BaseModel):
     email: str
     password: str
+    telegram_id: Optional[str] = ""
+    telegram_username: Optional[str] = ""
 
 class UserVerify(BaseModel):
     email: str
     code: str
+    telegram_id: Optional[str] = ""
 
 class UserLogin(BaseModel):
     email: str
     password: str
+    telegram_id: Optional[str] = ""
+    telegram_username: Optional[str] = ""
 
 class MetadataUpdate(BaseModel):
     id: Optional[str] = ""

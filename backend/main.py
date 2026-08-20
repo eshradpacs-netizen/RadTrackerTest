@@ -147,6 +147,8 @@ import email_service
 @app.post("/api/register")
 async def register(payload: UserRegister):
     email = payload.email.lower().strip()
+    tg_id = str(payload.telegram_id).strip() if payload.telegram_id else ""
+    tg_user = str(payload.telegram_username).strip() if payload.telegram_username else ""
     
     # 1. Enforce Whitelist check: Email MUST exist in allowed_emails list!
     allowed_list = db.state.get("allowed_emails", [])
@@ -157,6 +159,15 @@ async def register(payload: UserRegister):
         )
         
     existing_user = db.state["users"].get(email)
+    
+    # Check Telegram Identity Locking
+    if existing_user and existing_user.get("telegram_id"):
+        if tg_id and existing_user.get("telegram_id") != tg_id:
+            raise HTTPException(
+                status_code=403, 
+                detail="Bu e-posta adresi başka bir Telegram hesabına eşlenmiştir! Yetkisiz işlem engellendi."
+            )
+
     if existing_user and existing_user.get("is_verified", False):
         raise HTTPException(status_code=400, detail="Bu e-posta adresi zaten kayıtlı ve doğrulanmış. Lütfen Giriş Yapın.")
         
@@ -168,13 +179,14 @@ async def register(payload: UserRegister):
         "password_hash": pwd_hash,
         "is_verified": False,
         "verification_code": code,
+        "telegram_id": tg_id,
+        "telegram_username": tg_user,
         "created_at": time.time()
     }
     db.state["users"][email] = user_record
     await db.sync_to_telegram()
-    await db.log_event_to_channel("👤 Yeni Kullanıcı Kaydı", f"E-Posta: <code>{email}</code>\nDoğrulama Kodu: <b>{code}</b>")
+    await db.log_event_to_channel("👤 Yeni Kullanıcı Kaydı", f"E-Posta: <code>{email}</code>\nDoğrulama Kodu: <b>{code}</b>\nTelegram: @{tg_user} ({tg_id})")
     
-    # Attempt to send verification code via SMTP email
     email_sent = email_service.send_verification_email(email, code)
     
     res = {
@@ -193,10 +205,18 @@ async def verify_code(payload: UserVerify):
     user = db.state["users"].get(email)
     if not user:
         raise HTTPException(status_code=404, detail="Kullanıcı bulunamadı.")
+        
+    # Check Telegram Identity Locking on Verify
+    if user.get("telegram_id") and payload.telegram_id:
+        if str(user.get("telegram_id")) != str(payload.telegram_id):
+            raise HTTPException(status_code=403, detail="Bu e-posta adresi başka bir Telegram hesabına kilitlenmiştir!")
+
     if user.get("verification_code") != payload.code.strip():
         raise HTTPException(status_code=400, detail="Geçersiz doğrulama kodu.")
         
     user["is_verified"] = True
+    if payload.telegram_id and not user.get("telegram_id"):
+        user["telegram_id"] = str(payload.telegram_id)
     await db.sync_to_telegram()
     
     token = auth.create_access_token({"sub": email})
@@ -208,6 +228,17 @@ async def login(payload: UserLogin):
     user = db.state["users"].get(email)
     if not user or not auth.verify_password(payload.password, user.get("password_hash", "")):
         raise HTTPException(status_code=401, detail="Hatalı e-posta veya şifre.")
+        
+    # Enforce Telegram Identity Binding Security
+    if user.get("telegram_id") and payload.telegram_id:
+        if str(user.get("telegram_id")) != str(payload.telegram_id):
+            raise HTTPException(
+                status_code=403, 
+                detail="Bu e-posta adresi başka bir Telegram hesabına eşlenmiştir! Yetkisiz giriş engellendi."
+            )
+    elif payload.telegram_id and not user.get("telegram_id"):
+        user["telegram_id"] = str(payload.telegram_id)
+        await db.sync_to_telegram()
         
     # If user is unverified, generate fresh code and return requires_verification
     if not user.get("is_verified", False):

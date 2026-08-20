@@ -296,16 +296,27 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("tab-login").addEventListener("click", showLoginTab);
   document.getElementById("tab-register").addEventListener("click", showRegisterTab);
 
+  // Helper to extract Telegram WebApp User
+  function getTgUserData() {
+    const tgUser = tgApp?.initDataUnsafe?.user || {};
+    return {
+      telegram_id: tgUser.id ? String(tgUser.id) : "",
+      telegram_username: tgUser.username ? String(tgUser.username) : ""
+    };
+  }
+
   // Login Submit
   document.getElementById("form-login").addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = document.getElementById("login-email").value;
     const password = document.getElementById("login-password").value;
+    const tgData = getTgUserData();
+
     try {
       const resp = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, ...tgData })
       });
       const data = await resp.json();
       if (resp.ok && data.success) {
@@ -331,11 +342,13 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     pendingEmail = document.getElementById("reg-email").value;
     const password = document.getElementById("reg-password").value;
+    const tgData = getTgUserData();
+
     try {
       const resp = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: pendingEmail, password })
+        body: JSON.stringify({ email: pendingEmail, password, ...tgData })
       });
       const data = await resp.json();
       if (resp.ok && data.success) {
@@ -352,11 +365,13 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("form-verify").addEventListener("submit", async (e) => {
     e.preventDefault();
     const code = document.getElementById("verify-code").value;
+    const tgData = getTgUserData();
+
     try {
       const resp = await fetch("/api/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: pendingEmail, code })
+        body: JSON.stringify({ email: pendingEmail, code, ...tgData })
       });
       const data = await resp.json();
       if (resp.ok && data.success) {
