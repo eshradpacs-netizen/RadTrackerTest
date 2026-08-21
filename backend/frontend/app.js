@@ -328,12 +328,22 @@ function showPCLocationOnKroki(pcId) {
   document.getElementById("pc-grid-container")?.classList.add("hidden");
   document.getElementById("kroki-container")?.classList.remove("hidden");
 
-  // 2. Exact Target Kroki Layout Matching for this PC
-  let targetLayout = "kroki-pacs-raporlama";
+  // 2. Exact Target Kroki Room Layout Matching
+  let targetLayout = "kroki-pacs-oda-1";
   const name = (pc.friendlyName || "").toLowerCase();
   const room = (pc.room || "").toLowerCase();
 
-  if (name.includes("kvc") || room.includes("kvc")) {
+  if (room.includes("oda 1") || name.includes("oda 1 pc")) {
+    targetLayout = "kroki-pacs-oda-1";
+  } else if (room.includes("oda 2") || name.includes("oda 2 pc")) {
+    targetLayout = "kroki-pacs-oda-2";
+  } else if (room.includes("oda 3") || name.includes("oda 3 pc")) {
+    targetLayout = "kroki-pacs-oda-3";
+  } else if (room.includes("oda 4") || name.includes("oda 4 pc")) {
+    targetLayout = "kroki-pacs-oda-4";
+  } else if (room.includes("oda 5") || name.includes("oda 5 pc")) {
+    targetLayout = "kroki-pacs-oda-5";
+  } else if (name.includes("kvc") || room.includes("kvc")) {
     targetLayout = "kroki-cassiopeia";
   } else if (name.includes("kadın doğum toplantı") || room.includes("toplantı")) {
     targetLayout = "kroki-kadin-dogum";

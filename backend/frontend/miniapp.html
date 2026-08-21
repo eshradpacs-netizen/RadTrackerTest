@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=40000">
+  <link rel="stylesheet" href="styles.css?v=50000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative">
 
@@ -170,27 +170,294 @@
         <!-- Computer Cards rendered dynamically by app.js -->
       </div>
     
-      <!-- Layout 3B: Kadın Doğum PACS Odası -->
+      <!-- Layout 1: Genel PACS Oda 1 -->
+      <div class="kroki-view-wrapper" id="kroki-pacs-oda-1">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-4xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-bold">
+            🏛️ Genel PACS Oda 1 Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı (8 Çalışma İstasyonu)</p>
+          <div class="grid grid-cols-4 gap-5 max-w-3xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="ws-y-01" title="Genel PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 1</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-02" title="Genel PACS Oda 1 PC 2">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">2</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 2</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 2</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-03" title="Genel PACS Oda 1 PC 3">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">3</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 3</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 3</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-04" title="Genel PACS Oda 1 PC 4">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">4</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 4</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 4</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-05" title="Genel PACS Oda 1 PC 5">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">5</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 5</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 5</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-06" title="Genel PACS Oda 1 PC 6">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">6</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 6</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 6</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-07" title="Genel PACS Oda 1 PC 7">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">7</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 7</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 7</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-08" title="Genel PACS Oda 1 PC 8">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">8</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 8</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 2: Genel PACS Oda 2 -->
+      <div class="kroki-view-wrapper hidden" id="kroki-pacs-oda-2">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-4xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-sm font-bold">
+            🏛️ Genel PACS Oda 2 Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı (8 Çalışma İstasyonu)</p>
+          <div class="grid grid-cols-4 gap-5 max-w-3xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="ws-p-01" title="Genel PACS Oda 2 PC 1">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 1</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-02" title="Genel PACS Oda 2 PC 2">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">2</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 2</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 2</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-03" title="Genel PACS Oda 2 PC 3">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">3</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 3</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 3</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-04" title="Genel PACS Oda 2 PC 4">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">4</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 4</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 4</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-05" title="Genel PACS Oda 2 PC 5">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">5</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 5</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 5</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-06" title="Genel PACS Oda 2 PC 6">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">6</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 6</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 6</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-07" title="Genel PACS Oda 2 PC 7">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">7</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 7</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 7</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-08" title="Genel PACS Oda 2 PC 8">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">8</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 8</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 3: Genel PACS Oda 3 -->
+      <div class="kroki-view-wrapper hidden" id="kroki-pacs-oda-3">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-4xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold">
+            🏛️ Genel PACS Oda 3 Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı (11 Çalışma İstasyonu)</p>
+          <div class="grid grid-cols-4 gap-5 max-w-3xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="ws-t-01" title="Genel PACS Oda 3 PC 1"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">1</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 1</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-02" title="Genel PACS Oda 3 PC 2"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">2</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 2</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-03" title="Genel PACS Oda 3 PC 3"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">3</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 3</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-04" title="Genel PACS Oda 3 PC 4"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">4</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 4</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-05" title="Genel PACS Oda 3 PC 5"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">5</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 5</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-06" title="Genel PACS Oda 3 PC 6"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">6</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 6</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-07" title="Genel PACS Oda 3 PC 7"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">7</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 7</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-08" title="Genel PACS Oda 3 PC 8"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">8</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 8</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-09" title="Genel PACS Oda 3 PC 9"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">9</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 9</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-10" title="Genel PACS Oda 3 PC 10"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">10</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 10</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-11" title="Genel PACS Oda 3 PC 11"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">11</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 11</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 4: Genel PACS Oda 4 -->
+      <div class="kroki-view-wrapper hidden" id="kroki-pacs-oda-4">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-4xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-bold">
+            🏛️ Genel PACS Oda 4 Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı (10 Çalışma İstasyonu)</p>
+          <div class="grid grid-cols-4 gap-5 max-w-3xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="ws-b-01" title="Genel PACS Oda 4 PC 1"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">1</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 1</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-02" title="Genel PACS Oda 4 PC 2"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">2</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 2</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-03" title="Genel PACS Oda 4 PC 3"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">3</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 3</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-04" title="Genel PACS Oda 4 PC 4"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">4</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 4</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-05" title="Genel PACS Oda 4 PC 5"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">5</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 5</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-06" title="Genel PACS Oda 4 PC 6"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">6</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 6</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-07" title="Genel PACS Oda 4 PC 7"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">7</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 7</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-08" title="Genel PACS Oda 4 PC 8"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">8</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 8</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-09" title="Genel PACS Oda 4 PC 9"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">9</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 9</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-10" title="Genel PACS Oda 4 PC 10"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">10</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 10</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 5: Genel PACS Oda 5 -->
+      <div class="kroki-view-wrapper hidden" id="kroki-pacs-oda-5">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-2xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-400 text-sm font-bold">
+            🏛️ Genel PACS Oda 5 Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı</p>
+          <div class="flex justify-center items-center py-4">
+            <div class="ws dept-kroki-card max-w-[240px]" id="ws-pi-01" title="Genel PACS Oda 5 PC 1">
+              <div class="text-3xl font-black mb-1 text-pink-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Genel PACS Oda 5 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Raporlama Masası</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 6: KVC PACS Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-cassiopeia">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-2xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-sm font-bold">
+            ❤️ KVC PACS Odası Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Kalp Damar Cerrahisi PACS Raporlama Odası Masa Plânı</p>
+          <div class="grid grid-cols-2 gap-6 max-w-md mx-auto py-4">
+            <div class="ws dept-kroki-card" id="Cassiopeia-β" title="KVC PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-cyan-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">KVC PACS Oda 1 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Sol Masa</span>
+            </div>
+            <div class="ws dept-kroki-card" id="Cassiopeia-α" title="KVC PACS Oda 1 PC 2">
+              <div class="text-3xl font-black mb-1 text-cyan-300 pointer-events-none">2</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">KVC PACS Oda 1 PC 2</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Sağ Masa</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 7: Kadın Doğum PACS Odası -->
       <div class="kroki-view-wrapper hidden" id="kroki-kadin-dogum-pacs">
-        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
-          <h4 class="text-lg font-bold text-pink-400 flex items-center justify-center gap-2">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-3xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-400 text-sm font-bold">
             🤰 Kadın Doğum PACS Odası Krokisi
-          </h4>
-          <div class="grid grid-cols-3 gap-6 max-w-md mx-auto py-4">
-            <div class="ws p-5 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-pink-400 cursor-pointer flex-col" id="KD-PACS-01" title="Kadın Doğum PACS Oda 1 PC 1">
-              <div class="text-xl font-bold mb-1 text-pink-300">1</div>
-              <span class="text-xs text-slate-200 font-semibold block">Kadın Doğum PACS Oda 1 PC 1</span>
-              <span class="text-[10px] text-slate-400">Masa 1</span>
+          </div>
+          <p class="text-xs text-slate-400">Kadın Hastalıkları ve Doğum PACS Raporlama Odası Masa Plânı</p>
+          <div class="grid grid-cols-3 gap-5 max-w-xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="KD-PACS-01" title="Kadın Doğum PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-pink-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Kadın Doğum PACS Oda 1 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 1</span>
             </div>
-            <div class="ws p-5 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-pink-400 cursor-pointer flex-col" id="KD-PACS-02" title="Kadın Doğum PACS Oda 1 PC 2">
-              <div class="text-xl font-bold mb-1 text-pink-300">2</div>
-              <span class="text-xs text-slate-200 font-semibold block">Kadın Doğum PACS Oda 1 PC 2</span>
-              <span class="text-[10px] text-slate-400">Masa 2</span>
+            <div class="ws dept-kroki-card" id="KD-PACS-02" title="Kadın Doğum PACS Oda 1 PC 2">
+              <div class="text-3xl font-black mb-1 text-pink-300 pointer-events-none">2</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Kadın Doğum PACS Oda 1 PC 2</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 2</span>
             </div>
-            <div class="ws p-5 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-pink-400 cursor-pointer flex-col" id="KD-PACS-03" title="Kadın Doğum PACS Oda 1 PC 3">
-              <div class="text-xl font-bold mb-1 text-pink-300">3</div>
-              <span class="text-xs text-slate-200 font-semibold block">Kadın Doğum PACS Oda 1 PC 3</span>
-              <span class="text-[10px] text-slate-400">Masa 3</span>
+            <div class="ws dept-kroki-card" id="KD-PACS-03" title="Kadın Doğum PACS Oda 1 PC 3">
+              <div class="text-3xl font-black mb-1 text-pink-300 pointer-events-none">3</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Kadın Doğum PACS Oda 1 PC 3</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 8: Kadın Doğum Toplantı Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-kadin-dogum">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-bold">
+            🤰 Kadın Doğum Toplantı Odası Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Poliklinik ve Seminer Toplantı Masası PACS Bilgisayarı</p>
+          <div class="flex justify-center items-center py-4">
+            <div class="ws dept-kroki-card max-w-[240px]" id="Aquila-α" title="Kadın Doğum Toplantı Odası PC 1">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Kadın Doğum Toplantı Odası PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Toplantı Masası</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 9: Nöroloji PACS Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-noroloji">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-3xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-sm font-bold">
+            🧠 Nöroloji PACS Odası Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Nöroradyoloji PACS Raporlama Odası Masa Plânı</p>
+          <div class="grid grid-cols-3 gap-5 max-w-xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="Perseus-β" title="Nöroloji PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-teal-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Nöroloji PACS Oda 1 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Kapıya Yakın</span>
+            </div>
+            <div class="ws dept-kroki-card" id="Perseus-α" title="Nöroloji PACS Oda 1 PC 2">
+              <div class="text-3xl font-black mb-1 text-teal-300 pointer-events-none">2</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Nöroloji PACS Oda 1 PC 2</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Üst Duvar Sol</span>
+            </div>
+            <div class="ws dept-kroki-card" id="Perseus-γ" title="Nöroloji PACS Oda 1 PC 3">
+              <div class="text-3xl font-black mb-1 text-teal-300 pointer-events-none">3</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Nöroloji PACS Oda 1 PC 3</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Alt Duvar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 10: Onkoloji PACS Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-onkoloji">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-bold">
+            🎗️ Onkoloji PACS Odası Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Radyasyon Onkolojisi PACS Raporlama Odası Masa Plânı</p>
+          <div class="flex justify-center items-center py-4">
+            <div class="ws dept-kroki-card max-w-[240px]" id="ws-onkoloji-01" title="Onkoloji PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-yellow-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Onkoloji PACS Oda 1 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Raporlama Masası</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 11: FTR PACS Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-ftr">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-sm font-bold">
+            🦾 FTR PACS Odası Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Fizik Tedavi ve Rehabilitasyon PACS Raporlama Odası Masa Plânı</p>
+          <div class="flex justify-center items-center py-4">
+            <div class="ws dept-kroki-card max-w-[240px]" id="ws-ftr-01" title="FTR PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-indigo-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">FTR PACS Oda 1 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Raporlama Masası</span>
             </div>
           </div>
         </div>
@@ -208,203 +475,330 @@
 
         <!-- Kroki Layout Dropdown / Button Switcher -->
         <div class="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs">
-          <button class="kroki-layout-btn active px-3.5 py-2 rounded-xl font-bold bg-cyan-500 text-white shadow transition-all border border-cyan-400/30" data-layout="kroki-pacs-raporlama">
-            🏛️ Genel Kat Krokisi
+          <button class="kroki-layout-btn active px-3.5 py-2 rounded-xl font-bold bg-cyan-500 text-white shadow transition-all border border-cyan-400/30" data-layout="kroki-pacs-oda-1">
+            🏛️ Genel Oda 1
+          </button>
+          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-pacs-oda-2">
+            🏛️ Genel Oda 2
+          </button>
+          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-pacs-oda-3">
+            🏛️ Genel Oda 3
+          </button>
+          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-pacs-oda-4">
+            🏛️ Genel Oda 4
+          </button>
+          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-pacs-oda-5">
+            🏛️ Genel Oda 5
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-cassiopeia">
-            ❤️ KVC PACS Odası
+            ❤️ KVC PACS
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-kadin-dogum-pacs">
-            🤰 Kadın Doğum PACS Odası
+            🤰 Kadın Doğum PACS
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-kadin-dogum">
-            🤰 Kadın Doğum Toplantı Odası
+            🤰 Kadın Doğum Toplantı
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-noroloji">
-            🧠 Nöroloji PACS Odası
+            🧠 Nöroloji PACS
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-onkoloji">
-            🎗️ Onkoloji PACS Odası
+            🎗️ Onkoloji PACS
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-ftr">
-            🦾 FTR PACS Odası
+            🦾 FTR PACS
           </button>
         </div>
       </div>
 
-      <!-- Layout 1: Genel PACS Kat Krokisi -->
-      <div class="kroki-view-wrapper" id="kroki-pacs-raporlama">
-        <div class="kroki-wrapper">
-          <div class="sol-panel">
-            <div class="pacs-blok blok-teal-sag">
-              <div class="blok-label text-cyan-400 font-bold mb-1">Oda 3</div>
-              <div class="bos-ws"></div><div class="ws" id="ws-t-07" title="Genel PACS Oda 3 PC 7">7</div>
-              <div class="ws" id="ws-t-05" title="Genel PACS Oda 3 PC 5">5</div><div class="ws" id="ws-t-06" title="Genel PACS Oda 3 PC 6">6</div>
-              <div class="bos-ws"></div><div class="ws" id="ws-t-04" title="Genel PACS Oda 3 PC 4">4</div>
-              <div class="bos-ws"></div><div class="ws" id="ws-t-03" title="Genel PACS Oda 3 PC 3">3</div>
-              <div class="ws" id="ws-t-01" title="Genel PACS Oda 3 PC 1">1</div><div class="ws" id="ws-t-02" title="Genel PACS Oda 3 PC 2">2</div>
-            </div>
-
-            <div class="pacs-blok blok-teal-sol">
-              <div class="blok-label text-cyan-400 font-bold mb-1">Oda 3</div>
-              <div class="ws" id="ws-t-09" title="Genel PACS Oda 3 PC 9">9</div><div class="ws" id="ws-t-08" title="Genel PACS Oda 3 PC 8">8</div>
-              <div class="ws" id="ws-t-10" title="Genel PACS Oda 3 PC 10">10</div><div class="ws" id="ws-t-11" title="Genel PACS Oda 3 PC 11">11</div>
-            </div>
-
-            <div class="pacs-blok blok-pink">
-              <div class="blok-label text-pink-400 font-bold mb-1">Oda 6</div>
-              <div class="ws" id="ws-pi-01" title="Genel PACS Oda 5 PC 1">1</div>
-            </div>
-
-            <div class="koridor-1">Koridor 1</div>
-
-            <div class="pacs-blok blok-blue">
-              <div class="blok-label text-blue-400 font-bold mb-1">Oda 4</div>
-              <div class="ws" id="ws-b-01" title="Genel PACS Oda 4 PC 1">1</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-10" title="Genel PACS Oda 4 PC 10">10</div>
-              <div class="ws" id="ws-b-02" title="Genel PACS Oda 4 PC 2">2</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-09" title="Genel PACS Oda 4 PC 9">9</div>
-              <div class="ws" id="ws-b-03" title="Genel PACS Oda 4 PC 3">3</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-08" title="Genel PACS Oda 4 PC 8">8</div>
-              <div class="ws" id="ws-b-04" title="Genel PACS Oda 4 PC 4">4</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-07" title="Genel PACS Oda 4 PC 7">7</div>
-              <div class="ws" id="ws-b-05" title="Genel PACS Oda 4 PC 5">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-06" title="Genel PACS Oda 4 PC 6">6</div>
-            </div>
+      <!-- Layout 1: Genel PACS Oda 1 -->
+      <div class="kroki-view-wrapper" id="kroki-pacs-oda-1">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-4xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-bold">
+            🏛️ Genel PACS Oda 1 Krokisi
           </div>
-
-          <div class="ana-koridor">
-            Ana<br>Koridor
-          </div>
-
-          <div class="sag-panel">
-            <div class="pacs-blok blok-yellow">
-              <div class="blok-label text-amber-400 font-bold mb-1">Oda 1</div>
-              <div class="ws" id="ws-y-05" title="Genel PACS Oda 1 PC 5">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-04" title="Genel PACS Oda 1 PC 4">4</div>
-              <div class="ws" id="ws-y-06" title="Genel PACS Oda 1 PC 6">6</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-03" title="Genel PACS Oda 1 PC 3">3</div>
-              <div class="ws" id="ws-y-07" title="Genel PACS Oda 1 PC 7">7</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-02" title="Genel PACS Oda 1 PC 2">2</div>
-              <div class="ws" id="ws-y-08" title="Genel PACS Oda 1 PC 8">8</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-01" title="Genel PACS Oda 1 PC 1">1</div>
+          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı (8 Çalışma İstasyonu)</p>
+          <div class="grid grid-cols-4 gap-5 max-w-3xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="ws-y-01" title="Genel PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 1</span>
             </div>
-
-            <div class="pacs-blok blok-purple">
-              <div class="blok-label text-purple-400 font-bold mb-1">Oda 2</div>
-              <div class="ws" id="ws-p-05" title="Genel PACS Oda 2 PC 5">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-04" title="Genel PACS Oda 2 PC 4">4</div>
-              <div class="ws" id="ws-p-06" title="Genel PACS Oda 2 PC 6">6</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-03" title="Genel PACS Oda 2 PC 3">3</div>
-              <div class="ws" id="ws-p-07" title="Genel PACS Oda 2 PC 7">7</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-02" title="Genel PACS Oda 2 PC 2">2</div>
-              <div class="ws" id="ws-p-08" title="Genel PACS Oda 2 PC 8">8</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-01" title="Genel PACS Oda 2 PC 1">1</div>
+            <div class="ws dept-kroki-card" id="ws-y-02" title="Genel PACS Oda 1 PC 2">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">2</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 2</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 2</span>
             </div>
-
-            <div class="koridor-2">Koridor 2</div>
-
-            <div class="pacs-blok blok-pe">
-              <div class="blok-label text-teal-400 font-bold mb-1">Nöroloji</div>
-              <div class="ws" id="ws-pe-01" title="Nöroloji PACS Oda 1 PC 1">1</div>
-              <div class="ws" id="ws-pe-02" title="Nöroloji PACS Oda 1 PC 2">2</div>
-              <div class="ws" id="ws-pe-03" title="Nöroloji PACS Oda 1 PC 3">3</div>
+            <div class="ws dept-kroki-card" id="ws-y-03" title="Genel PACS Oda 1 PC 3">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">3</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 3</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 3</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-04" title="Genel PACS Oda 1 PC 4">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">4</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 4</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 4</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-05" title="Genel PACS Oda 1 PC 5">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">5</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 5</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 5</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-06" title="Genel PACS Oda 1 PC 6">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">6</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 6</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 6</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-07" title="Genel PACS Oda 1 PC 7">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">7</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 7</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 7</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-y-08" title="Genel PACS Oda 1 PC 8">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">8</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 8</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 8</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Layout 2: KVC PACS Odası (Cassiopeia) -->
+      <!-- Layout 2: Genel PACS Oda 2 -->
+      <div class="kroki-view-wrapper hidden" id="kroki-pacs-oda-2">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-4xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-sm font-bold">
+            🏛️ Genel PACS Oda 2 Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı (8 Çalışma İstasyonu)</p>
+          <div class="grid grid-cols-4 gap-5 max-w-3xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="ws-p-01" title="Genel PACS Oda 2 PC 1">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 1</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-02" title="Genel PACS Oda 2 PC 2">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">2</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 2</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 2</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-03" title="Genel PACS Oda 2 PC 3">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">3</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 3</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 3</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-04" title="Genel PACS Oda 2 PC 4">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">4</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 4</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 4</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-05" title="Genel PACS Oda 2 PC 5">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">5</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 5</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 5</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-06" title="Genel PACS Oda 2 PC 6">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">6</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 6</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 6</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-07" title="Genel PACS Oda 2 PC 7">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">7</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 7</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 7</span>
+            </div>
+            <div class="ws dept-kroki-card" id="ws-p-08" title="Genel PACS Oda 2 PC 8">
+              <div class="text-3xl font-black mb-1 text-purple-300 pointer-events-none">8</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 8</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 3: Genel PACS Oda 3 -->
+      <div class="kroki-view-wrapper hidden" id="kroki-pacs-oda-3">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-4xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold">
+            🏛️ Genel PACS Oda 3 Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı (11 Çalışma İstasyonu)</p>
+          <div class="grid grid-cols-4 gap-5 max-w-3xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="ws-t-01" title="Genel PACS Oda 3 PC 1"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">1</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 1</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-02" title="Genel PACS Oda 3 PC 2"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">2</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 2</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-03" title="Genel PACS Oda 3 PC 3"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">3</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 3</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-04" title="Genel PACS Oda 3 PC 4"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">4</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 4</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-05" title="Genel PACS Oda 3 PC 5"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">5</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 5</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-06" title="Genel PACS Oda 3 PC 6"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">6</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 6</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-07" title="Genel PACS Oda 3 PC 7"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">7</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 7</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-08" title="Genel PACS Oda 3 PC 8"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">8</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 8</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-09" title="Genel PACS Oda 3 PC 9"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">9</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 9</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-10" title="Genel PACS Oda 3 PC 10"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">10</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 10</span></div>
+            <div class="ws dept-kroki-card" id="ws-t-11" title="Genel PACS Oda 3 PC 11"><div class="text-3xl font-black text-cyan-300 mb-1 pointer-events-none">11</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 11</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 4: Genel PACS Oda 4 -->
+      <div class="kroki-view-wrapper hidden" id="kroki-pacs-oda-4">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-4xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm font-bold">
+            🏛️ Genel PACS Oda 4 Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı (10 Çalışma İstasyonu)</p>
+          <div class="grid grid-cols-4 gap-5 max-w-3xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="ws-b-01" title="Genel PACS Oda 4 PC 1"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">1</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 1</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-02" title="Genel PACS Oda 4 PC 2"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">2</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 2</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-03" title="Genel PACS Oda 4 PC 3"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">3</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 3</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-04" title="Genel PACS Oda 4 PC 4"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">4</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 4</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-05" title="Genel PACS Oda 4 PC 5"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">5</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 5</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-06" title="Genel PACS Oda 4 PC 6"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">6</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 6</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-07" title="Genel PACS Oda 4 PC 7"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">7</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 7</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-08" title="Genel PACS Oda 4 PC 8"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">8</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 8</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-09" title="Genel PACS Oda 4 PC 9"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">9</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 9</span></div>
+            <div class="ws dept-kroki-card" id="ws-b-10" title="Genel PACS Oda 4 PC 10"><div class="text-3xl font-black text-blue-300 mb-1 pointer-events-none">10</div><span class="text-xs font-bold text-slate-100 pointer-events-none">PC 10</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 5: Genel PACS Oda 5 -->
+      <div class="kroki-view-wrapper hidden" id="kroki-pacs-oda-5">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-2xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-400 text-sm font-bold">
+            🏛️ Genel PACS Oda 5 Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı</p>
+          <div class="flex justify-center items-center py-4">
+            <div class="ws dept-kroki-card max-w-[240px]" id="ws-pi-01" title="Genel PACS Oda 5 PC 1">
+              <div class="text-3xl font-black mb-1 text-pink-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Genel PACS Oda 5 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Raporlama Masası</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 6: KVC PACS Odası -->
       <div class="kroki-view-wrapper hidden" id="kroki-cassiopeia">
-        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
-          <h4 class="text-lg font-bold text-indigo-400 flex items-center justify-center gap-2">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-2xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-sm font-bold">
             ❤️ KVC PACS Odası Krokisi
-          </h4>
-          <div class="flex justify-center items-center gap-8 py-6">
-            <div class="ws p-6 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-cyan-400 cursor-pointer min-w-[120px] flex-col" id="Cassiopeia-β" title="KVC PACS Oda 1 PC 1">1</div>
-              <span class="text-xs text-slate-200 font-semibold block">KVC PACS Oda 1 PC 1</span>
-              <span class="text-[10px] text-slate-400">Sol Masa</span>
-            </div>
-            <div class="ws p-6 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-cyan-400 cursor-pointer min-w-[120px] flex-col" id="Cassiopeia-α" title="KVC PACS Oda 1 PC 2">2</div>
-              <span class="text-xs text-slate-200 font-semibold block">KVC PACS Oda 1 PC 2</span>
-              <span class="text-[10px] text-slate-400">Sağ Masa</span>
-            </div>
           </div>
-        </div>
-      </div>
-        </div>
-      </div>
-
-      <!-- Layout 3: Kadın Doğum Toplantı Odası (Aquila) -->
-      <div class="kroki-view-wrapper hidden" id="kroki-kadin-dogum">
-        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
-          <h4 class="text-lg font-bold text-amber-400 flex items-center justify-center gap-2">
-            🤰 Kadın Doğum Toplantı Odası Krokisi
-          </h4>
-          <div class="flex justify-center items-center py-6">
-            <div class="ws p-6 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-amber-400 cursor-pointer min-w-[160px] flex-col" id="Aquila-α" title="Kadın Doğum Toplantı Odası PC 1">1</div>
-              <span class="text-xs text-slate-200 font-semibold block">Kadın Doğum Toplantı Odası PC 1</span>
-              <span class="text-[10px] text-slate-400">Toplantı Masası</span>
-            </div>
-          </div>
-        </div>
-      </div>
-        </div>
-      </div>
-
-      <!-- Layout 4: Nöroloji PACS Odası (Perseus) -->
-      <div class="kroki-view-wrapper hidden" id="kroki-noroloji">
-        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
-          <h4 class="text-lg font-bold text-teal-400 flex items-center justify-center gap-2">
-            🧠 Nöroloji PACS Odası Krokisi
-          </h4>
+          <p class="text-xs text-slate-400">Kalp Damar Cerrahisi PACS Raporlama Odası Masa Plânı</p>
           <div class="grid grid-cols-2 gap-6 max-w-md mx-auto py-4">
-            <div class="ws p-5 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-teal-400 cursor-pointer flex-col" id="Perseus-β" title="Nöroloji PACS Oda 1 PC 1">1</div>
-              <span class="text-xs text-slate-200 font-semibold block">Nöroloji PACS Oda 1 PC 1</span>
-              <span class="text-[10px] text-slate-400">Üst Duvar Sol</span>
+            <div class="ws dept-kroki-card" id="Cassiopeia-β" title="KVC PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-cyan-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">KVC PACS Oda 1 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Sol Masa</span>
             </div>
-            <div class="ws p-5 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-teal-400 cursor-pointer flex-col" id="Perseus-α" title="Nöroloji PACS Oda 1 PC 2">2</div>
-              <span class="text-xs text-slate-200 font-semibold block">Nöroloji PACS Oda 1 PC 2</span>
-              <span class="text-[10px] text-slate-400">Kapıya Yakın</span>
-            </div>
-            <div class="ws p-5 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-teal-400 cursor-pointer col-span-2 max-w-[220px] mx-auto w-full flex-col" id="Perseus-γ" title="Nöroloji PACS Oda 1 PC 3">3</div>
-              <span class="text-xs text-slate-200 font-semibold block">Nöroloji PACS Oda 1 PC 3</span>
-              <span class="text-[10px] text-slate-400">Alt Duvar</span>
+            <div class="ws dept-kroki-card" id="Cassiopeia-α" title="KVC PACS Oda 1 PC 2">
+              <div class="text-3xl font-black mb-1 text-cyan-300 pointer-events-none">2</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">KVC PACS Oda 1 PC 2</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Sağ Masa</span>
             </div>
           </div>
         </div>
       </div>
-        </div>
-      </div>
 
-      <!-- Layout 5: Onkoloji PACS Odası -->
-      <div class="kroki-view-wrapper hidden" id="kroki-onkoloji">
-        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-4 shadow-2xl">
-          <h4 class="text-lg font-bold text-purple-400 flex items-center justify-center gap-2">
-            🎗️ Onkoloji PACS Odası Krokisi
-          </h4>
-          <p class="text-xs text-slate-400">Onkoloji PACS birimi cihaz durumları anlık takip edilmektedir.</p>
-        </div>
-      </div>
-
-      <!-- Layout 6: FTR PACS Odası -->
-      <div class="kroki-view-wrapper hidden" id="kroki-ftr">
-        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-4 shadow-2xl">
-          <h4 class="text-lg font-bold text-emerald-400 flex items-center justify-center gap-2">
-            🦾 FTR PACS Odası Krokisi
-          </h4>
-          <p class="text-xs text-slate-400">Fizik Tedavi ve Rehabilitasyon PACS birimi takip durumu.</p>
-        </div>
-      </div>
-    
-      <!-- Layout 3B: Kadın Doğum PACS Odası -->
+      <!-- Layout 7: Kadın Doğum PACS Odası -->
       <div class="kroki-view-wrapper hidden" id="kroki-kadin-dogum-pacs">
-        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
-          <h4 class="text-lg font-bold text-pink-400 flex items-center justify-center gap-2">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-3xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-400 text-sm font-bold">
             🤰 Kadın Doğum PACS Odası Krokisi
-          </h4>
-          <div class="grid grid-cols-3 gap-6 max-w-md mx-auto py-4">
-            <div class="ws p-5 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-pink-400 cursor-pointer flex-col" id="KD-PACS-01" title="Kadın Doğum PACS Oda 1 PC 1">
-              <div class="text-xl font-bold mb-1 text-pink-300">1</div>
-              <span class="text-xs text-slate-200 font-semibold block">Kadın Doğum PACS Oda 1 PC 1</span>
-              <span class="text-[10px] text-slate-400">Masa 1</span>
+          </div>
+          <p class="text-xs text-slate-400">Kadın Hastalıkları ve Doğum PACS Raporlama Odası Masa Plânı</p>
+          <div class="grid grid-cols-3 gap-5 max-w-xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="KD-PACS-01" title="Kadın Doğum PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-pink-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Kadın Doğum PACS Oda 1 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 1</span>
             </div>
-            <div class="ws p-5 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-pink-400 cursor-pointer flex-col" id="KD-PACS-02" title="Kadın Doğum PACS Oda 1 PC 2">
-              <div class="text-xl font-bold mb-1 text-pink-300">2</div>
-              <span class="text-xs text-slate-200 font-semibold block">Kadın Doğum PACS Oda 1 PC 2</span>
-              <span class="text-[10px] text-slate-400">Masa 2</span>
+            <div class="ws dept-kroki-card" id="KD-PACS-02" title="Kadın Doğum PACS Oda 1 PC 2">
+              <div class="text-3xl font-black mb-1 text-pink-300 pointer-events-none">2</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Kadın Doğum PACS Oda 1 PC 2</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 2</span>
             </div>
-            <div class="ws p-5 rounded-2xl border border-slate-700 bg-slate-800/90 hover:border-pink-400 cursor-pointer flex-col" id="KD-PACS-03" title="Kadın Doğum PACS Oda 1 PC 3">
-              <div class="text-xl font-bold mb-1 text-pink-300">3</div>
-              <span class="text-xs text-slate-200 font-semibold block">Kadın Doğum PACS Oda 1 PC 3</span>
-              <span class="text-[10px] text-slate-400">Masa 3</span>
+            <div class="ws dept-kroki-card" id="KD-PACS-03" title="Kadın Doğum PACS Oda 1 PC 3">
+              <div class="text-3xl font-black mb-1 text-pink-300 pointer-events-none">3</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Kadın Doğum PACS Oda 1 PC 3</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 8: Kadın Doğum Toplantı Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-kadin-dogum">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-bold">
+            🤰 Kadın Doğum Toplantı Odası Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Poliklinik ve Seminer Toplantı Masası PACS Bilgisayarı</p>
+          <div class="flex justify-center items-center py-4">
+            <div class="ws dept-kroki-card max-w-[240px]" id="Aquila-α" title="Kadın Doğum Toplantı Odası PC 1">
+              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Kadın Doğum Toplantı Odası PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Toplantı Masası</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 9: Nöroloji PACS Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-noroloji">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-3xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-sm font-bold">
+            🧠 Nöroloji PACS Odası Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Nöroradyoloji PACS Raporlama Odası Masa Plânı</p>
+          <div class="grid grid-cols-3 gap-5 max-w-xl mx-auto py-4">
+            <div class="ws dept-kroki-card" id="Perseus-β" title="Nöroloji PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-teal-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Nöroloji PACS Oda 1 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Kapıya Yakın</span>
+            </div>
+            <div class="ws dept-kroki-card" id="Perseus-α" title="Nöroloji PACS Oda 1 PC 2">
+              <div class="text-3xl font-black mb-1 text-teal-300 pointer-events-none">2</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Nöroloji PACS Oda 1 PC 2</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Üst Duvar Sol</span>
+            </div>
+            <div class="ws dept-kroki-card" id="Perseus-γ" title="Nöroloji PACS Oda 1 PC 3">
+              <div class="text-3xl font-black mb-1 text-teal-300 pointer-events-none">3</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Nöroloji PACS Oda 1 PC 3</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Alt Duvar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 10: Onkoloji PACS Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-onkoloji">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-bold">
+            🎗️ Onkoloji PACS Odası Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Radyasyon Onkolojisi PACS Raporlama Odası Masa Plânı</p>
+          <div class="flex justify-center items-center py-4">
+            <div class="ws dept-kroki-card max-w-[240px]" id="ws-onkoloji-01" title="Onkoloji PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-yellow-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">Onkoloji PACS Oda 1 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Raporlama Masası</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 11: FTR PACS Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-ftr">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-sm font-bold">
+            🦾 FTR PACS Odası Krokisi
+          </div>
+          <p class="text-xs text-slate-400">Fizik Tedavi ve Rehabilitasyon PACS Raporlama Odası Masa Plânı</p>
+          <div class="flex justify-center items-center py-4">
+            <div class="ws dept-kroki-card max-w-[240px]" id="ws-ftr-01" title="FTR PACS Oda 1 PC 1">
+              <div class="text-3xl font-black mb-1 text-indigo-300 pointer-events-none">1</div>
+              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">FTR PACS Oda 1 PC 1</span>
+              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Raporlama Masası</span>
             </div>
           </div>
         </div>
@@ -479,6 +873,6 @@
     </form>
   </div>
 
-  <script src="app.js?v=40000"></script>
+  <script src="app.js?v=50000"></script>
 </body>
 </html>
