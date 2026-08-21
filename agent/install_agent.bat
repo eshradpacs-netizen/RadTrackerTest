@@ -42,9 +42,10 @@ echo  [8]  Kadin Dogum PACS Odasi (PC 1 - 3)
 echo  [9]  Kadin Dogum Toplanti Odasi (PC 1)
 echo  [10] Onkoloji PACS Odasi (PC 1)
 echo  [11] FTR PACS Odasi (PC 1)
+echo  [12] Noroloji PACS Odasi (PC 1 - 3)
 echo  [0]  Otomatik Tani (Host/IP eslesmesi ile)
 echo ----------------------------------------------------------------------------
-set /p ODA_SEC="Oda Seciminiz [1-11 veya 0]: "
+set /p ODA_SEC="Oda Seciminiz [1-12 veya 0]: "
 
 set MASA_SEC=1
 if "%ODA_SEC%"=="1" (
@@ -67,6 +68,9 @@ if "%ODA_SEC%"=="7" (
 )
 if "%ODA_SEC%"=="8" (
     set /p MASA_SEC="Kadin Dogum PACS Odasi icindeki Masa Numarasi [1-3]: "
+)
+if "%ODA_SEC%"=="12" (
+    set /p MASA_SEC="Noroloji PACS Odasi icindeki Masa Numarasi [1-3]: "
 )
 
 echo.
@@ -135,6 +139,9 @@ powershell -ExecutionPolicy Bypass -NoProfile -Command "& {
         '9_1' = @{ id = 'Aquila-α'; name = 'Kadin Dogum Toplanti Odasi PC 1'; room = 'Kadin Dogum Toplanti Odasi' }
         '10_1' = @{ id = 'ws-onkoloji-01'; name = 'Onkoloji PACS Oda 1 PC 1'; room = 'Onkoloji PACS Odasi' }
         '11_1' = @{ id = 'ws-ftr-01'; name = 'FTR PACS Oda 1 PC 1'; room = 'FTR PACS Odasi' }
+        '12_1' = @{ id = 'noroloji-pacs-01-uuid-0001'; name = 'Noroloji PACS Oda 1 PC 1'; room = 'Noroloji PACS Odasi' }
+        '12_2' = @{ id = 'noroloji-pacs-01-uuid-0002'; name = 'Noroloji PACS Oda 1 PC 2'; room = 'Noroloji PACS Odasi' }
+        '12_3' = @{ id = 'noroloji-pacs-01-uuid-0003'; name = 'Noroloji PACS Oda 1 PC 3'; room = 'Noroloji PACS Odasi' }
     }
 
     $key = \"$($oda)_$($masa)\"

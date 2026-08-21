@@ -4,6 +4,10 @@ Contains exact UUIDs, Friendly Names, Rooms (Constellations), Hostnames, and IP 
 """
 
 MASTER_PC_MAPPING = {
+    "noroloji-pacs-01-uuid-0001": {"friendlyName": "Nöroloji PACS Oda 1 PC 1", "room": "Nöroloji PACS Odası", "hostname": "desktop-noropacs1", "ip": "10.86.155.101"},
+    "noroloji-pacs-01-uuid-0002": {"friendlyName": "Nöroloji PACS Oda 1 PC 2", "room": "Nöroloji PACS Odası", "hostname": "desktop-noropacs2", "ip": "10.86.155.102"},
+    "noroloji-pacs-01-uuid-0003": {"friendlyName": "Nöroloji PACS Oda 1 PC 3", "room": "Nöroloji PACS Odası", "hostname": "desktop-noropacs3", "ip": "10.86.155.103"},
+
     "3178e41d-97f6-4cdf-b170-503cbf9343bc": {"friendlyName": "KVC PACS Oda 1 PC 1", "room": "KVC PACS Odası", "hostname": "desktop-2t9o3va", "ip": "10.86.166.8"},
     "1259338b-c73d-4629-ae01-115ad7ccecb2": {"friendlyName": "KVC PACS Oda 1 PC 2", "room": "KVC PACS Odası", "hostname": "desktop-2t9o3va", "ip": "10.86.165.179"},
     "1259338b-c73d-4629-ae01-115ad7ccecb5": {"friendlyName": "KVC PACS Oda 1 PC 2", "room": "KVC PACS Odası", "hostname": "desktop-2t9o3va", "ip": "10.86.165.179"},

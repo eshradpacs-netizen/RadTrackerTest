@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=250000">
+  <link rel="stylesheet" href="styles.css?v=260000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative">
 
@@ -545,6 +545,53 @@
         </div>
       </div>
 
+            <!-- Layout 7: Nöroloji PACS Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-noroloji">
+        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 sm:p-8 max-w-2xl mx-auto space-y-6 shadow-2xl">
+          <div class="text-center space-y-1">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs sm:text-sm font-bold shadow-sm">
+              🧠 Nöroloji PACS Odası Krokisi
+            </div>
+            <p class="text-[11px] text-slate-400">Nöroloji & Beyin Cerrahisi PACS Raporlama Odası</p>
+          </div>
+
+          <!-- Room Architectural Box -->
+          <div class="p-6 rounded-2xl bg-slate-950/80 border border-purple-500/30 relative max-w-lg mx-auto shadow-inner">
+            <!-- Room Pill Header -->
+            <div class="absolute -top-3.5 left-6 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/40">
+              NÖROLOJİ PACS (ODA 1)
+            </div>
+
+            <!-- Door Indicator -->
+            <div class="flex justify-between items-center mb-6 text-[10px] text-slate-500 font-semibold px-2 border-b border-slate-800 pb-2">
+              <span class="flex items-center gap-1">🚪 Giriş Kapısı</span>
+              <span>3 Çalışma İstasyonu</span>
+            </div>
+
+            <!-- Desks Grid -->
+            <div class="grid grid-cols-3 gap-3 sm:gap-4">
+              <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col items-center gap-2">
+                <div class="ws floor-ws w-12 h-12 text-base font-bold flex items-center justify-center rounded-xl" id="ws-noroloji-01" title="Nöroloji PACS Oda 1 PC 1">1</div>
+                <span class="text-[11px] font-bold text-slate-200 text-center">Masa 1</span>
+                <span class="text-[9px] text-slate-400">Nöro-PACS 1</span>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col items-center gap-2">
+                <div class="ws floor-ws w-12 h-12 text-base font-bold flex items-center justify-center rounded-xl" id="ws-noroloji-02" title="Nöroloji PACS Oda 1 PC 2">2</div>
+                <span class="text-[11px] font-bold text-slate-200 text-center">Masa 2</span>
+                <span class="text-[9px] text-slate-400">Nöro-PACS 2</span>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col items-center gap-2">
+                <div class="ws floor-ws w-12 h-12 text-base font-bold flex items-center justify-center rounded-xl" id="ws-noroloji-03" title="Nöroloji PACS Oda 1 PC 3">3</div>
+                <span class="text-[11px] font-bold text-slate-200 text-center">Masa 3</span>
+                <span class="text-[9px] text-slate-400">Nöro-PACS 3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Layout 6: FTR PACS Odası -->
       <div class="kroki-view-wrapper hidden" id="kroki-ftr">
         <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 sm:p-8 max-w-lg mx-auto space-y-6 shadow-2xl">
@@ -647,7 +694,7 @@
     </form>
   </div>
 
-  <script src="app.js?v=250000"></script>
+  <script src="app.js?v=260000"></script>
     <!-- Admin Whitelist & Dynamic Role Management Modal -->
   <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden">
     <div class="glass-card bg-slate-900/95 border border-cyan-500/30 rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-5 text-slate-100 max-h-[90vh] overflow-y-auto">

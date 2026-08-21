@@ -210,6 +210,13 @@ function closeModal() {
 }
 
 const KROKI_MAP = {
+  'ws-noroloji-01': 'Nöroloji PACS Oda 1 PC 1',
+  'ws-noroloji-02': 'Nöroloji PACS Oda 1 PC 2',
+  'ws-noroloji-03': 'Nöroloji PACS Oda 1 PC 3',
+  'noroloji-pacs-01-uuid-0001': 'Nöroloji PACS Oda 1 PC 1',
+  'noroloji-pacs-01-uuid-0002': 'Nöroloji PACS Oda 1 PC 2',
+  'noroloji-pacs-01-uuid-0003': 'Nöroloji PACS Oda 1 PC 3',
+
   'KD-PACS-01': 'Kadın Doğum PACS Oda 1 PC 1',
   'KD-PACS-02': 'Kadın Doğum PACS Oda 1 PC 2',
   'KD-PACS-03': 'Kadın Doğum PACS Oda 1 PC 3',
