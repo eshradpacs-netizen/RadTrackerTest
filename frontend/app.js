@@ -124,14 +124,34 @@ function renderGrid() {
   grid.innerHTML = "";
 
   const filtered = pcs.filter(p => {
-    const matchRoom = (activeRoom === 'ALL') || (p.room === activeRoom);
-    const q = searchQuery.toLowerCase();
+    // 1. Room Filter
+    let matchRoom = false;
+    if (activeRoom === 'ALL' || activeRoom === 'KROKI') {
+      matchRoom = true;
+    } else if (activeRoom === 'GENEL_PACS') {
+      matchRoom = p.room && (p.room.startsWith('Genel PACS') || p.room === 'Toplantı Odası');
+    } else {
+      matchRoom = (p.room === activeRoom);
+    }
+
+    // 2. Status Filter
+    let matchStatus = true;
+    if (activeStatusFilter === 'idle') {
+      matchStatus = (p.status === 'idle' || p.status === 'probably-idle');
+    } else if (activeStatusFilter !== 'ALL') {
+      matchStatus = (p.status === activeStatusFilter);
+    }
+
+    // 3. Search Query Filter
+    const q = searchQuery.toLowerCase().trim();
     const matchQuery = !q || 
       (p.friendlyName && p.friendlyName.toLowerCase().includes(q)) ||
       (p.hostname && p.hostname.toLowerCase().includes(q)) ||
       (p.username && p.username.toLowerCase().includes(q)) ||
-      (p.ip && p.ip.includes(q));
-    return matchRoom && matchQuery;
+      (p.ip && p.ip.includes(q)) ||
+      (p.room && p.room.toLowerCase().includes(q));
+
+    return matchRoom && matchStatus && matchQuery;
   });
 
   if (filtered.length === 0) {
@@ -563,7 +583,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const filter = card.getAttribute("data-status-filter");
       
       if (activeStatusFilter === filter) {
-        // Toggle off
+        // Toggle off: return to all
         activeStatusFilter = "ALL";
         card.classList.remove("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
       } else {
@@ -575,7 +595,19 @@ document.addEventListener("DOMContentLoaded", () => {
         card.classList.add("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
       }
 
-      // Switch to card grid view to show filtered PCs immediately
+      // Ensure room tabs highlight 'Tüm Odalar'
+      document.querySelectorAll(".room-tab").forEach(t => {
+        if (t.getAttribute("data-room") === "ALL") {
+          t.classList.remove("bg-slate-800", "text-slate-300");
+          t.classList.add("bg-cyan-500", "text-white", "active");
+        } else {
+          t.classList.remove("bg-cyan-500", "text-white", "active");
+          t.classList.add("bg-slate-800", "text-slate-300");
+        }
+      });
+      activeRoom = "ALL";
+
+      // Switch view to PC Grid Cards
       document.getElementById("kroki-container")?.classList.add("hidden");
       document.getElementById("pc-grid-container")?.classList.remove("hidden");
       
