@@ -187,7 +187,7 @@ function openModal(pc) {
   }
 
   document.getElementById("modal-title").innerText = pc.friendlyName || pc.hostname;
-  document.getElementById("modal-room").innerText = `${pc.room || 'Genel'} Odası`;
+  const rName = pc.room || "Genel"; document.getElementById("modal-room").innerText = rName.toLowerCase().endsWith("odası") ? rName : `${rName} Odası`;
   document.getElementById("modal-user").innerText = pc.username && pc.username !== 'unknown' ? pc.username : 'Belirtilmedi';
   document.getElementById("modal-hostname").innerText = pc.hostname || 'Bilinmiyor';
   document.getElementById("modal-ip").innerText = pc.ip || 'Bilinmiyor';
@@ -216,12 +216,12 @@ const KROKI_MAP = {
   'Cassiopeia-β': 'KVC PACS Oda 1 PC 1',
   'Cassiopeia-α': 'KVC PACS Oda 1 PC 2',
   'Aquila-α': 'Kadın Doğum Toplantı Odası PC 1',
-  'Perseus-β': 'Nöroloji PACS Oda 1 PC 1',
-  'Perseus-α': 'Nöroloji PACS Oda 1 PC 2',
-  'Perseus-γ': 'Nöroloji PACS Oda 1 PC 3',
-  'ws-pe-01': 'Nöroloji PACS Oda 1 PC 1',
-  'ws-pe-02': 'Nöroloji PACS Oda 1 PC 2',
-  'ws-pe-03': 'Nöroloji PACS Oda 1 PC 3',
+  'Perseus-β': 'Toplantı Odası PC 1',
+  'Perseus-α': 'Toplantı Odası PC 2',
+  'Perseus-γ': 'Toplantı Odası PC 3',
+  'ws-pe-01': 'Toplantı Odası PC 1',
+  'ws-pe-02': 'Toplantı Odası PC 2',
+  'ws-pe-03': 'Toplantı Odası PC 3',
   'ws-y-01': 'Genel PACS Oda 1 PC 1',
   'ws-y-02': 'Genel PACS Oda 1 PC 2',
   'ws-y-03': 'Genel PACS Oda 1 PC 3',
