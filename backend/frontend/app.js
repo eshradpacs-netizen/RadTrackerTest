@@ -260,7 +260,11 @@ const KROKI_MAP = {
   'ws-b-09': 'Genel PACS Oda 4 PC 9',
   'ws-b-10': 'Genel PACS Oda 4 PC 10',
   'ws-pi-01': 'Genel PACS Oda 5 PC 1',
+  'ws-pi-02': 'Genel PACS Oda 5 PC 2',
+  'ws-pi-03': 'Genel PACS Oda 5 PC 3',
   'e092e2c2-5348-4724-9a00-5d37a4486176': 'Genel PACS Oda 6 PC 1',
+  'ws-onkoloji-01': 'Onkoloji PACS Oda 1 PC 1',
+  'ws-ftr-01': 'FTR PACS Oda 1 PC 1',
 };
 
 function updateKrokiColors() {
