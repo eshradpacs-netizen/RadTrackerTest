@@ -694,18 +694,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // View mode switcher (Kart vs Kroki Planı)
   document.getElementById("view-card-btn")?.addEventListener("click", () => {
-    document.getElementById("pc-grid-container")?.classList.remove("hidden");
-    document.getElementById("kroki-container")?.classList.add("hidden");
+    showGridView();
     document.getElementById("view-card-btn").className = "px-3 py-2 text-xs font-bold rounded-xl bg-cyan-500 text-white shadow transition-all";
     document.getElementById("view-kroki-btn").className = "px-3 py-2 text-xs font-bold rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700";
   });
 
   document.getElementById("view-kroki-btn")?.addEventListener("click", () => {
-    document.getElementById("kroki-container")?.classList.remove("hidden");
-    document.getElementById("pc-grid-container")?.classList.add("hidden");
+    showKrokiView();
     document.getElementById("view-kroki-btn").className = "px-3 py-2 text-xs font-bold rounded-xl bg-cyan-500 text-white shadow transition-all";
     document.getElementById("view-card-btn").className = "px-3 py-2 text-xs font-bold rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700";
-    updateKrokiColors();
   });
 
   // Kroki Layout Switcher Buttons
