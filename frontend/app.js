@@ -1,7 +1,34 @@
+/**
+ * Radiology PC Tracker v1 - Frontend Real-Time Client
+ */
 
-// Bulletproof Global Status Filter Handler
+// Global State Variables (Top-Level)
+var pcs = [];
+var activeRoom = 'ALL';
+var activeStatusFilter = 'ALL';
+var searchQuery = '';
+var socket = null;
+var selectedPc = null;
+
+const ROOM_TO_KROKI_LAYOUT = {
+  'GENEL_PACS': 'kroki-pacs-raporlama',
+  'Genel PACS Oda 1': 'kroki-pacs-raporlama',
+  'Genel PACS Oda 2': 'kroki-pacs-raporlama',
+  'Genel PACS Oda 3': 'kroki-pacs-raporlama',
+  'Genel PACS Oda 4': 'kroki-pacs-raporlama',
+  'Genel PACS Oda 5': 'kroki-pacs-raporlama',
+  'Toplantı Odası': 'kroki-pacs-raporlama',
+  'Nöroloji PACS Odası': 'kroki-noroloji',
+  'KVC PACS Odası': 'kroki-cassiopeia',
+  'Kadın Doğum PACS Odası': 'kroki-kadin-dogum-pacs',
+  'Kadın Doğum Toplantı Odası': 'kroki-kadin-dogum',
+  'Onkoloji PACS Odası': 'kroki-onkoloji',
+  'FTR PACS Odası': 'kroki-ftr'
+};
+
+// Global Bulletproof Status Filter Handler
 window.filterByStatus = function(statusName) {
-  console.log("Filtering by status:", statusName);
+  console.log("Filter requested for status:", statusName);
   
   if (activeStatusFilter === statusName) {
     // Toggle off: return to all
@@ -48,6 +75,10 @@ window.filterByStatus = function(statusName) {
   renderGrid();
 };
 
+window.clearStatusFilter = function() {
+  window.filterByStatus(activeStatusFilter);
+};
+
 
 async function fetchComputers() {
   try {
@@ -63,41 +94,11 @@ async function fetchComputers() {
 }
 
 
-function clearStatusFilter() {
-  activeStatusFilter = "ALL";
-  document.querySelectorAll(".stat-filter-card").forEach(c => {
-    c.classList.remove("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
-  });
-  renderGrid();
-}
-
-
-const ROOM_TO_KROKI_LAYOUT = {
-  'GENEL_PACS': 'kroki-pacs-raporlama',
-  'Genel PACS Oda 1': 'kroki-pacs-raporlama',
-  'Genel PACS Oda 2': 'kroki-pacs-raporlama',
-  'Genel PACS Oda 3': 'kroki-pacs-raporlama',
-  'Genel PACS Oda 4': 'kroki-pacs-raporlama',
-  'Genel PACS Oda 5': 'kroki-pacs-raporlama',
-  'Toplantı Odası': 'kroki-pacs-raporlama',
-  'Nöroloji PACS Odası': 'kroki-noroloji',
-  'KVC PACS Odası': 'kroki-cassiopeia',
-  'Kadın Doğum PACS Odası': 'kroki-kadin-dogum-pacs',
-  'Kadın Doğum Toplantı Odası': 'kroki-kadin-dogum',
-  'Onkoloji PACS Odası': 'kroki-onkoloji',
-  'FTR PACS Odası': 'kroki-ftr'
-};
-
 /**
  * Radiology PC Tracker v1 - Frontend Real-Time WebSocket & Telegram Mini App Client
  */
 
-let pcs = [];
-let activeRoom = 'ALL';
-let activeStatusFilter = 'ALL';
-let searchQuery = '';
-let socket = null;
-let selectedPc = null;
+
 
 // Initialize Telegram WebApp SDK if available
 const tgApp = window.Telegram?.WebApp;
