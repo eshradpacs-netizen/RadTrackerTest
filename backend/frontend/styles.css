@@ -206,3 +206,207 @@ body {
   border-color: #38bdf8 !important;
   box-shadow: 0 15px 30px -5px rgba(14, 165, 233, 0.4) !important;
 }
+
+
+/* Pixel-Perfect Kroki Floor Plan Styles Matching User Architectural Diagram */
+.floor-canvas {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 32px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.25);
+  display: inline-flex;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 0 auto;
+  border: 1px solid #e2e8f0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.floor-room {
+  position: relative;
+  border-radius: 18px;
+  border-width: 2px;
+  border-style: solid;
+  padding: 16px 12px 12px 12px;
+  transition: all 0.2s ease;
+}
+
+.floor-room-pill {
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  padding: 2px 12px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.room-vega {
+  background: #f0f9ff;
+  border-color: #7dd3fc;
+}
+.pill-vega {
+  background: #e0f2fe;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+}
+
+.room-sirius {
+  background: #fff1f2;
+  border-color: #fda4af;
+}
+.pill-sirius {
+  background: #ffe4e6;
+  color: #e11d48;
+  border: 1px solid #fecdd3;
+}
+
+.room-cygnus {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+.pill-cygnus {
+  background: #dbeafe;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.room-orion {
+  background: #fefce8;
+  border-color: #fde047;
+}
+.pill-orion {
+  background: #fef9c3;
+  color: #ca8a04;
+  border: 1px solid #fef08a;
+}
+
+.room-andromeda {
+  background: #faf5ff;
+  border-color: #d8b4fe;
+}
+.pill-andromeda {
+  background: #f3e8ff;
+  color: #9333ea;
+  border: 1px solid #e9d5ff;
+}
+
+.room-lyra {
+  background: #fff7ed;
+  border-color: #fdba74;
+}
+.pill-lyra {
+  background: #ffedd5;
+  color: #ea580c;
+  border: 1px solid #fed7aa;
+}
+
+.corridor-box {
+  background: #f1f5f9;
+  border: 1.5px dashed #94a3b8;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.landmark-box {
+  border-radius: 14px;
+  border-width: 2px;
+  border-style: solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.landmark-box:hover {
+  transform: scale(1.06);
+}
+
+.landmark-m {
+  background: #fdf2f8;
+  border-color: #f472b6;
+  color: #db2777;
+}
+
+.landmark-n {
+  background: #eef2ff;
+  border-color: #818cf8;
+  color: #4f46e5;
+}
+
+/* Floor Plan Workstation Pills */
+.floor-ws {
+  border-radius: 12px;
+  border: 1.5px solid #86efac;
+  background: #f0fdf4;
+  color: #15803d;
+  font-weight: 800;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-width: 46px;
+  height: 38px;
+  padding: 4px 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+
+.floor-ws:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.floor-ws.ws-idle {
+  background: #dcfce7 !important;
+  border-color: #22c55e !important;
+  color: #15803d !important;
+}
+
+.floor-ws.ws-active {
+  background: #fee2e2 !important;
+  border-color: #ef4444 !important;
+  color: #b91c1c !important;
+}
+
+.floor-ws.ws-lunch-break {
+  background: #ffedd5 !important;
+  border-color: #f97316 !important;
+  color: #c2410c !important;
+}
+
+.floor-ws.ws-probably-idle {
+  background: #fef9c3 !important;
+  border-color: #eab308 !important;
+  color: #a16207 !important;
+}
+
+.floor-ws.ws-offline {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #64748b !important;
+}
+
+.floor-ws.ws-aktif {
+  border-color: #0284c7 !important;
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(2, 132, 199, 0.8) !important;
+  animation: sonar-pulse 1.2s infinite ease-in-out !important;
+}
