@@ -84,6 +84,8 @@ class TelegramBotController:
             await self.cmd_subscribe(chat_id, text, state_mgr)
         elif text.startswith("/kod") or text.startswith("/code"):
             await self.cmd_kod(chat_id)
+        elif text.startswith("/admin_ekle"):
+            await self.cmd_add_admin(chat_id, text)
         elif text.startswith("/ekle"):
             await self.cmd_add_email(chat_id, text)
         elif text.startswith("/cikar") or text.startswith("/sil"):
@@ -231,6 +233,24 @@ class TelegramBotController:
             "• <code>/cikar dr.ahmet@hastane.gov.tr</code> : Hekim yetkisini kaldırır.\n"
         )
         await self.send_message(chat_id, text)
+
+    
+    async def cmd_add_admin(self, chat_id: int, text: str):
+        from telegram_db import db
+        parts = text.split()
+        if len(parts) < 2:
+            await self.send_message(chat_id, "❌ Kullanım: <code>/admin_ekle dr.mehmet@hastane.gov.tr</code>")
+            return
+        new_admin = parts[1].lower().strip()
+        admins = db.state.setdefault("admin_emails", ["gulderenabdullah@gmail.com", "eshradpacs@gmail.com"])
+        if new_admin not in [a.lower() for a in admins]:
+            admins.append(new_admin)
+            db.state["admin_emails"] = admins
+        allowed = db.state.setdefault("allowed_emails", [])
+        if new_admin not in [e.lower() for e in allowed]:
+            allowed.append(new_admin)
+        await db.sync_to_telegram()
+        await self.send_message(chat_id, f"👑 <b>YÖNETİCİ ATANDI!</b>\n<code>{new_admin}</code> artık tam yetkili Sistem Yöneticisidir.")
 
     async def cmd_add_email(self, chat_id: int, text: str):
         from telegram_db import db

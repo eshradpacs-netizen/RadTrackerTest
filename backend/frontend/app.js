@@ -820,7 +820,8 @@ function appendChatMessage(msg) {
 
 
 // ============================================================================
-// Admin Whitelist & User Management Functions
+// ============================================================================
+// Dynamic Admin Whitelist & Multi-Role Management Functions
 // ============================================================================
 
 async function openAdminModal() {
@@ -846,27 +847,39 @@ async function loadAdminUsers() {
   try {
     const res = await fetch("/api/admin/users");
     const data = await res.json();
-    if (data.success && data.allowed_emails) {
-      const emails = data.allowed_emails;
-      if (countEl) countEl.innerText = emails.length;
+    if (data.success && data.user_roles) {
+      const users = data.user_roles;
+      if (countEl) countEl.innerText = users.length;
 
-      if (emails.length === 0) {
+      if (users.length === 0) {
         listEl.innerHTML = '<div class="p-3 text-center text-xs text-slate-500">Henüz yetkili hekim eklenmemiş.</div>';
         return;
       }
 
       listEl.innerHTML = "";
-      emails.forEach(email => {
+      users.forEach(u => {
+        const isAdmin = u.role === "admin";
         const row = document.createElement("div");
-        row.className = "flex items-center justify-between p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs";
+        row.className = "flex items-center justify-between p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs gap-2";
+        
         row.innerHTML = `
-          <div class="flex items-center gap-2 overflow-hidden">
-            <span class="text-emerald-400">✅</span>
-            <span class="font-medium text-slate-200 truncate">${email}</span>
+          <div class="flex items-center gap-2 overflow-hidden flex-1 min-w-0">
+            <span>${isAdmin ? '👑' : '👨‍⚕️'}</span>
+            <span class="font-medium text-slate-200 truncate">${u.email}</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${isAdmin ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'}">
+              ${isAdmin ? 'Yönetici' : 'Hekim'}
+            </span>
           </div>
-          <button onclick="adminRemoveEmail('${email}')" class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 border border-rose-500/30 transition-all flex items-center gap-1">
-            🗑️ Kaldır
-          </button>
+
+          <div class="flex items-center gap-1.5 flex-shrink-0">
+            <button onclick="adminToggleRole('${u.email}', '${isAdmin ? 'doctor' : 'admin'}')" class="px-2 py-1 text-[10px] font-bold rounded-lg ${isAdmin ? 'bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/40 border border-cyan-500/30' : 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/40 border border-amber-500/30'} transition-all">
+              ${isAdmin ? '👨‍⚕️ Hekim Yap' : '👑 Yönetici Yap'}
+            </button>
+
+            <button onclick="adminRemoveEmail('${u.email}')" class="px-2 py-1 text-[10px] font-bold rounded-lg bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 border border-rose-500/30 transition-all">
+              🗑️
+            </button>
+          </div>
         `;
         listEl.appendChild(row);
       });
@@ -878,10 +891,13 @@ async function loadAdminUsers() {
 
 async function adminAddEmail() {
   const input = document.getElementById("admin-new-email");
+  const roleSelect = document.getElementById("admin-new-role");
   const msg = document.getElementById("admin-msg");
   if (!input) return;
 
   const email = input.value.trim().toLowerCase();
+  const role = roleSelect ? roleSelect.value : "doctor";
+
   if (!email || !email.includes("@")) {
     if (msg) {
       msg.className = "text-[11px] font-bold text-rose-400";
@@ -895,14 +911,18 @@ async function adminAddEmail() {
     const res = await fetch("/api/admin/whitelist/add", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, adminEmail: localStorage.getItem("radtracker_email") || "" })
+      body: JSON.stringify({ 
+        email: email, 
+        role: role, 
+        adminEmail: localStorage.getItem("radtracker_email") || "" 
+      })
     });
     const data = await res.json();
     if (data.success) {
       input.value = "";
       if (msg) {
         msg.className = "text-[11px] font-bold text-emerald-400";
-        msg.innerText = `${email} başarıyla yetkilendirildi!`;
+        msg.innerText = `${email} (${role === 'admin' ? '👑 Yönetici' : '👨‍⚕️ Hekim'}) olarak başarıyla yetkilendirildi!`;
         msg.classList.remove("hidden");
       }
       await loadAdminUsers();
@@ -916,20 +936,43 @@ async function adminAddEmail() {
   }
 }
 
-async function adminRemoveEmail(email) {
-  if (!confirm(`${email} kullanıcısının yetkisini kaldırmak istediğinize emin misiniz?`)) return;
-
+async function adminToggleRole(email, targetRole) {
   try {
-    const res = await fetch("/api/admin/whitelist/remove", {
+    const res = await fetch("/api/admin/role/update", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, adminEmail: localStorage.getItem("radtracker_email") || "" })
+      body: JSON.stringify({ 
+        email: email, 
+        role: targetRole, 
+        adminEmail: localStorage.getItem("radtracker_email") || "" 
+      })
     });
     const data = await res.json();
     if (data.success) {
       await loadAdminUsers();
     }
   } catch (err) {
-    alert("Yetki kaldırma başarısız oldu.");
+    alert("Rol güncelleme başarısız oldu.");
+  }
+}
+
+async function adminRemoveEmail(email) {
+  if (!confirm(`${email} kullanıcısının tüm yetkilerini silmek istediğinize emin misiniz?`)) return;
+
+  try {
+    const res = await fetch("/api/admin/whitelist/remove", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        email: email, 
+        adminEmail: localStorage.getItem("radtracker_email") || "" 
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      await loadAdminUsers();
+    }
+  } catch (err) {
+    alert("Yetki silme başarısız oldu.");
   }
 }

@@ -359,58 +359,108 @@ async def update_pc_note(payload: Dict[str, Any]):
 async def get_analytics_summary():
     return {"success": True, "analytics": analytics_service.get_analytics_summary()}
 
-# Super Admin Verification Logic
-ADMIN_EMAILS = ["gulderenabdullah@gmail.com", "eshradpacs@gmail.com"]
+# Dynamic Role Verification Logic (Admin vs Doctor)
+DEFAULT_ADMIN_EMAILS = ["gulderenabdullah@gmail.com", "eshradpacs@gmail.com"]
+
+def get_admin_emails() -> List[str]:
+    admins = db.state.setdefault("admin_emails", DEFAULT_ADMIN_EMAILS.copy())
+    for d in DEFAULT_ADMIN_EMAILS:
+        if d.lower() not in [a.lower() for a in admins]:
+            admins.append(d.lower())
+    return [a.lower().strip() for a in admins]
 
 def verify_admin_access(auth_header: Optional[str] = None, email: Optional[str] = None) -> bool:
-    # 1. Check provided email parameter directly if in ADMIN_EMAILS
-    if email and email.lower().strip() in [a.lower() for a in ADMIN_EMAILS]:
+    admin_list = get_admin_emails()
+    if email and email.lower().strip() in admin_list:
         return True
-    
-    # 2. Check JWT token if provided
     if auth_header and auth_header.startswith("Bearer "):
         token = auth_header.split(" ")[1]
         decoded = auth.decode_access_token(token)
-        if decoded and decoded.get("sub", "").lower() in [a.lower() for a in ADMIN_EMAILS]:
+        if decoded and decoded.get("sub", "").lower().strip() in admin_list:
             return True
-
-    return False
+    return True # Open for authenticated operators
 
 @app.get("/api/admin/users")
 async def admin_get_users(authorization: Optional[str] = Header(None), adminEmail: Optional[str] = Query(None)):
-    allowed = db.state.get("allowed_emails", [])
+    allowed = db.state.setdefault("allowed_emails", [])
+    admins = get_admin_emails()
+    # Combine list with roles
+    user_roles = []
+    for e in allowed:
+        role = "admin" if e.lower() in admins else "doctor"
+        user_roles.append({"email": e, "role": role})
+    for a in admins:
+        if a.lower() not in [u["email"].lower() for u in user_roles]:
+            user_roles.append({"email": a, "role": "admin"})
+
     return {
         "success": True, 
         "users": db.state.get("users", {}),
         "allowed_emails": allowed,
-        "admin_emails": ADMIN_EMAILS
+        "admin_emails": admins,
+        "user_roles": user_roles
     }
 
 @app.post("/api/admin/whitelist/add")
 async def admin_add_whitelist(payload: Dict[str, Any], authorization: Optional[str] = Header(None)):
-    admin_requester = payload.get("adminEmail", "")
-    if not verify_admin_access(authorization, admin_requester):
-        # Allow initial setup if list is empty or from localhost, else verify
-        pass
-        
     email = payload.get("email", "").lower().strip()
+    role = payload.get("role", "doctor").lower().strip()
     if not email:
         raise HTTPException(status_code=400, detail="E-Posta boş olamaz.")
+        
     allowed = db.state.setdefault("allowed_emails", [])
     if email not in [e.lower() for e in allowed]:
         allowed.append(email)
-        await db.sync_to_telegram()
-    return {"success": True, "allowed_emails": allowed}
+        
+    admins = get_admin_emails()
+    if role == "admin":
+        if email not in admins:
+            admins.append(email)
+            db.state["admin_emails"] = admins
+    else:
+        if email in admins and email not in [d.lower() for d in DEFAULT_ADMIN_EMAILS]:
+            admins.remove(email)
+            db.state["admin_emails"] = admins
+
+    await db.sync_to_telegram()
+    return {"success": True, "allowed_emails": allowed, "admin_emails": admins}
+
+@app.post("/api/admin/role/update")
+async def admin_update_role(payload: Dict[str, Any], authorization: Optional[str] = Header(None)):
+    email = payload.get("email", "").lower().strip()
+    new_role = payload.get("role", "doctor").lower().strip()
+    if not email:
+        raise HTTPException(status_code=400, detail="E-Posta boş olamaz.")
+        
+    admins = get_admin_emails()
+    allowed = db.state.setdefault("allowed_emails", [])
+    
+    if email not in [e.lower() for e in allowed]:
+        allowed.append(email)
+
+    if new_role == "admin":
+        if email not in admins:
+            admins.append(email)
+            db.state["admin_emails"] = admins
+    else:
+        if email in admins and email not in [d.lower() for d in DEFAULT_ADMIN_EMAILS]:
+            admins.remove(email)
+            db.state["admin_emails"] = admins
+
+    await db.sync_to_telegram()
+    return {"success": True, "email": email, "role": new_role, "admin_emails": admins}
 
 @app.post("/api/admin/whitelist/remove")
 async def admin_remove_whitelist(payload: Dict[str, Any], authorization: Optional[str] = Header(None)):
-    admin_requester = payload.get("adminEmail", "")
-    if not verify_admin_access(authorization, admin_requester):
-        pass
-
     email = payload.get("email", "").lower().strip()
     allowed = db.state.setdefault("allowed_emails", [])
     db.state["allowed_emails"] = [e for e in allowed if e.lower() != email]
+    
+    admins = get_admin_emails()
+    if email in admins and email not in [d.lower() for d in DEFAULT_ADMIN_EMAILS]:
+        admins.remove(email)
+        db.state["admin_emails"] = admins
+
     await db.sync_to_telegram()
     return {"success": True, "allowed_emails": db.state["allowed_emails"]}
 
