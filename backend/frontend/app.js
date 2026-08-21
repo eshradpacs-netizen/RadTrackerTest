@@ -1,4 +1,54 @@
 
+// Bulletproof Global Status Filter Handler
+window.filterByStatus = function(statusName) {
+  console.log("Filtering by status:", statusName);
+  
+  if (activeStatusFilter === statusName) {
+    // Toggle off: return to all
+    activeStatusFilter = "ALL";
+    document.querySelectorAll(".stat-filter-card").forEach(c => {
+      c.classList.remove("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
+    });
+  } else {
+    // Toggle on: filter by selected status
+    activeStatusFilter = statusName;
+    document.querySelectorAll(".stat-filter-card").forEach(c => {
+      if (c.getAttribute("data-status-filter") === statusName) {
+        c.classList.add("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
+      } else {
+        c.classList.remove("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
+      }
+    });
+  }
+
+  // Highlight 'Tüm Odalar' tab
+  document.querySelectorAll(".room-tab").forEach(t => {
+    if (t.getAttribute("data-room") === "ALL") {
+      t.classList.remove("bg-slate-800", "text-slate-300");
+      t.classList.add("bg-cyan-500", "text-white", "active");
+    } else {
+      t.classList.remove("bg-cyan-500", "text-white", "active");
+      t.classList.add("bg-slate-800", "text-slate-300");
+    }
+  });
+  activeRoom = "ALL";
+
+  // Force show card grid container and hide kroki
+  const krokiCont = document.getElementById("kroki-container");
+  const pcGridCont = document.getElementById("pc-grid-container");
+  if (krokiCont) {
+    krokiCont.classList.add("hidden");
+    krokiCont.style.display = "none";
+  }
+  if (pcGridCont) {
+    pcGridCont.classList.remove("hidden");
+    pcGridCont.style.display = "block";
+  }
+
+  renderGrid();
+};
+
+
 async function fetchComputers() {
   try {
     const res = await fetch('/api/computers');
