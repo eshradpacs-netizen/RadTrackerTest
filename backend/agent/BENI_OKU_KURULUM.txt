@@ -1,0 +1,16 @@
+RADYOLOJİ PACS TAKİP SİSTEMİ - USB KURULUM REHBERİ
+=====================================================
+
+1. USB Belleği bilgisayara takın.
+2. "RadTracker_Kurulum.bat" dosyasına ÇİFT TIKLAYIN.
+3. Ekrana gelen listeden bilgisayarın bulunduğu ODA ve MASA numarasını seçin.
+4. "Kurulum tamamlandı" yazısını görünce USB belleği çıkarabilirsiniz!
+
+ÖZELLİKLER:
+- Dosyalar bilgisayarın C:\ProgramData\RadTracker klasörüne kalıcı kopyalanır.
+- Bilgisayar her açıldığında HİÇBİR PENCERE / SİYAH EKRAN AÇILMAZ.
+- Arka planda %100 gizli ve sessiz çalışır, yanlışlıkla kapatılamaz.
+- İnternet kesilse bile otomatik yeniden bağlanır.
+
+KALDIRMAK İÇİN:
+- "RadTracker_Kaldir.bat" dosyasını çalıştırmanız yeterlidir.
