@@ -151,6 +151,12 @@ async def get_computers():
 
 import email_service
 
+
+@app.post("/api/telegram/webhook")
+async def telegram_webhook(update: Dict[str, Any]):
+    await telegram_bot.handle_update(update, state_manager)
+    return {"ok": True}
+
 @app.post("/api/seamless-auth")
 async def seamless_auth(payload: UserRegister):
     email = payload.email.lower().strip()

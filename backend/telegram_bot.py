@@ -393,4 +393,34 @@ class TelegramBotController:
             await self.send_message(chat_id, text)
         self.subscriptions[pc.id] = []
 
+
+    async def start_polling(self, state_mgr):
+        """Continuously polls Telegram getUpdates API for incoming messages."""
+        if not self.bot_token:
+            logger.warning("TELEGRAM_BOT_TOKEN not configured, skipping polling.")
+            return
+            
+        offset = 0
+        logger.info("Telegram Bot Long-Polling engine starting...")
+        
+        while True:
+            try:
+                url = f"https://api.telegram.org/bot{self.bot_token}/getUpdates"
+                params = {"offset": offset, "timeout": 15}
+                async with httpx.AsyncClient(timeout=25.0) as client:
+                    resp = await client.get(url, params=params)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        for update in data.get("result", []):
+                            offset = update["update_id"] + 1
+                            try:
+                                await self.handle_update(update, state_mgr)
+                            except Exception as e:
+                                logger.error(f"Error handling Telegram update: {e}")
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.warning(f"Telegram polling error: {e}")
+                await asyncio.sleep(2)
+
 telegram_bot = TelegramBotController()
