@@ -169,95 +169,180 @@
     </main>
 
     <!-- Interactive PACS Kroki Floor Map View -->
+        <!-- Interactive PACS Kroki Floor Map View -->
     <main id="kroki-container" class="max-w-7xl mx-auto px-4 py-4 hidden">
-      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 mb-3 text-center">
-        <h3 class="text-sm font-bold text-cyan-400">🗺️ PACS Raporlama Odaları Fiziksel Yerleşim Krokisi</h3>
-        <p class="text-xs text-slate-400 mb-2">Masaların üzerindeki renkler canlı bilgisayar durumlarını gösterir. Masaya dokunarak detayları inceleyebilirsiniz.</p>
-        
-        <!-- Room Kroki Sub-Filter Selector -->
-        <div class="flex items-center justify-center gap-1.5 overflow-x-auto pt-1 no-scrollbar text-xs">
-          <button class="kroki-sub-tab active px-3 py-1.5 rounded-xl font-bold bg-cyan-500 text-white shadow whitespace-nowrap" data-kroki-room="ALL">
-            🏛️ Tüm Kat Krokisi
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 mb-4 text-center space-y-3">
+        <h3 class="text-base font-bold text-cyan-400 flex items-center justify-center gap-2">
+          🗺️ Bölüm ve Oda Bazlı Canlı Krokiler
+        </h3>
+        <p class="text-xs text-slate-400">İncelemek istediğiniz hastane kat krokisini veya özel bölüm odasını seçiniz.</p>
+
+        <!-- Kroki Layout Dropdown / Button Switcher -->
+        <div class="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs">
+          <button class="kroki-layout-btn active px-3.5 py-2 rounded-xl font-bold bg-cyan-500 text-white shadow transition-all border border-cyan-400/30" data-layout="kroki-pacs-raporlama">
+            🏛️ Genel PACS Kat Krokisi
           </button>
-          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Cassiopeia">
-            ❤️ Cassiopeia / KVC
+          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-cassiopeia">
+            ❤️ KVC PACS Odası
           </button>
-          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Orion">
-            🌌 Orion Odası
+          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-kadin-dogum">
+            🤰 Kadın Doğum Toplantı Odası
           </button>
-          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Andromeda">
-            🌠 Andromeda Odası
+          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-noroloji">
+            🧠 Nöroloji PACS Odası (Perseus)
           </button>
-          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Lyra">
-            🎶 Lyra Odası
+          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-onkoloji">
+            🎗️ Onkoloji PACS Odası
           </button>
-          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Vega">
-            ⭐ Vega Odası
-          </button>
-          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Cygnus">
-            🦢 Cygnus Odası
-          </button>
-          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Perseus">
-            🛡️ Perseus Odası
+          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-ftr">
+            🦾 FTR PACS Odası
           </button>
         </div>
       </div>
 
-      <div class="kroki-wrapper">
-        <div class="sol-panel">
-          <div class="pacs-blok blok-teal-sag">
-            <div class="bos-ws"></div><div class="ws" id="ws-t-07" title="Cassiopeia-β">7</div>
-            <div class="ws" id="ws-t-05" title="Cassiopeia-α">5</div><div class="ws" id="ws-t-06" title="Cassiopeia-β">6</div>
-            <div class="bos-ws"></div><div class="ws" id="ws-t-04" title="Orion α">4</div>
-            <div class="bos-ws"></div><div class="ws" id="ws-t-03" title="Orion β">3</div>
-            <div class="ws" id="ws-t-01" title="Orion γ">1</div><div class="ws" id="ws-t-02" title="Orion δ">2</div>
+      <!-- Layout 1: Genel PACS Kat Krokisi -->
+      <div class="kroki-view-wrapper" id="kroki-pacs-raporlama">
+        <div class="kroki-wrapper">
+          <div class="sol-panel">
+            <div class="pacs-blok blok-teal-sag">
+              <div class="blok-label text-cyan-400 font-bold mb-1">Vega</div>
+              <div class="bos-ws"></div><div class="ws" id="ws-t-07" title="Cassiopeia-β">7</div>
+              <div class="ws" id="ws-t-05" title="Cassiopeia-α">5</div><div class="ws" id="ws-t-06" title="Cassiopeia-β">6</div>
+              <div class="bos-ws"></div><div class="ws" id="ws-t-04" title="Orion α">4</div>
+              <div class="bos-ws"></div><div class="ws" id="ws-t-03" title="Orion β">3</div>
+              <div class="ws" id="ws-t-01" title="Orion γ">1</div><div class="ws" id="ws-t-02" title="Orion δ">2</div>
+            </div>
+
+            <div class="pacs-blok blok-teal-sol">
+              <div class="blok-label text-cyan-400 font-bold mb-1">Vega</div>
+              <div class="ws" id="ws-t-09" title="Orion ε">9</div><div class="ws" id="ws-t-08" title="Orion ζ">8</div>
+              <div class="ws" id="ws-t-10" title="Orion η">10</div><div class="ws" id="ws-t-11" title="Orion θ">11</div>
+            </div>
+
+            <div class="pacs-blok blok-pink">
+              <div class="blok-label text-pink-400 font-bold mb-1">Sirius</div>
+              <div class="ws" id="ws-pi-01" title="Andromeda α">1</div>
+            </div>
+
+            <div class="koridor-1">Koridor 1</div>
+
+            <div class="pacs-blok blok-blue">
+              <div class="blok-label text-blue-400 font-bold mb-1">Cygnus</div>
+              <div class="ws" id="ws-b-01" title="Andromeda β">1</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-10" title="Andromeda θ">10</div>
+              <div class="ws" id="ws-b-02" title="Andromeda γ">2</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-09" title="Andromeda η">9</div>
+              <div class="ws" id="ws-b-03" title="Andromeda δ">3</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-08" title="Andromeda ζ">8</div>
+              <div class="ws" id="ws-b-04" title="Andromeda ε">4</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-07" title="Lyra α">7</div>
+              <div class="ws" id="ws-b-05" title="Lyra β">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-06" title="Lyra γ">6</div>
+            </div>
           </div>
 
-          <div class="pacs-blok blok-teal-sol">
-            <div class="ws" id="ws-t-09" title="Orion ε">9</div><div class="ws" id="ws-t-08" title="Orion ζ">8</div>
-            <div class="ws" id="ws-t-10" title="Orion η">10</div><div class="ws" id="ws-t-11" title="Orion θ">11</div>
+          <div class="ana-koridor">
+            Ana<br>Koridor
           </div>
 
-          <div class="pacs-blok blok-pink">
-            <div class="ws" id="ws-pi-01" title="Andromeda α">1</div>
-          </div>
+          <div class="sag-panel">
+            <div class="pacs-blok blok-yellow">
+              <div class="blok-label text-amber-400 font-bold mb-1">Orion</div>
+              <div class="ws" id="ws-y-05" title="Vega α">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-04" title="Vega ε">4</div>
+              <div class="ws" id="ws-y-06" title="Vega ζ">6</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-03" title="Vega η">3</div>
+              <div class="ws" id="ws-y-07" title="Vega θ">7</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-02" title="Vega-ι">2</div>
+              <div class="ws" id="ws-y-08" title="Vega-κ">8</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-01" title="Vega-λ">1</div>
+            </div>
 
-          <div class="koridor-1">Koridor 1</div>
+            <div class="pacs-blok blok-purple">
+              <div class="blok-label text-purple-400 font-bold mb-1">Andromeda</div>
+              <div class="ws" id="ws-p-05" title="Cygnus-α">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-04" title="Cygnus-ε">4</div>
+              <div class="ws" id="ws-p-06" title="Cygnus-ζ">6</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-03" title="Cygnus-η">3</div>
+              <div class="ws" id="ws-p-07" title="Cygnus-θ">7</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-02" title="Cygnus-ι">2</div>
+              <div class="ws" id="ws-p-08" title="Cygnus-κ">8</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-01" title="Cygnus-λ">1</div>
+            </div>
 
-          <div class="pacs-blok blok-blue">
-            <div class="ws" id="ws-b-01" title="Andromeda β">1</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-10" title="Andromeda θ">10</div>
-            <div class="ws" id="ws-b-02" title="Andromeda γ">2</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-09" title="Andromeda η">9</div>
-            <div class="ws" id="ws-b-03" title="Andromeda δ">3</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-08" title="Andromeda ζ">8</div>
-            <div class="ws" id="ws-b-04" title="Andromeda ε">4</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-07" title="Lyra α">7</div>
-            <div class="ws" id="ws-b-05" title="Lyra β">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-b-06" title="Lyra γ">6</div>
+            <div class="koridor-2">Koridor 2</div>
+
+            <div class="pacs-blok blok-pe">
+              <div class="blok-label text-teal-400 font-bold mb-1">Perseus</div>
+              <div class="ws" id="ws-pe-01" title="Perseus - α">1</div>
+              <div class="ws" id="ws-pe-02" title="Perseus - β">2</div>
+              <div class="ws" id="ws-pe-03" title="Perseus - γ">3</div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="ana-koridor">
-          Ana<br>Koridor
+      <!-- Layout 2: KVC PACS Odası (Cassiopeia) -->
+      <div class="kroki-view-wrapper hidden" id="kroki-cassiopeia">
+        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
+          <h4 class="text-lg font-bold text-indigo-400 flex items-center justify-center gap-2">
+            ❤️ KVC PACS Odası Krokisi (Cassiopeia)
+          </h4>
+          <div class="flex justify-center items-center gap-8 py-6">
+            <div class="ws p-4 rounded-xl border border-slate-700 bg-slate-800/80 cursor-pointer" id="Cassiopeia-β" title="Cassiopeia-β (Sol İstasyon)">
+              <div class="text-sm font-bold mb-1">β</div>
+              <span class="text-xs text-slate-300">Sol Masa</span>
+            </div>
+            <div class="ws p-4 rounded-xl border border-slate-700 bg-slate-800/80 cursor-pointer" id="Cassiopeia-α" title="Cassiopeia-α (Sağ İstasyon)">
+              <div class="text-sm font-bold mb-1">α</div>
+              <span class="text-xs text-slate-300">Sağ Masa</span>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div class="sag-panel">
-          <div class="pacs-blok blok-yellow">
-            <div class="ws" id="ws-y-05" title="Vega α">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-04" title="Vega ε">4</div>
-            <div class="ws" id="ws-y-06" title="Vega ζ">6</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-03" title="Vega η">3</div>
-            <div class="ws" id="ws-y-07" title="Vega θ">7</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-02" title="Vega-ι">2</div>
-            <div class="ws" id="ws-y-08" title="Vega-κ">8</div> <div class="bos-ws"></div> <div class="ws" id="ws-y-01" title="Vega-λ">1</div>
+      <!-- Layout 3: Kadın Doğum Toplantı Odası (Aquila) -->
+      <div class="kroki-view-wrapper hidden" id="kroki-kadin-dogum">
+        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
+          <h4 class="text-lg font-bold text-amber-400 flex items-center justify-center gap-2">
+            🤰 Kadın Doğum Toplantı Odası Krokisi (Aquila)
+          </h4>
+          <div class="flex justify-center items-center py-6">
+            <div class="ws p-6 rounded-xl border border-slate-700 bg-slate-800/80 cursor-pointer" id="Aquila-α" title="Aquila-α (Toplantı Masası)">
+              <div class="text-base font-bold mb-1">α</div>
+              <span class="text-xs text-slate-300">Kadın Doğum Toplantı Masası</span>
+            </div>
           </div>
+        </div>
+      </div>
 
-          <div class="pacs-blok blok-purple">
-            <div class="ws" id="ws-p-05" title="Cygnus-α">5</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-04" title="Cygnus-β">4</div>
-            <div class="ws" id="ws-p-06" title="Cygnus-γ">6</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-03" title="Cygnus-δ">3</div>
-            <div class="ws" id="ws-p-07" title="Cygnus-ε">7</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-02" title="Cygnus-ζ">2</div>
-            <div class="ws" id="ws-p-08" title="Cygnus-η">8</div> <div class="bos-ws"></div> <div class="ws" id="ws-p-01" title="Cygnus-θ">1</div>
+      <!-- Layout 4: Nöroloji PACS Odası (Perseus) -->
+      <div class="kroki-view-wrapper hidden" id="kroki-noroloji">
+        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl">
+          <h4 class="text-lg font-bold text-teal-400 flex items-center justify-center gap-2">
+            🧠 Nöroloji PACS Odası Krokisi (Perseus)
+          </h4>
+          <div class="grid grid-cols-2 gap-6 max-w-md mx-auto py-4">
+            <div class="ws p-4 rounded-xl border border-slate-700 bg-slate-800/80 cursor-pointer" id="Perseus-β" title="Perseus - β (Üst Duvar Sol)">
+              <div class="text-sm font-bold mb-1">β</div>
+              <span class="text-xs text-slate-300">Üst Duvar Sol</span>
+            </div>
+            <div class="ws p-4 rounded-xl border border-slate-700 bg-slate-800/80 cursor-pointer" id="Perseus-α" title="Perseus - α (Kapıya Yakın)">
+              <div class="text-sm font-bold mb-1">α</div>
+              <span class="text-xs text-slate-300">Kapıya Yakın</span>
+            </div>
+            <div class="ws p-4 rounded-xl border border-slate-700 bg-slate-800/80 cursor-pointer col-span-2 max-w-[200px] mx-auto w-full" id="Perseus-γ" title="Perseus - γ (Alt Duvar)">
+              <div class="text-sm font-bold mb-1">γ</div>
+              <span class="text-xs text-slate-300">Alt Duvar</span>
+            </div>
           </div>
+        </div>
+      </div>
 
-          <div class="koridor-2">Koridor 2</div>
+      <!-- Layout 5: Onkoloji PACS Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-onkoloji">
+        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-4 shadow-2xl">
+          <h4 class="text-lg font-bold text-purple-400 flex items-center justify-center gap-2">
+            🎗️ Onkoloji PACS Odası Krokisi
+          </h4>
+          <p class="text-xs text-slate-400">Onkoloji PACS birimi cihaz durumları anlık takip edilmektedir.</p>
+        </div>
+      </div>
 
-          <div class="pacs-blok blok-peach">
-            <div class="bos-ws"></div><div class="ws" id="ws-pe-03" title="Perseus - γ">3</div>
-            <div class="ws" id="ws-pe-01" title="Perseus - α">1</div><div class="ws" id="ws-pe-02" title="Perseus - β">2</div>
-          </div>
+      <!-- Layout 6: FTR PACS Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-ftr">
+        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-xl mx-auto text-center space-y-4 shadow-2xl">
+          <h4 class="text-lg font-bold text-emerald-400 flex items-center justify-center gap-2">
+            🦾 FTR PACS Odası Krokisi
+          </h4>
+          <p class="text-xs text-slate-400">Fizik Tedavi ve Rehabilitasyon PACS birimi takip durumu.</p>
         </div>
       </div>
     </main>

@@ -279,44 +279,24 @@ function updateKrokiColors() {
 
 let activeKrokiRoom = "ALL";
 
-function filterKrokiByRoom(roomName) {
-  activeKrokiRoom = roomName;
-  document.querySelectorAll(".kroki-sub-tab").forEach(tab => {
-    if (tab.getAttribute("data-kroki-room") === roomName) {
-      tab.className = "kroki-sub-tab active px-3 py-1.5 rounded-xl font-bold bg-cyan-500 text-white shadow whitespace-nowrap";
+function switchKrokiLayout(layoutId) {
+  document.querySelectorAll(".kroki-layout-btn").forEach(btn => {
+    if (btn.getAttribute("data-layout") === layoutId) {
+      btn.className = "kroki-layout-btn active px-3.5 py-2 rounded-xl font-bold bg-cyan-500 text-white shadow transition-all border border-cyan-400/30";
     } else {
-      tab.className = "kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap";
+      btn.className = "kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700";
     }
   });
 
-  const allBlocks = document.querySelectorAll(".pacs-blok");
-  if (!roomName || roomName === "ALL") {
-    allBlocks.forEach(b => {
-      b.style.opacity = "1";
-      b.style.filter = "none";
-    });
-  } else {
-    const roomBlockClass = {
-      "Cassiopeia": "blok-teal-sag",
-      "Orion": "blok-teal-sol",
-      "Andromeda": "blok-pink",
-      "Lyra": "blok-blue",
-      "Vega": "blok-yellow",
-      "Cygnus": "blok-purple",
-      "Perseus": "blok-pe"
-    };
+  document.querySelectorAll(".kroki-view-wrapper").forEach(wrapper => {
+    if (wrapper.id === layoutId) {
+      wrapper.classList.remove("hidden");
+    } else {
+      wrapper.classList.add("hidden");
+    }
+  });
 
-    allBlocks.forEach(b => {
-      const targetCls = roomBlockClass[roomName];
-      if (targetCls && b.classList.contains(targetCls)) {
-        b.style.opacity = "1";
-        b.style.filter = "drop-shadow(0 0 12px rgba(6,182,212,0.6))";
-      } else {
-        b.style.opacity = "0.35";
-        b.style.filter = "grayscale(50%)";
-      }
-    });
-  }
+  updateKrokiColors();
 }
 
 function showPCLocationOnKroki(pcId) {
@@ -339,32 +319,43 @@ function showPCLocationOnKroki(pcId) {
   document.getElementById("pc-grid-container")?.classList.add("hidden");
   document.getElementById("kroki-container")?.classList.remove("hidden");
 
-  if (pc.room) {
-    filterKrokiByRoom(pc.room);
-  } else {
-    filterKrokiByRoom("ALL");
+  // Determine target Kroki layout ID for this PC
+  let targetLayout = "kroki-pacs-raporlama";
+  const fn = (pc.friendlyName || pc.hostname || "").toLowerCase();
+  const room = (pc.room || "").toLowerCase();
+
+  if (fn.includes("cassiopeia") || room.includes("kvc")) {
+    targetLayout = "kroki-cassiopeia";
+  } else if (fn.includes("aquila") || room.includes("kadin") || room.includes("doğum") || room.includes("dogum")) {
+    targetLayout = "kroki-kadin-dogum";
+  } else if (fn.includes("perseus") || room.includes("nöroloji") || room.includes("noroloji")) {
+    targetLayout = "kroki-noroloji";
+  } else if (room.includes("onkoloji")) {
+    targetLayout = "kroki-onkoloji";
+  } else if (room.includes("ftr")) {
+    targetLayout = "kroki-ftr";
   }
 
-  updateKrokiColors();
-
-  // 2. Target Workstation Element
-  let targetWsId = null;
-  for (const [wsId, name] of Object.entries(KROKI_MAP)) {
-    if (name === pc.friendlyName || name === pc.hostname) {
-      targetWsId = wsId;
-      break;
-    }
-  }
+  switchKrokiLayout(targetLayout);
 
   // Clear previous active sonar highlights
   document.querySelectorAll('.ws-aktif').forEach(el => el.classList.remove('ws-aktif'));
 
-  if (targetWsId) {
-    const wsEl = document.getElementById(targetWsId);
-    if (wsEl) {
-      wsEl.classList.add('ws-aktif');
-      wsEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+  // Target Workstation Element across layouts
+  let wsEl = document.getElementById(pc.friendlyName) || document.getElementById(pc.id);
+
+  if (!wsEl) {
+    for (const [wsId, name] of Object.entries(KROKI_MAP)) {
+      if (name === pc.friendlyName || name === pc.hostname) {
+        wsEl = document.getElementById(wsId);
+        if (wsEl) break;
+      }
     }
+  }
+
+  if (wsEl) {
+    wsEl.classList.add('ws-aktif');
+    wsEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
   }
 }
 
@@ -449,11 +440,11 @@ document.addEventListener("DOMContentLoaded", () => {
     updateKrokiColors();
   });
 
-  // Kroki Sub-Tab Room Filter Buttons
-  document.querySelectorAll(".kroki-sub-tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-      const roomName = tab.getAttribute("data-kroki-room");
-      filterKrokiByRoom(roomName);
+  // Kroki Layout Switcher Buttons
+  document.querySelectorAll(".kroki-layout-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const layoutId = btn.getAttribute("data-layout");
+      switchKrokiLayout(layoutId);
     });
   });
 
