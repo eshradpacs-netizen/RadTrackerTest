@@ -77,6 +77,7 @@ echo.
 echo [ISLENIYOR] Secilen oda ve masa kaydediliyor...
 
 powershell -ExecutionPolicy Bypass -NoProfile -Command "& {
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls
     $oda = '%ODA_SEC%'
     $masa = '%MASA_SEC%'
     $srv = '%SERVER_URL%'
@@ -194,11 +195,15 @@ powershell -ExecutionPolicy Bypass -NoProfile -Command "& {
 schtasks /Delete /TN "%TASK_NAME%" /F >nul 2>&1
 schtasks /Create /F /TN "%TASK_NAME%" /SC ONLOGON /RL HIGHEST /TR "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File \"%TARGET_PS1%\"" >nul
 schtasks /Run /TN "%TASK_NAME%" >nul 2>&1
-Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"%TARGET_PS1%`"" -WindowStyle Hidden
+
+powershell -ExecutionPolicy Bypass -NoProfile -Command "Start-Process powershell.exe -ArgumentList '-ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File \"\"%TARGET_PS1%\"\"' -WindowStyle Hidden" >nul 2>&1
 
 echo.
-echo [TEBRIKLER] KURULUM TAMAMLANDI!
-echo Bilgisayar artik dogrudan krokideki masaya kilitlendi.
-echo USB'yi cikarip bir sonraki bilgisayara gecebilirsiniz.
+echo ============================================================================
+echo   [TEBRIKLER] KURULUM BASARIYLA TAMAMLANDI!
+echo ============================================================================
+echo   Bilgisayar artik dogrudan krokideki masaya kilitlendi.
+echo   Ajan arka planda sessizce calismaya basladi.
+echo   USB'yi cikarip bir sonraki bilgisayara gecebilirsiniz.
 echo.
 pause
