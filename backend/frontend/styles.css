@@ -161,3 +161,19 @@ body {
   animation: sonar-pulse 1.2s infinite ease-in-out !important;
   z-index: 40 !important;
 }
+
+.blok-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  grid-column: 1 / -1;
+  pointer-events: none;
+}

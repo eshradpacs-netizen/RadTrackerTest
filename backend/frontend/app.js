@@ -328,22 +328,22 @@ function showPCLocationOnKroki(pcId) {
   document.getElementById("pc-grid-container")?.classList.add("hidden");
   document.getElementById("kroki-container")?.classList.remove("hidden");
 
-  // Determine target Kroki layout ID for this PC
+  // 2. Exact Target Kroki Layout Matching for this PC
   let targetLayout = "kroki-pacs-raporlama";
-  const fn = (pc.friendlyName || pc.hostname || "").toLowerCase();
+  const name = (pc.friendlyName || "").toLowerCase();
   const room = (pc.room || "").toLowerCase();
 
-  if (fn.includes("cassiopeia") || room.includes("kvc")) {
+  if (name.includes("kvc") || room.includes("kvc")) {
     targetLayout = "kroki-cassiopeia";
-  } else if (fn.includes("aquila") || room.includes("kadin") || room.includes("doğum") || room.includes("dogum")) {
+  } else if (name.includes("kadın doğum toplantı") || room.includes("toplantı")) {
     targetLayout = "kroki-kadin-dogum";
-  } else if (fn.includes("perseus") || room.includes("nöroloji") || room.includes("noroloji")) {
-    targetLayout = "kroki-noroloji";
-  } else if (fn.includes("kdpacs") || (room.includes("kadin") && room.includes("pacs"))) {
+  } else if (name.includes("kadın doğum pacs") || (room.includes("kadın doğum") && room.includes("pacs"))) {
     targetLayout = "kroki-kadin-dogum-pacs";
-  } else if (room.includes("onkoloji")) {
+  } else if (name.includes("nöroloji") || room.includes("nöroloji") || room.includes("noroloji")) {
+    targetLayout = "kroki-noroloji";
+  } else if (name.includes("onkoloji") || room.includes("onkoloji")) {
     targetLayout = "kroki-onkoloji";
-  } else if (room.includes("ftr")) {
+  } else if (name.includes("ftr") || room.includes("ftr")) {
     targetLayout = "kroki-ftr";
   }
 
@@ -352,12 +352,12 @@ function showPCLocationOnKroki(pcId) {
   // Clear previous active sonar highlights
   document.querySelectorAll('.ws-aktif').forEach(el => el.classList.remove('ws-aktif'));
 
-  // Target Workstation Element across layouts
+  // 3. Find Workstation Element across layouts
   let wsEl = document.getElementById(pc.friendlyName) || document.getElementById(pc.id);
 
   if (!wsEl) {
-    for (const [wsId, name] of Object.entries(KROKI_MAP)) {
-      if (name === pc.friendlyName || name === pc.hostname) {
+    for (const [wsId, fn] of Object.entries(KROKI_MAP)) {
+      if (fn === pc.friendlyName || fn === pc.hostname) {
         wsEl = document.getElementById(wsId);
         if (wsEl) break;
       }
