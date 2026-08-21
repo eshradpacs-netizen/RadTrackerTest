@@ -1,3 +1,19 @@
+
+const ROOM_TO_KROKI_LAYOUT = {
+  'Genel PACS Oda 1': 'kroki-pacs-raporlama',
+  'Genel PACS Oda 2': 'kroki-pacs-raporlama',
+  'Genel PACS Oda 3': 'kroki-pacs-raporlama',
+  'Genel PACS Oda 4': 'kroki-pacs-raporlama',
+  'Genel PACS Oda 5': 'kroki-pacs-raporlama',
+  'Toplantı Odası': 'kroki-pacs-raporlama',
+  'Nöroloji PACS Odası': 'kroki-noroloji',
+  'KVC PACS Odası': 'kroki-cassiopeia',
+  'Kadın Doğum PACS Odası': 'kroki-kadin-dogum-pacs',
+  'Kadın Doğum Toplantı Odası': 'kroki-kadin-dogum',
+  'Onkoloji PACS Odası': 'kroki-onkoloji',
+  'FTR PACS Odası': 'kroki-ftr'
+};
+
 /**
  * Radiology PC Tracker v1 - Frontend Real-Time WebSocket & Telegram Mini App Client
  */
@@ -316,21 +332,33 @@ function updateKrokiColors() {
 let activeKrokiRoom = "ALL";
 
 function switchKrokiLayout(layoutId) {
+  if (!layoutId) layoutId = 'kroki-pacs-raporlama';
+  
+  // Highlight active layout button
   document.querySelectorAll(".kroki-layout-btn").forEach(btn => {
     if (btn.getAttribute("data-layout") === layoutId) {
-      btn.className = "kroki-layout-btn active px-3.5 py-2 rounded-xl font-bold bg-cyan-500 text-white shadow transition-all border border-cyan-400/30";
+      btn.className = "kroki-layout-btn active px-4 py-2 rounded-xl font-black bg-cyan-500 text-white shadow-lg shadow-cyan-500/30 transition-all border border-cyan-300 scale-105";
     } else {
-      btn.className = "kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700";
+      btn.className = "kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800/90 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700";
     }
   });
 
+  // Toggle layout visibility
   document.querySelectorAll(".kroki-view-wrapper").forEach(wrapper => {
     if (wrapper.id === layoutId) {
       wrapper.classList.remove("hidden");
+      wrapper.style.display = "block";
     } else {
       wrapper.classList.add("hidden");
+      wrapper.style.display = "none";
     }
   });
+
+  // Toggle zoom controls (only needed for main large floor plan)
+  const zoomControls = document.getElementById("kroki-zoom-controls");
+  if (zoomControls) {
+    zoomControls.style.display = (layoutId === 'kroki-pacs-raporlama') ? 'flex' : 'none';
+  }
 
   updateKrokiColors();
 }
@@ -575,7 +603,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (targetRoom === "KROKI") {
         document.getElementById("pc-grid-container")?.classList.add("hidden");
         document.getElementById("kroki-container")?.classList.remove("hidden");
-        updateKrokiColors();
+        switchKrokiLayout('kroki-pacs-raporlama');
+      } else if (ROOM_TO_KROKI_LAYOUT[targetRoom] && !document.getElementById("kroki-container")?.classList.contains("hidden")) {
+        // If already in Kroki view and user taps a room tab, switch to that room's Kroki!
+        switchKrokiLayout(ROOM_TO_KROKI_LAYOUT[targetRoom]);
       } else {
         document.getElementById("kroki-container")?.classList.add("hidden");
         document.getElementById("pc-grid-container")?.classList.remove("hidden");
