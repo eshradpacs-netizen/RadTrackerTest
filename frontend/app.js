@@ -817,3 +817,119 @@ function appendChatMessage(msg) {
   container.appendChild(msgDiv);
   container.scrollTop = container.scrollHeight;
 }
+
+
+// ============================================================================
+// Admin Whitelist & User Management Functions
+// ============================================================================
+
+async function openAdminModal() {
+  const modal = document.getElementById("admin-modal");
+  if (modal) modal.classList.remove("hidden");
+  await loadAdminUsers();
+}
+
+function closeAdminModal() {
+  const modal = document.getElementById("admin-modal");
+  if (modal) modal.classList.add("hidden");
+  const msg = document.getElementById("admin-msg");
+  if (msg) msg.classList.add("hidden");
+}
+
+async function loadAdminUsers() {
+  const listEl = document.getElementById("admin-email-list");
+  const countEl = document.getElementById("admin-user-count");
+  if (!listEl) return;
+
+  listEl.innerHTML = '<div class="p-3 text-center text-xs text-slate-500">Yükleniyor...</div>';
+
+  try {
+    const res = await fetch("/api/admin/users");
+    const data = await res.json();
+    if (data.success && data.allowed_emails) {
+      const emails = data.allowed_emails;
+      if (countEl) countEl.innerText = emails.length;
+
+      if (emails.length === 0) {
+        listEl.innerHTML = '<div class="p-3 text-center text-xs text-slate-500">Henüz yetkili hekim eklenmemiş.</div>';
+        return;
+      }
+
+      listEl.innerHTML = "";
+      emails.forEach(email => {
+        const row = document.createElement("div");
+        row.className = "flex items-center justify-between p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs";
+        row.innerHTML = `
+          <div class="flex items-center gap-2 overflow-hidden">
+            <span class="text-emerald-400">✅</span>
+            <span class="font-medium text-slate-200 truncate">${email}</span>
+          </div>
+          <button onclick="adminRemoveEmail('${email}')" class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 border border-rose-500/30 transition-all flex items-center gap-1">
+            🗑️ Kaldır
+          </button>
+        `;
+        listEl.appendChild(row);
+      });
+    }
+  } catch (err) {
+    listEl.innerHTML = '<div class="p-3 text-center text-xs text-rose-400">Yetkili listesi yüklenemedi.</div>';
+  }
+}
+
+async function adminAddEmail() {
+  const input = document.getElementById("admin-new-email");
+  const msg = document.getElementById("admin-msg");
+  if (!input) return;
+
+  const email = input.value.trim().toLowerCase();
+  if (!email || !email.includes("@")) {
+    if (msg) {
+      msg.className = "text-[11px] font-bold text-rose-400";
+      msg.innerText = "Geçerli bir e-posta adresi giriniz.";
+      msg.classList.remove("hidden");
+    }
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/admin/whitelist/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email })
+    });
+    const data = await res.json();
+    if (data.success) {
+      input.value = "";
+      if (msg) {
+        msg.className = "text-[11px] font-bold text-emerald-400";
+        msg.innerText = `${email} başarıyla yetkilendirildi!`;
+        msg.classList.remove("hidden");
+      }
+      await loadAdminUsers();
+    }
+  } catch (err) {
+    if (msg) {
+      msg.className = "text-[11px] font-bold text-rose-400";
+      msg.innerText = "Ekleme sırasında bir hata oluştu.";
+      msg.classList.remove("hidden");
+    }
+  }
+}
+
+async function adminRemoveEmail(email) {
+  if (!confirm(`${email} kullanıcısının yetkisini kaldırmak istediğinize emin misiniz?`)) return;
+
+  try {
+    const res = await fetch("/api/admin/whitelist/remove", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email })
+    });
+    const data = await res.json();
+    if (data.success) {
+      await loadAdminUsers();
+    }
+  } catch (err) {
+    alert("Yetki kaldırma başarısız oldu.");
+  }
+}
