@@ -124,6 +124,11 @@ body {
   transition: all 0.2s ease;
 }
 
+.kroki-view-wrapper .ws {
+  flex-direction: column !important;
+  text-align: center !important;
+}
+
 .ws:hover {
   transform: scale(1.08);
   border-color: #38bdf8;
