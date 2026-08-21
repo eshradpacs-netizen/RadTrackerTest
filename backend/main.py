@@ -218,7 +218,8 @@ async def send_telegram_code(payload: Dict[str, Any]):
         if tg_id and bound_tg_id != tg_id:
             raise HTTPException(status_code=403, detail=f"Güvenlik Uyarısı: Bu e-posta adresi başka bir Telegram hesabına (@{existing_user.get('telegram_username', 'kilitli')}) kilitlidir!")
 
-    target_chat_id = tg_id or (existing_user.get("telegram_id") if existing_user else None)
+    # Find target chat ID from payload or stored user binding
+    target_chat_id = tg_id or (existing_user.get("chat_id") or existing_user.get("telegram_id") if existing_user else None)
 
     # Generate 6-digit random code
     code = f"{random.randint(100000, 999999)}"
@@ -244,14 +245,24 @@ async def send_telegram_code(payload: Dict[str, Any]):
         except Exception as e:
             logger.warning(f"Could not send direct chat message to {target_chat_id}: {e}")
 
-    if not sent_via_bot:
-        await db.log_event_to_channel("🔑 Hekim Giriş Kodu", msg_text)
+    # Also log to admin channel for audit
+    await db.log_event_to_channel("🔑 Hekim Giriş Kodu", msg_text)
 
-    return {
-        "success": True,
-        "message": f"6 haneli doğrulama kodu Telegram sohbetinize (@RadTrackerTest_bot) gönderildi!",
-        "email": email
-    }
+    if sent_via_bot:
+        return {
+            "success": True,
+            "bot_linked": True,
+            "message": f"6 haneli doğrulama kodu Telegram sohbetinize (@RadTrackerTest_bot) gönderildi!",
+            "email": email
+        }
+    else:
+        return {
+            "success": True,
+            "bot_linked": False,
+            "message": f"Telegram botunuz henüz eşleştirilmemiş. Lütfen @RadTrackerTest_bot botuna girip e-posta adresinizi ({email}) mesaj atınız.",
+            "bot_url": "https://t.me/RadTrackerTest_bot",
+            "email": email
+        }
 
 @app.post("/api/verify-telegram-code")
 async def verify_telegram_code(payload: Dict[str, Any]):
