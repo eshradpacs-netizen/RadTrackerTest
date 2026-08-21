@@ -662,3 +662,65 @@ div.ws.ws-aktif,
   from { opacity: 0; transform: translateY(-12px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+
+/* Room Active Glow Effect when PC located */
+.room-active-glow {
+  box-shadow: 0 0 0 4px #38bdf8, 0 0 35px rgba(56, 189, 248, 0.6) !important;
+  border-color: #38bdf8 !important;
+  animation: room-glow-pulse 1.5s infinite ease-in-out !important;
+}
+
+@keyframes room-glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px #38bdf8, 0 0 25px rgba(56, 189, 248, 0.5); }
+  50% { box-shadow: 0 0 0 6px #0284c7, 0 0 45px rgba(14, 165, 233, 0.8); }
+}
+
+/* Floating Workstation Pin Callout Bubble */
+.pc-pin-callout {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  animation: pin-bob 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes pin-bob {
+  from { transform: translateX(-50%) translateY(0); }
+  to { transform: translateX(-50%) translateY(-8px); }
+}
+
+.pc-pin-badge {
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  box-shadow: 0 10px 25px rgba(2, 132, 199, 0.8), 0 0 0 2px #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pc-pin-arrow {
+  width: 8px;
+  height: 8px;
+  background: #0369a1;
+  transform: rotate(45deg);
+  margin-top: -4px;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+/* Make sure floor-ws has relative positioning so pin attaches perfectly */
+.floor-ws, .ws {
+  position: relative !important;
+}

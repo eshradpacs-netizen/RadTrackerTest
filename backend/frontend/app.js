@@ -322,7 +322,7 @@ function showPCLocationOnKroki(pcId) {
 
   closeModal();
 
-  // 1. Activate Kroki View Tab
+  // 1. Activate Kroki View Mode
   document.getElementById("pc-grid-container")?.classList.add("hidden");
   document.getElementById("kroki-container")?.classList.remove("hidden");
   
@@ -362,8 +362,10 @@ function showPCLocationOnKroki(pcId) {
 
   switchKrokiLayout(targetLayout);
 
-  // Clear previous active sonar highlights
+  // Clear previous highlights & pins & room glows
   document.querySelectorAll('.ws-aktif').forEach(el => el.classList.remove('ws-aktif'));
+  document.querySelectorAll('.room-active-glow').forEach(el => el.classList.remove('room-active-glow'));
+  document.querySelectorAll('.pc-pin-callout').forEach(el => el.remove());
 
   // 3. Find Workstation Element across layouts
   let wsEl = document.getElementById(pc.id) || document.getElementById(pc.friendlyName);
@@ -385,19 +387,58 @@ function showPCLocationOnKroki(pcId) {
            document.querySelector(`[title*="${pc.friendlyName}"]`);
   }
 
-  // 4. Show Notification Banner and Pulse
+  // 4. Show Notification Banner at Top
   const banner = document.getElementById("kroki-location-banner");
   const bannerText = document.getElementById("kroki-banner-text");
   if (banner && bannerText) {
-    bannerText.innerText = `${pc.friendlyName || pc.hostname} (${pc.room || 'Genel'}) krokide mavi halka ile işaretlendi.`;
+    bannerText.innerText = `${pc.friendlyName || pc.hostname} (${pc.room || 'Genel'}) krokide işaretlendi!`;
     banner.classList.remove("hidden");
   }
 
   if (wsEl) {
+    // A. Add active sonar class
     wsEl.classList.add('ws-aktif');
+
+    // B. Glow the parent room container if available
+    const parentRoom = wsEl.closest('.floor-room') || wsEl.closest('.glass-card');
+    if (parentRoom) {
+      parentRoom.classList.add('room-active-glow');
+    }
+
+    // C. Attach Floating 3D Animated Pin Callout directly on the desk
+    const pinEl = document.createElement('div');
+    pinEl.className = 'pc-pin-callout';
+    pinEl.innerHTML = `
+      <div class="pc-pin-badge">
+        <span>📍</span>
+        <span>${pc.friendlyName || pc.hostname}</span>
+      </div>
+      <div class="pc-pin-arrow"></div>
+    `;
+    wsEl.appendChild(pinEl);
+
+    // D. Precise Multi-Axis Center Scrolling (handles mobile & overflow)
     setTimeout(() => {
       wsEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-    }, 150);
+      
+      // Also scroll parent horizontal containers
+      const scrollContainers = document.querySelectorAll('.overflow-x-auto, #kroki-container');
+      scrollContainers.forEach(container => {
+        if (container.contains(wsEl)) {
+          const wsRect = wsEl.getBoundingClientRect();
+          const contRect = container.getBoundingClientRect();
+          const offsetLeft = wsEl.offsetLeft - (container.clientWidth / 2) + (wsEl.clientWidth / 2);
+          container.scrollTo({ left: offsetLeft, behavior: 'smooth' });
+        }
+      });
+    }, 100);
+
+    // Haptic feedback on Telegram if available
+    if (tgApp?.HapticFeedback) {
+      tgApp.HapticFeedback.notificationOccurred('success');
+    }
+  } else {
+    console.warn("Could not find workstation DOM element for PC:", pc);
   }
 }
 
