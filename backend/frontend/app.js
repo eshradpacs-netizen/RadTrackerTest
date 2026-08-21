@@ -557,6 +557,32 @@ function showAuthError(msg) {
 
 // Event Listeners
 document.addEventListener("DOMContentLoaded", () => {
+  // Stat Summary Cards Clickable Filter Handler
+  document.querySelectorAll(".stat-filter-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const filter = card.getAttribute("data-status-filter");
+      
+      if (activeStatusFilter === filter) {
+        // Toggle off
+        activeStatusFilter = "ALL";
+        card.classList.remove("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
+      } else {
+        // Toggle on
+        activeStatusFilter = filter;
+        document.querySelectorAll(".stat-filter-card").forEach(c => {
+          c.classList.remove("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
+        });
+        card.classList.add("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
+      }
+
+      // Switch to card grid view to show filtered PCs immediately
+      document.getElementById("kroki-container")?.classList.add("hidden");
+      document.getElementById("pc-grid-container")?.classList.remove("hidden");
+      
+      renderGrid();
+    });
+  });
+
   connectWebSocket();
   checkAuthStatus();
 
