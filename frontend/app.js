@@ -1,4 +1,13 @@
 
+function clearStatusFilter() {
+  activeStatusFilter = "ALL";
+  document.querySelectorAll(".stat-filter-card").forEach(c => {
+    c.classList.remove("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
+  });
+  renderGrid();
+}
+
+
 const ROOM_TO_KROKI_LAYOUT = {
   'GENEL_PACS': 'kroki-pacs-raporlama',
   'Genel PACS Oda 1': 'kroki-pacs-raporlama',
@@ -155,10 +164,25 @@ function renderGrid() {
   });
 
   if (filtered.length === 0) {
+    let filterMsg = "Aramaya uygun bilgisayar bulunamadı.";
+    if (activeStatusFilter !== "ALL") {
+      const filterNames = {
+        'idle': 'Boşta (Kullanılabilir)',
+        'active': 'Dolu (Aktif)',
+        'lunch-break': 'Öğle Arası',
+        'offline': 'Çevrimdışı / Kapalı',
+        'suspicious': 'Şüpheli Aktivite'
+      };
+      filterMsg = `Şu anda "<b>${filterNames[activeStatusFilter] || activeStatusFilter}</b>" durumunda bilgisayar bulunmuyor.`;
+    }
+
     grid.innerHTML = `
-      <div class="col-span-full py-12 text-center text-slate-500">
+      <div class="col-span-full py-10 text-center text-slate-400 glass-card rounded-2xl border border-slate-800 p-6 max-w-md mx-auto">
         <p class="text-3xl mb-2">🔍</p>
-        <p class="text-sm font-medium">Aramaya uygun bilgisayar bulunamadı.</p>
+        <p class="text-sm font-medium text-slate-300 mb-3">${filterMsg}</p>
+        <button onclick="clearStatusFilter()" class="px-4 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-white shadow-lg hover:opacity-90 transition-all">
+          ✨ Filtreyi Temizle (Tümünü Göster)
+        </button>
       </div>
     `;
     return;
@@ -663,7 +687,12 @@ document.addEventListener("DOMContentLoaded", () => {
       tab.classList.add("bg-cyan-500", "text-white", "active");
 
       const targetRoom = tab.getAttribute("data-room");
-      
+      // Reset status filter when switching room tabs
+      activeStatusFilter = "ALL";
+      document.querySelectorAll(".stat-filter-card").forEach(c => {
+        c.classList.remove("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
+      });
+
       if (targetRoom === "ALL") {
         // Tüm Odalar -> Show card grid list
         document.getElementById("kroki-container")?.classList.add("hidden");
