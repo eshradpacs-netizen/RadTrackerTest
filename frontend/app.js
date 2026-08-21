@@ -1,4 +1,18 @@
 
+async function fetchComputers() {
+  try {
+    const res = await fetch('/api/computers');
+    if (res.ok) {
+      const data = await res.json();
+      pcs = Array.isArray(data) ? data : (data.computers || []);
+      renderAll();
+    }
+  } catch (err) {
+    console.error("fetchComputers error:", err);
+  }
+}
+
+
 function clearStatusFilter() {
   activeStatusFilter = "ALL";
   document.querySelectorAll(".stat-filter-card").forEach(c => {
@@ -30,6 +44,7 @@ const ROOM_TO_KROKI_LAYOUT = {
 
 let pcs = [];
 let activeRoom = 'ALL';
+let activeStatusFilter = 'ALL';
 let searchQuery = '';
 let socket = null;
 let selectedPc = null;
@@ -601,6 +616,7 @@ function showAuthError(msg) {
 
 // Event Listeners
 document.addEventListener("DOMContentLoaded", () => {
+  fetchComputers();
   // Stat Summary Cards Clickable Filter Handler
   document.querySelectorAll(".stat-filter-card").forEach(card => {
     card.addEventListener("click", () => {
