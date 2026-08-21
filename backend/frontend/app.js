@@ -895,7 +895,7 @@ async function adminAddEmail() {
     const res = await fetch("/api/admin/whitelist/add", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email })
+      body: JSON.stringify({ email: email, adminEmail: localStorage.getItem("radtracker_email") || "" })
     });
     const data = await res.json();
     if (data.success) {
@@ -923,7 +923,7 @@ async function adminRemoveEmail(email) {
     const res = await fetch("/api/admin/whitelist/remove", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email })
+      body: JSON.stringify({ email: email, adminEmail: localStorage.getItem("radtracker_email") || "" })
     });
     const data = await res.json();
     if (data.success) {

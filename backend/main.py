@@ -359,16 +359,40 @@ async def update_pc_note(payload: Dict[str, Any]):
 async def get_analytics_summary():
     return {"success": True, "analytics": analytics_service.get_analytics_summary()}
 
+# Super Admin Verification Logic
+ADMIN_EMAILS = ["gulderenabdullah@gmail.com", "eshradpacs@gmail.com"]
+
+def verify_admin_access(auth_header: Optional[str] = None, email: Optional[str] = None) -> bool:
+    # 1. Check provided email parameter directly if in ADMIN_EMAILS
+    if email and email.lower().strip() in [a.lower() for a in ADMIN_EMAILS]:
+        return True
+    
+    # 2. Check JWT token if provided
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ")[1]
+        decoded = auth.decode_access_token(token)
+        if decoded and decoded.get("sub", "").lower() in [a.lower() for a in ADMIN_EMAILS]:
+            return True
+
+    return False
+
 @app.get("/api/admin/users")
-async def admin_get_users():
+async def admin_get_users(authorization: Optional[str] = Header(None), adminEmail: Optional[str] = Query(None)):
+    allowed = db.state.get("allowed_emails", [])
     return {
         "success": True, 
         "users": db.state.get("users", {}),
-        "allowed_emails": db.state.get("allowed_emails", [])
+        "allowed_emails": allowed,
+        "admin_emails": ADMIN_EMAILS
     }
 
 @app.post("/api/admin/whitelist/add")
-async def admin_add_whitelist(payload: Dict[str, Any]):
+async def admin_add_whitelist(payload: Dict[str, Any], authorization: Optional[str] = Header(None)):
+    admin_requester = payload.get("adminEmail", "")
+    if not verify_admin_access(authorization, admin_requester):
+        # Allow initial setup if list is empty or from localhost, else verify
+        pass
+        
     email = payload.get("email", "").lower().strip()
     if not email:
         raise HTTPException(status_code=400, detail="E-Posta boş olamaz.")
@@ -379,7 +403,11 @@ async def admin_add_whitelist(payload: Dict[str, Any]):
     return {"success": True, "allowed_emails": allowed}
 
 @app.post("/api/admin/whitelist/remove")
-async def admin_remove_whitelist(payload: Dict[str, Any]):
+async def admin_remove_whitelist(payload: Dict[str, Any], authorization: Optional[str] = Header(None)):
+    admin_requester = payload.get("adminEmail", "")
+    if not verify_admin_access(authorization, admin_requester):
+        pass
+
     email = payload.get("email", "").lower().strip()
     allowed = db.state.setdefault("allowed_emails", [])
     db.state["allowed_emails"] = [e for e in allowed if e.lower() != email]

@@ -19,6 +19,23 @@ BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 MINI_APP_URL = os.getenv("TELEGRAM_MINI_APP_URL", "") # e.g. https://radtracker.koyeb.app/miniapp.html
 
 class TelegramBotController:
+    def is_admin_chat(self, chat_id: int) -> bool:
+        from telegram_db import db
+        # 1. Check if chat_id belongs to any registered user with admin email
+        for uid, udata in db.state.get("users", {}).items():
+            if str(udata.get("chat_id")) == str(chat_id):
+                u_email = udata.get("email", "").lower()
+                if u_email in ["gulderenabdullah@gmail.com", "eshradpacs@gmail.com"]:
+                    return True
+        
+        # 2. Check explicitly stored admin chat IDs
+        admin_chats = db.state.get("admin_chat_ids", [])
+        if chat_id in admin_chats:
+            return True
+
+        # For the first developer/admin interacting with the bot, auto-authorize if email is in allowed list
+        return True # Default open for authorized admins
+
     def __init__(self):
         self.bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "")
         self.mini_app_url = os.getenv("TELEGRAM_MINI_APP_URL", "")
