@@ -368,11 +368,13 @@ function showPCLocationOnKroki(pcId) {
   const name = (pc.friendlyName || "").toLowerCase();
   const room = (pc.room || "").toLowerCase();
 
-  if (name.includes("kvc") || room.includes("kvc")) {
+  if (name.includes("nöroloji") || room.includes("nöroloji")) {
+    targetLayout = "kroki-noroloji";
+  } else if (name.includes("kvc") || room.includes("kvc")) {
     targetLayout = "kroki-cassiopeia";
-  } else if (name.includes("kadın doğum toplantı") || room.includes("toplantı")) {
+  } else if (name.includes("kadın doğum toplantı") || (room.includes("kadın doğum") && room.includes("toplantı"))) {
     targetLayout = "kroki-kadin-dogum";
-  } else if (name.includes("kadın doğum pacs") || (room.includes("kadın doğum") && room.includes("pacs"))) {
+  } else if (name.includes("kadın doğum") || room.includes("kadın doğum")) {
     targetLayout = "kroki-kadin-dogum-pacs";
   } else if (name.includes("onkoloji") || room.includes("onkoloji")) {
     targetLayout = "kroki-onkoloji";
