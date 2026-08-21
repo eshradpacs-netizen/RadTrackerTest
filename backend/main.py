@@ -544,6 +544,38 @@ async def serve_styles_css():
         })
     raise HTTPException(status_code=404, detail="styles.css not found")
 
+
+# -----------------------------------------------------------------------------
+# 6. Serve Agent Installation & Update Scripts
+# -----------------------------------------------------------------------------
+agent_dir = os.path.join(os.path.dirname(__file__), "..", "agent")
+if not os.path.exists(agent_dir):
+    agent_dir = os.path.join(os.path.dirname(__file__), "agent")
+
+@app.get("/agent/install.ps1")
+@app.get("/install.ps1")
+async def serve_install_ps1():
+    p = os.path.join(agent_dir, "install.ps1")
+    if os.path.exists(p):
+        return FileResponse(p, media_type="text/plain")
+    raise HTTPException(status_code=404, detail="install.ps1 not found")
+
+@app.get("/agent/agent.ps1")
+@app.get("/agent.ps1")
+async def serve_agent_ps1():
+    p = os.path.join(agent_dir, "agent.ps1")
+    if os.path.exists(p):
+        return FileResponse(p, media_type="text/plain")
+    raise HTTPException(status_code=404, detail="agent.ps1 not found")
+
+@app.get("/agent/install_render.bat")
+@app.get("/install.bat")
+async def serve_install_bat():
+    p = os.path.join(agent_dir, "install_render.bat")
+    if os.path.exists(p):
+        return FileResponse(p, media_type="text/plain")
+    raise HTTPException(status_code=404, detail="install_render.bat not found")
+
 if os.path.exists(frontend_dir):
     app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
