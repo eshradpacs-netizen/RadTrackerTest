@@ -26,10 +26,36 @@ const ROOM_TO_KROKI_LAYOUT = {
   'FTR PACS Odası': 'kroki-ftr'
 };
 
+// Unified View Switchers
+function showGridView() {
+  const krokiCont = document.getElementById("kroki-container");
+  const pcGridCont = document.getElementById("pc-grid-container");
+  if (krokiCont) {
+    krokiCont.classList.add("hidden");
+    krokiCont.removeAttribute("style");
+  }
+  if (pcGridCont) {
+    pcGridCont.classList.remove("hidden");
+    pcGridCont.removeAttribute("style");
+  }
+}
+
+function showKrokiView(layoutId = 'kroki-pacs-raporlama') {
+  const krokiCont = document.getElementById("kroki-container");
+  const pcGridCont = document.getElementById("pc-grid-container");
+  if (pcGridCont) {
+    pcGridCont.classList.add("hidden");
+    pcGridCont.removeAttribute("style");
+  }
+  if (krokiCont) {
+    krokiCont.classList.remove("hidden");
+    krokiCont.removeAttribute("style");
+  }
+  switchKrokiLayout(layoutId);
+}
+
 // Global Bulletproof Status Filter Handler
 window.filterByStatus = function(statusName) {
-  console.log("Filter requested for status:", statusName);
-  
   if (activeStatusFilter === statusName) {
     // Toggle off: return to all
     activeStatusFilter = "ALL";
@@ -60,25 +86,18 @@ window.filterByStatus = function(statusName) {
   });
   activeRoom = "ALL";
 
-  // Force show card grid container and hide kroki
-  const krokiCont = document.getElementById("kroki-container");
-  const pcGridCont = document.getElementById("pc-grid-container");
-  if (krokiCont) {
-    krokiCont.classList.add("hidden");
-    krokiCont.style.display = "none";
-  }
-  if (pcGridCont) {
-    pcGridCont.classList.remove("hidden");
-    pcGridCont.style.display = "block";
-  }
-
+  showGridView();
   renderGrid();
 };
 
 window.clearStatusFilter = function() {
-  window.filterByStatus(activeStatusFilter);
+  activeStatusFilter = "ALL";
+  document.querySelectorAll(".stat-filter-card").forEach(c => {
+    c.classList.remove("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
+  });
+  showGridView();
+  renderGrid();
 };
-
 
 async function fetchComputers() {
   try {
@@ -718,6 +737,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tab.classList.add("bg-cyan-500", "text-white", "active");
 
       const targetRoom = tab.getAttribute("data-room");
+      
       // Reset status filter when switching room tabs
       activeStatusFilter = "ALL";
       document.querySelectorAll(".stat-filter-card").forEach(c => {
@@ -725,26 +745,18 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (targetRoom === "ALL") {
-        // Tüm Odalar -> Show card grid list
-        document.getElementById("kroki-container")?.classList.add("hidden");
-        document.getElementById("pc-grid-container")?.classList.remove("hidden");
         activeRoom = "ALL";
+        showGridView();
         renderGrid();
       } else if (targetRoom === "KROKI" || targetRoom === "GENEL_PACS") {
-        // Genel PACS (Ana Kat) or Kroki Haritasi -> Open Main Floor Kroki
-        document.getElementById("pc-grid-container")?.classList.add("hidden");
-        document.getElementById("kroki-container")?.classList.remove("hidden");
-        switchKrokiLayout('kroki-pacs-raporlama');
+        activeRoom = "GENEL_PACS";
+        showKrokiView('kroki-pacs-raporlama');
       } else if (ROOM_TO_KROKI_LAYOUT[targetRoom]) {
-        // Branch Department -> Directly open that department's Kroki!
-        document.getElementById("pc-grid-container")?.classList.add("hidden");
-        document.getElementById("kroki-container")?.classList.remove("hidden");
-        switchKrokiLayout(ROOM_TO_KROKI_LAYOUT[targetRoom]);
-      } else {
-        // Fallback
-        document.getElementById("kroki-container")?.classList.add("hidden");
-        document.getElementById("pc-grid-container")?.classList.remove("hidden");
         activeRoom = targetRoom;
+        showKrokiView(ROOM_TO_KROKI_LAYOUT[targetRoom]);
+      } else {
+        activeRoom = targetRoom;
+        showGridView();
         renderGrid();
       }
     });
