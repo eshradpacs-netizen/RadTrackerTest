@@ -12,7 +12,7 @@ Write-Host "  RADYOLOJI PACS TAKIP SISTEMI - 1-TIK AJAN KURULUMU (WINDOWS)" -For
 Write-Host "============================================================================" -ForegroundColor Cyan
 Write-Host ""
 
-$ServerUrl = "https://radtrackertest.onrender.com"
+$ServerUrl = "https://esh-radtracker.onrender.com"
 
 # Determine Best Persistent Directory (ProgramData or User AppData)
 $TargetDir = "C:\ProgramData\RadTracker"

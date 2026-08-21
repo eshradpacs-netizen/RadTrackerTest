@@ -5,7 +5,7 @@ echo  Radiology PC Tracker v1 - Render Cloud Installer
 echo ==================================================
 echo.
 
-set SERVER_URL=https://radtrackertest.onrender.com
+set SERVER_URL=https://esh-radtracker.onrender.com
 
 set AGENT_DIR=%~dp0
 set AGENT_PS1=%AGENT_DIR%agent.ps1

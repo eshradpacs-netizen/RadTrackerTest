@@ -175,7 +175,7 @@ class TelegramBotController:
 
     async def cmd_start(self, chat_id: int):
         """Welcome message with prioritized Big Free PCs button & Persistent Keyboard."""
-        app_url = self.mini_app_url or "https://radtrackertest.onrender.com/miniapp.html"
+        app_url = self.mini_app_url or "https://esh-radtracker.onrender.com/miniapp.html"
         
         inline_keyboard = {
             "inline_keyboard": [
@@ -206,7 +206,7 @@ class TelegramBotController:
 
     async def cmd_free_pcs(self, chat_id: int, state_mgr):
         """Lists currently idle / probably-idle PCs with quick Kroki open button."""
-        app_url = self.mini_app_url or "https://radtrackertest.onrender.com/miniapp.html"
+        app_url = self.mini_app_url or "https://esh-radtracker.onrender.com/miniapp.html"
         pcs = state_mgr.get_all_computers()
         idle_pcs = [p for p in pcs if p.get("status") in ["idle", "probably-idle"]]
         
@@ -234,7 +234,7 @@ class TelegramBotController:
 
     async def cmd_status(self, chat_id: int, state_mgr):
         """General summary report."""
-        app_url = self.mini_app_url or "https://radtrackertest.onrender.com/miniapp.html"
+        app_url = self.mini_app_url or "https://esh-radtracker.onrender.com/miniapp.html"
         pcs = state_mgr.get_all_computers()
         total = len(pcs)
         active = sum(1 for p in pcs if p.get("status") == "active")
@@ -263,7 +263,7 @@ class TelegramBotController:
 
     async def cmd_rooms(self, chat_id: int, state_mgr):
         """Room-by-room PC breakdown."""
-        app_url = self.mini_app_url or "https://radtrackertest.onrender.com/miniapp.html"
+        app_url = self.mini_app_url or "https://esh-radtracker.onrender.com/miniapp.html"
         pcs = state_mgr.get_all_computers()
         rooms: Dict[str, List[Any]] = {}
         for p in pcs:

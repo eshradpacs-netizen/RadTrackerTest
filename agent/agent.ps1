@@ -8,7 +8,7 @@
 #>
 
 param (
-    [string]$ServerUrl = "https://radtrackertest.onrender.com",
+    [string]$ServerUrl = "https://esh-radtracker.onrender.com",
     [int]$Interval = 10,
     [string]$AgentId = ""
 )
