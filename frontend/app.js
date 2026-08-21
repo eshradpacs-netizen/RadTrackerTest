@@ -668,43 +668,7 @@ function showAuthError(msg) {
 // Event Listeners
 document.addEventListener("DOMContentLoaded", () => {
   fetchComputers();
-  // Stat Summary Cards Clickable Filter Handler
-  document.querySelectorAll(".stat-filter-card").forEach(card => {
-    card.addEventListener("click", () => {
-      const filter = card.getAttribute("data-status-filter");
-      
-      if (activeStatusFilter === filter) {
-        // Toggle off: return to all
-        activeStatusFilter = "ALL";
-        card.classList.remove("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
-      } else {
-        // Toggle on
-        activeStatusFilter = filter;
-        document.querySelectorAll(".stat-filter-card").forEach(c => {
-          c.classList.remove("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
-        });
-        card.classList.add("ring-2", "ring-cyan-400", "bg-cyan-500/20", "active-filter");
-      }
-
-      // Ensure room tabs highlight 'Tüm Odalar'
-      document.querySelectorAll(".room-tab").forEach(t => {
-        if (t.getAttribute("data-room") === "ALL") {
-          t.classList.remove("bg-slate-800", "text-slate-300");
-          t.classList.add("bg-cyan-500", "text-white", "active");
-        } else {
-          t.classList.remove("bg-cyan-500", "text-white", "active");
-          t.classList.add("bg-slate-800", "text-slate-300");
-        }
-      });
-      activeRoom = "ALL";
-
-      // Switch view to PC Grid Cards
-      document.getElementById("kroki-container")?.classList.add("hidden");
-      document.getElementById("pc-grid-container")?.classList.remove("hidden");
-      
-      renderGrid();
-    });
-  });
+  // Stat filters handled exclusively by window.filterByStatus
 
   connectWebSocket();
   checkAuthStatus();
