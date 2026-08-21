@@ -716,3 +716,14 @@ div.ws.ws-aktif,
   text-align: left;
   margin: 0 auto;
 }
+
+
+/* Hide horizontal scrollbar across all browsers for room tabs */
+#room-tabs, .scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+#room-tabs::-webkit-scrollbar, .scrollbar-none::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}

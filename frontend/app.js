@@ -1,5 +1,6 @@
 
 const ROOM_TO_KROKI_LAYOUT = {
+  'GENEL_PACS': 'kroki-pacs-raporlama',
   'Genel PACS Oda 1': 'kroki-pacs-raporlama',
   'Genel PACS Oda 2': 'kroki-pacs-raporlama',
   'Genel PACS Oda 3': 'kroki-pacs-raporlama',
