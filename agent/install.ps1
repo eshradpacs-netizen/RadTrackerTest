@@ -1,18 +1,10 @@
 <#
 .SYNOPSIS
-    Radiology PC Tracker v1 - Interactive Room & Desk Installer
+    Radiology PC Tracker v1 - 100% Resilient Multi-User Room & Desk Installer
 #>
 
 # Enable TLS 1.2
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls
-
-# Check Admin Elevation
-$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-if (-not $isAdmin) {
-    Write-Host "[BILGI] Yonetici haklari ile yeniden baslatiliyor..." -ForegroundColor Yellow
-    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
-    exit
-}
 
 Clear-Host
 Write-Host "============================================================================" -ForegroundColor Cyan
@@ -21,14 +13,23 @@ Write-Host "====================================================================
 Write-Host ""
 
 $ServerUrl = "https://radtrackertest.onrender.com"
+
+# Determine Best Persistent Directory (ProgramData or User AppData)
 $TargetDir = "C:\ProgramData\RadTracker"
+try {
+    if (-not (Test-Path $TargetDir)) {
+        New-Item -ItemType Directory -Path $TargetDir -Force -ErrorAction Stop | Out-Null
+    }
+} catch {
+    $TargetDir = "$env:APPDATA\RadTracker"
+    if (-not (Test-Path $TargetDir)) {
+        New-Item -ItemType Directory -Path $TargetDir -Force | Out-Null
+    }
+}
+
 $TargetPs1 = "$TargetDir\agent.ps1"
 $TargetCfg = "$TargetDir\config.json"
 $TaskName  = "RadTrackerAgentTask"
-
-if (-not (Test-Path $TargetDir)) {
-    New-Item -ItemType Directory -Path $TargetDir -Force | Out-Null
-}
 
 $ScriptDir = Split-Path -Parent $PSCommandPath
 $SourcePs1 = Join-Path $ScriptDir "agent.ps1"
@@ -165,17 +166,28 @@ try {
     Write-Host "  [OK] Sunucuya Ilk Sinyal Basariyla Gonderildi (200 OK)!" -ForegroundColor Green
     Write-Host "  [OK] Krokideki Masaya Baglandi: $($resp.pc.friendlyName)" -ForegroundColor Green
 } catch {
-    Write-Host "  [UYARI] Ilk sinyal bekletildi, ajan arka planda baglanmaya devam edecek: $_" -ForegroundColor DarkYellow
+    Write-Host "  [UYARI] Ilk sinyal bekletildi: $_" -ForegroundColor DarkYellow
 }
 Write-Host "============================================================" -ForegroundColor DarkCyan
 
-# Create & Run Windows Scheduled Task
-schtasks /Delete /TN $TaskName /F 2>$null | Out-Null
-schtasks /Create /F /TN $TaskName /SC ONLOGON /RL HIGHEST /TR "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"$TargetPs1`"" 2>$null | Out-Null
-schtasks /Run /TN $TaskName 2>$null | Out-Null
+# 1. Add to Windows Startup Folder (Works for 100% of standard & admin users)
+try {
+    $startupVbs = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\RadTrackerAgent.vbs"
+    $vbsContent = "Set WshShell = CreateObject(`"WScript.Shell`")`nWshShell.Run `"powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"`"$TargetPs1`"`"`", 0, False"
+    Set-Content -Path $startupVbs -Value $vbsContent -Encoding ASCII
+} catch { }
 
-# Also start background job directly now
-Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"$TargetPs1`"" -WindowStyle Hidden
+# 2. Try Scheduled Task (Optional if admin)
+try {
+    schtasks /Delete /TN $TaskName /F 2>$null | Out-Null
+    schtasks /Create /F /TN $TaskName /SC ONLOGON /TR "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"$TargetPs1`"" 2>$null | Out-Null
+    schtasks /Run /TN $TaskName 2>$null | Out-Null
+} catch { }
+
+# 3. Start background runner now
+try {
+    Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"$TargetPs1`"" -WindowStyle Hidden
+} catch { }
 
 Write-Host ""
 Write-Host "============================================================================" -ForegroundColor Green
