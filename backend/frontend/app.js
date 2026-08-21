@@ -273,7 +273,7 @@ function updateKrokiColors() {
     if (!el) return;
 
     const friendly = KROKI_MAP[wsId];
-    const pc = pcs.find(p => p.friendlyName === friendly || p.hostname === friendly);
+    const pc = pcs.find(p => p.friendlyName === friendly || p.hostname === friendly || p.id === wsId);
 
     el.classList.remove('ws-idle', 'ws-active', 'ws-lunch-break', 'ws-offline');
 
@@ -284,9 +284,27 @@ function updateKrokiColors() {
       else if (st === 'lunch-break') el.classList.add('ws-lunch-break');
       else el.classList.add('ws-offline');
 
-      el.onclick = () => openModal(pc);
+      el.onclick = (e) => {
+        e.stopPropagation();
+        openModal(pc);
+      };
     } else {
       el.classList.add('ws-offline');
+      el.onclick = (e) => {
+        e.stopPropagation();
+        const dummyPc = {
+          id: wsId,
+          friendlyName: friendly || wsId,
+          hostname: wsId,
+          room: 'Radyoloji PACS',
+          status: 'offline',
+          username: 'Bilinmiyor',
+          ip: '-',
+          idleTimeSeconds: 0,
+          lastSeen: 0
+        };
+        openModal(dummyPc);
+      };
     }
   });
 }
