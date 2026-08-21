@@ -260,6 +260,7 @@ const KROKI_MAP = {
   'ws-b-09': 'Genel PACS Oda 4 PC 9',
   'ws-b-10': 'Genel PACS Oda 4 PC 10',
   'ws-pi-01': 'Genel PACS Oda 5 PC 1',
+  'e092e2c2-5348-4724-9a00-5d37a4486176': 'Genel PACS Oda 6 PC 1',
 };
 
 function updateKrokiColors() {
@@ -314,7 +315,15 @@ function showPCLocationOnKroki(pcId) {
 
   closeModal();
 
-  // 1. Activate Kroki Tab
+  // 1. Activate Kroki View Tab
+  document.getElementById("pc-grid-container")?.classList.add("hidden");
+  document.getElementById("kroki-container")?.classList.remove("hidden");
+  
+  const viewCardBtn = document.getElementById("view-card-btn");
+  const viewKrokiBtn = document.getElementById("view-kroki-btn");
+  if (viewKrokiBtn) viewKrokiBtn.className = "px-3 py-2 text-xs font-bold rounded-xl bg-cyan-500 text-white shadow transition-all";
+  if (viewCardBtn) viewCardBtn.className = "px-3 py-2 text-xs font-bold rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700";
+
   document.querySelectorAll(".room-tab").forEach(t => {
     t.classList.remove("bg-cyan-500", "text-white", "active");
     t.classList.add("bg-slate-800", "text-slate-300");
@@ -324,9 +333,6 @@ function showPCLocationOnKroki(pcId) {
     krokiTab.classList.remove("bg-slate-800", "text-slate-300");
     krokiTab.classList.add("bg-cyan-500", "text-white", "active");
   }
-
-  document.getElementById("pc-grid-container")?.classList.add("hidden");
-  document.getElementById("kroki-container")?.classList.remove("hidden");
 
   // 2. Exact Target Kroki Room Layout Matching
   let targetLayout = "kroki-pacs-raporlama";
@@ -339,14 +345,11 @@ function showPCLocationOnKroki(pcId) {
     targetLayout = "kroki-kadin-dogum";
   } else if (name.includes("kadın doğum pacs") || (room.includes("kadın doğum") && room.includes("pacs"))) {
     targetLayout = "kroki-kadin-dogum-pacs";
-  } else if (name.includes("nöroloji") || room.includes("nöroloji") || room.includes("noroloji")) {
-    targetLayout = "kroki-noroloji";
   } else if (name.includes("onkoloji") || room.includes("onkoloji")) {
     targetLayout = "kroki-onkoloji";
   } else if (name.includes("ftr") || room.includes("ftr")) {
     targetLayout = "kroki-ftr";
   } else {
-    // All Genel PACS Rooms (Oda 1..6) are on single master page
     targetLayout = "kroki-pacs-raporlama";
   }
 
@@ -356,11 +359,11 @@ function showPCLocationOnKroki(pcId) {
   document.querySelectorAll('.ws-aktif').forEach(el => el.classList.remove('ws-aktif'));
 
   // 3. Find Workstation Element across layouts
-  let wsEl = document.getElementById(pc.friendlyName) || document.getElementById(pc.id);
+  let wsEl = document.getElementById(pc.id) || document.getElementById(pc.friendlyName);
 
   if (!wsEl) {
     for (const [wsId, fn] of Object.entries(KROKI_MAP)) {
-      if (fn === pc.friendlyName || fn === pc.hostname) {
+      if (fn === pc.friendlyName || fn === pc.hostname || wsId === pc.id) {
         wsEl = document.getElementById(wsId);
         if (wsEl) break;
       }
@@ -369,7 +372,9 @@ function showPCLocationOnKroki(pcId) {
 
   if (wsEl) {
     wsEl.classList.add('ws-aktif');
-    wsEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    setTimeout(() => {
+      wsEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    }, 150);
   }
 }
 

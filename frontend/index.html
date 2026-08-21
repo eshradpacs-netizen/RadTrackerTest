@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=90000">
+  <link rel="stylesheet" href="styles.css?v=100000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative">
 
@@ -170,7 +170,7 @@
         <!-- Computer Cards rendered dynamically by app.js -->
       </div>
     
-      <!-- Layout 1: Genel PACS Kat Krokisi (media_1787326693070.png Birebir Mimarî Çizim) -->
+      <!-- Layout 1: Genel PACS Kat Krokisi (Mimarî Çizim - Oda Numaralı) -->
       <div class="kroki-view-wrapper" id="kroki-pacs-raporlama">
         <div class="flex justify-center p-2 sm:p-4 overflow-x-auto w-full">
           <div class="floor-canvas">
@@ -178,12 +178,12 @@
             <!-- SOL KANAT -->
             <div class="flex flex-col gap-4">
               
-              <!-- Top: Vega Ek + Vega Ana -->
+              <!-- Top: Vega Ek + Vega Ana (Oda 3) -->
               <div class="flex gap-4 items-start">
                 
-                <!-- Vega Ek (4 PCs) -->
+                <!-- Oda 3 Ek (4 PCs: 8, 9, 10, 11) -->
                 <div class="floor-room room-vega flex flex-col justify-center min-w-[120px]">
-                  <div class="floor-room-pill pill-vega">VEGA</div>
+                  <div class="floor-room-pill pill-vega">ODA 3 (EK)</div>
                   <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="ws floor-ws" id="ws-t-09" title="Genel PACS Oda 3 PC 9">9</div>
                     <div class="ws floor-ws" id="ws-t-08" title="Genel PACS Oda 3 PC 8">8</div>
@@ -192,9 +192,9 @@
                   </div>
                 </div>
 
-                <!-- Vega Ana (7 PCs) -->
+                <!-- Oda 3 Ana (7 PCs: 1..7) -->
                 <div class="floor-room room-vega min-w-[120px]">
-                  <div class="floor-room-pill pill-vega">VEGA</div>
+                  <div class="floor-room-pill pill-vega">ODA 3</div>
                   <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="h-[38px]"></div>
                     <div class="ws floor-ws" id="ws-t-07" title="Genel PACS Oda 3 PC 7">7</div>
@@ -215,12 +215,12 @@
 
               </div>
 
-              <!-- Sirius + Koridor 1 + M -->
+              <!-- Sirius (Oda 6) + Koridor 1 + M (Dr. Meltem Hoca) -->
               <div class="flex flex-col gap-2">
                 <div class="flex items-center gap-3">
-                  <!-- Sirius (1 PC) -->
+                  <!-- Oda 6 (1 PC) -->
                   <div class="floor-room room-sirius flex-1 min-w-[120px]">
-                    <div class="floor-room-pill pill-sirius">SİRİUS</div>
+                    <div class="floor-room-pill pill-sirius">ODA 6</div>
                     <div class="p-1 flex justify-center mt-1">
                       <div class="ws floor-ws w-full bg-amber-100/70 border-amber-400 text-amber-900" id="e092e2c2-5348-4724-9a00-5d37a4486176" title="Genel PACS Oda 6 PC 1">1</div>
                     </div>
@@ -234,15 +234,15 @@
 
                 <!-- M (Dr. Meltem Hoca) -->
                 <div class="flex justify-end pr-2">
-                  <div class="landmark-box landmark-m w-14 h-14" title="Dr. Meltem Hoca Odası">
+                  <div class="landmark-box landmark-m w-14 h-14" title="Dr. Meltem Hoca Odası (Referans)">
                     <span class="text-xl">M</span>
                   </div>
                 </div>
               </div>
 
-              <!-- Cygnus (10 PCs) -->
+              <!-- Cygnus (Oda 4 - 10 PCs) -->
               <div class="floor-room room-cygnus w-full">
-                <div class="floor-room-pill pill-cygnus">CYGNUS</div>
+                <div class="floor-room-pill pill-cygnus">ODA 4</div>
                 <div class="grid grid-cols-2 gap-2.5 mt-1">
                   <div class="ws floor-ws" id="ws-b-01" title="Genel PACS Oda 4 PC 1">1</div>
                   <div class="ws floor-ws" id="ws-b-10" title="Genel PACS Oda 4 PC 10">10</div>
@@ -273,12 +273,12 @@
             <!-- SAĞ KANAT -->
             <div class="flex flex-col gap-4">
               
-              <!-- Orion & Andromeda Side-by-Side -->
+              <!-- Oda 1 & Oda 2 Side-by-Side -->
               <div class="flex gap-4 items-start">
                 
-                <!-- Orion (8 PCs) -->
+                <!-- Oda 1 (8 PCs) -->
                 <div class="floor-room room-orion min-w-[135px]">
-                  <div class="floor-room-pill pill-orion">ORİON</div>
+                  <div class="floor-room-pill pill-orion">ODA 1</div>
                   <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="ws floor-ws" id="ws-y-05" title="Genel PACS Oda 1 PC 5">5</div>
                     <div class="ws floor-ws" id="ws-y-04" title="Genel PACS Oda 1 PC 4">4</div>
@@ -294,9 +294,9 @@
                   </div>
                 </div>
 
-                <!-- Andromeda (8 PCs) -->
+                <!-- Oda 2 (8 PCs) -->
                 <div class="floor-room room-andromeda min-w-[135px]">
-                  <div class="floor-room-pill pill-andromeda">ANDROMEDA</div>
+                  <div class="floor-room-pill pill-andromeda">ODA 2</div>
                   <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="ws floor-ws" id="ws-p-05" title="Genel PACS Oda 2 PC 5">5</div>
                     <div class="ws floor-ws" id="ws-p-04" title="Genel PACS Oda 2 PC 4">4</div>
@@ -319,19 +319,19 @@
                 KORİDOR 2
               </div>
 
-              <!-- N (Dr. Nurcan Hoca) & Lyra Container -->
+              <!-- N (Dr. Nurcan Hoca) & Nöroloji (Lyra) Container -->
               <div class="flex items-start justify-between gap-4 mt-2">
                 
                 <!-- N (Dr. Nurcan Hoca) -->
                 <div class="ml-16">
-                  <div class="landmark-box landmark-n w-16 h-14" title="Dr. Nurcan Hoca Odası">
+                  <div class="landmark-box landmark-n w-16 h-14" title="Dr. Nurcan Hoca Odası (Referans)">
                     <span class="text-xl">N</span>
                   </div>
                 </div>
 
-                <!-- Lyra (3 PCs) -->
+                <!-- Nöroloji PACS (3 PCs) -->
                 <div class="floor-room room-lyra min-w-[135px]">
-                  <div class="floor-room-pill pill-lyra">LYRA</div>
+                  <div class="floor-room-pill pill-lyra">NÖROLOJİ</div>
                   <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="h-[38px]"></div>
                     <div class="ws floor-ws" id="Perseus-γ" title="Nöroloji PACS Oda 1 PC 3">3</div>
@@ -626,7 +626,7 @@
         </div>
       </div>
 
-      <!-- Layout 1: Genel PACS Kat Krokisi (media_1787326693070.png Birebir Mimarî Çizim) -->
+      <!-- Layout 1: Genel PACS Kat Krokisi (Mimarî Çizim - Oda Numaralı) -->
       <div class="kroki-view-wrapper" id="kroki-pacs-raporlama">
         <div class="flex justify-center p-2 sm:p-4 overflow-x-auto w-full">
           <div class="floor-canvas">
@@ -634,12 +634,12 @@
             <!-- SOL KANAT -->
             <div class="flex flex-col gap-4">
               
-              <!-- Top: Vega Ek + Vega Ana -->
+              <!-- Top: Vega Ek + Vega Ana (Oda 3) -->
               <div class="flex gap-4 items-start">
                 
-                <!-- Vega Ek (4 PCs) -->
+                <!-- Oda 3 Ek (4 PCs: 8, 9, 10, 11) -->
                 <div class="floor-room room-vega flex flex-col justify-center min-w-[120px]">
-                  <div class="floor-room-pill pill-vega">VEGA</div>
+                  <div class="floor-room-pill pill-vega">ODA 3 (EK)</div>
                   <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="ws floor-ws" id="ws-t-09" title="Genel PACS Oda 3 PC 9">9</div>
                     <div class="ws floor-ws" id="ws-t-08" title="Genel PACS Oda 3 PC 8">8</div>
@@ -648,9 +648,9 @@
                   </div>
                 </div>
 
-                <!-- Vega Ana (7 PCs) -->
+                <!-- Oda 3 Ana (7 PCs: 1..7) -->
                 <div class="floor-room room-vega min-w-[120px]">
-                  <div class="floor-room-pill pill-vega">VEGA</div>
+                  <div class="floor-room-pill pill-vega">ODA 3</div>
                   <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="h-[38px]"></div>
                     <div class="ws floor-ws" id="ws-t-07" title="Genel PACS Oda 3 PC 7">7</div>
@@ -671,12 +671,12 @@
 
               </div>
 
-              <!-- Sirius + Koridor 1 + M -->
+              <!-- Sirius (Oda 6) + Koridor 1 + M (Dr. Meltem Hoca) -->
               <div class="flex flex-col gap-2">
                 <div class="flex items-center gap-3">
-                  <!-- Sirius (1 PC) -->
+                  <!-- Oda 6 (1 PC) -->
                   <div class="floor-room room-sirius flex-1 min-w-[120px]">
-                    <div class="floor-room-pill pill-sirius">SİRİUS</div>
+                    <div class="floor-room-pill pill-sirius">ODA 6</div>
                     <div class="p-1 flex justify-center mt-1">
                       <div class="ws floor-ws w-full bg-amber-100/70 border-amber-400 text-amber-900" id="e092e2c2-5348-4724-9a00-5d37a4486176" title="Genel PACS Oda 6 PC 1">1</div>
                     </div>
@@ -690,15 +690,15 @@
 
                 <!-- M (Dr. Meltem Hoca) -->
                 <div class="flex justify-end pr-2">
-                  <div class="landmark-box landmark-m w-14 h-14" title="Dr. Meltem Hoca Odası">
+                  <div class="landmark-box landmark-m w-14 h-14" title="Dr. Meltem Hoca Odası (Referans)">
                     <span class="text-xl">M</span>
                   </div>
                 </div>
               </div>
 
-              <!-- Cygnus (10 PCs) -->
+              <!-- Cygnus (Oda 4 - 10 PCs) -->
               <div class="floor-room room-cygnus w-full">
-                <div class="floor-room-pill pill-cygnus">CYGNUS</div>
+                <div class="floor-room-pill pill-cygnus">ODA 4</div>
                 <div class="grid grid-cols-2 gap-2.5 mt-1">
                   <div class="ws floor-ws" id="ws-b-01" title="Genel PACS Oda 4 PC 1">1</div>
                   <div class="ws floor-ws" id="ws-b-10" title="Genel PACS Oda 4 PC 10">10</div>
@@ -729,12 +729,12 @@
             <!-- SAĞ KANAT -->
             <div class="flex flex-col gap-4">
               
-              <!-- Orion & Andromeda Side-by-Side -->
+              <!-- Oda 1 & Oda 2 Side-by-Side -->
               <div class="flex gap-4 items-start">
                 
-                <!-- Orion (8 PCs) -->
+                <!-- Oda 1 (8 PCs) -->
                 <div class="floor-room room-orion min-w-[135px]">
-                  <div class="floor-room-pill pill-orion">ORİON</div>
+                  <div class="floor-room-pill pill-orion">ODA 1</div>
                   <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="ws floor-ws" id="ws-y-05" title="Genel PACS Oda 1 PC 5">5</div>
                     <div class="ws floor-ws" id="ws-y-04" title="Genel PACS Oda 1 PC 4">4</div>
@@ -750,9 +750,9 @@
                   </div>
                 </div>
 
-                <!-- Andromeda (8 PCs) -->
+                <!-- Oda 2 (8 PCs) -->
                 <div class="floor-room room-andromeda min-w-[135px]">
-                  <div class="floor-room-pill pill-andromeda">ANDROMEDA</div>
+                  <div class="floor-room-pill pill-andromeda">ODA 2</div>
                   <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="ws floor-ws" id="ws-p-05" title="Genel PACS Oda 2 PC 5">5</div>
                     <div class="ws floor-ws" id="ws-p-04" title="Genel PACS Oda 2 PC 4">4</div>
@@ -775,19 +775,19 @@
                 KORİDOR 2
               </div>
 
-              <!-- N (Dr. Nurcan Hoca) & Lyra Container -->
+              <!-- N (Dr. Nurcan Hoca) & Nöroloji (Lyra) Container -->
               <div class="flex items-start justify-between gap-4 mt-2">
                 
                 <!-- N (Dr. Nurcan Hoca) -->
                 <div class="ml-16">
-                  <div class="landmark-box landmark-n w-16 h-14" title="Dr. Nurcan Hoca Odası">
+                  <div class="landmark-box landmark-n w-16 h-14" title="Dr. Nurcan Hoca Odası (Referans)">
                     <span class="text-xl">N</span>
                   </div>
                 </div>
 
-                <!-- Lyra (3 PCs) -->
+                <!-- Nöroloji PACS (3 PCs) -->
                 <div class="floor-room room-lyra min-w-[135px]">
-                  <div class="floor-room-pill pill-lyra">LYRA</div>
+                  <div class="floor-room-pill pill-lyra">NÖROLOJİ</div>
                   <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="h-[38px]"></div>
                     <div class="ws floor-ws" id="Perseus-γ" title="Nöroloji PACS Oda 1 PC 3">3</div>
@@ -1115,6 +1115,6 @@
     </form>
   </div>
 
-  <script src="app.js?v=90000"></script>
+  <script src="app.js?v=100000"></script>
 </body>
 </html>
