@@ -190,19 +190,109 @@ async def seamless_auth(payload: UserRegister):
     token = auth.create_access_token({"sub": email})
     return {"success": True, "message": "Giriş başarılı! Hoş geldiniz.", "token": token, "email": email}
 
-@app.post("/api/register")
-async def register(payload: UserRegister):
-    return await seamless_auth(payload)
+import random
 
-@app.post("/api/login")
-async def login(payload: UserLogin):
-    reg_payload = UserRegister(
-        email=payload.email,
-        password=payload.password or "seamless",
-        telegram_id=payload.telegram_id,
-        telegram_username=payload.telegram_username
+# Store verification codes in memory: email -> { "code": "849201", "expires_at": 1787..., "telegram_id": "123456" }
+VERIFICATION_CODES: Dict[str, Dict[str, Any]] = {}
+
+@app.post("/api/send-telegram-code")
+async def send_telegram_code(payload: Dict[str, Any]):
+    email = payload.get("email", "").lower().strip()
+    tg_id = payload.get("telegram_id", "").strip()
+    tg_user = payload.get("telegram_username", "").strip()
+
+    if not email:
+        raise HTTPException(status_code=400, detail="Lütfen geçerli bir e-posta adresi giriniz.")
+
+    # 1. Whitelist Check
+    allowed = [e.lower() for e in db.state.get("allowed_emails", [])]
+    if email not in allowed:
+        raise HTTPException(status_code=403, detail="Bu e-posta adresi yetkili hekim listesinde bulunamadı. Lütfen yöneticinize başvurun.")
+
+    # 2. Telegram Identity Matching & Binding Check
+    users = db.state.get("users", {})
+    existing_user = users.get(email)
+
+    if existing_user and existing_user.get("telegram_id"):
+        bound_tg_id = str(existing_user["telegram_id"])
+        if tg_id and bound_tg_id != tg_id:
+            raise HTTPException(status_code=403, detail=f"Güvenlik Uyarısı: Bu e-posta adresi başka bir Telegram hesabına (@{existing_user.get('telegram_username', 'kilitli')}) kilitlidir!")
+
+    target_chat_id = tg_id or (existing_user.get("telegram_id") if existing_user else None)
+
+    # Generate 6-digit random code
+    code = f"{random.randint(100000, 999999)}"
+    VERIFICATION_CODES[email] = {
+        "code": code,
+        "expires_at": time.time() + 300, # 5 minutes
+        "telegram_id": tg_id,
+        "telegram_username": tg_user
+    }
+
+    msg_text = (
+        f"🔑 <b>RadTracker Hekim Giriş Kodu</b>\n\n"
+        f"E-Posta: <code>{email}</code>\n"
+        f"Doğrulama Kodunuz: <b>{code}</b>\n\n"
+        f"<i>Bu kod 5 dakika süreyle geçerlidir. Lütfen kimseyle paylaşmayınız.</i>"
     )
-    return await seamless_auth(reg_payload)
+
+    sent_via_bot = False
+    if target_chat_id:
+        try:
+            await telegram_bot.send_message(int(target_chat_id), msg_text)
+            sent_via_bot = True
+        except Exception as e:
+            logger.warning(f"Could not send direct chat message to {target_chat_id}: {e}")
+
+    if not sent_via_bot:
+        await db.log_event_to_channel("🔑 Hekim Giriş Kodu", msg_text)
+
+    return {
+        "success": True,
+        "message": f"6 haneli doğrulama kodu Telegram sohbetinize (@RadTrackerTest_bot) gönderildi!",
+        "email": email
+    }
+
+@app.post("/api/verify-telegram-code")
+async def verify_telegram_code(payload: Dict[str, Any]):
+    email = payload.get("email", "").lower().strip()
+    code_input = payload.get("code", "").strip()
+    tg_id = payload.get("telegram_id", "").strip()
+    tg_user = payload.get("telegram_username", "").strip()
+
+    if not email or not code_input:
+        raise HTTPException(status_code=400, detail="E-posta ve 6 haneli doğrulama kodu zorunludur.")
+
+    entry = VERIFICATION_CODES.get(email)
+    if not entry:
+        raise HTTPException(status_code=400, detail="Doğrulama kodu bulunamadı veya süresi doldu. Lütfen tekrar kod isteyin.")
+
+    if time.time() > entry["expires_at"]:
+        VERIFICATION_CODES.pop(email, None)
+        raise HTTPException(status_code=400, detail="Doğrulama kodunun 5 dakikalık süresi doldu. Lütfen yeni kod isteyin.")
+
+    if entry["code"] != code_input:
+        raise HTTPException(status_code=400, detail="Hatalı doğrulama kodu! Lütfen Telegram sohbetinizdeki 6 haneli kodu kontrol edin.")
+
+    VERIFICATION_CODES.pop(email, None)
+
+    users = db.state.setdefault("users", {})
+    existing_user = users.get(email, {})
+    
+    user_record = {
+        "email": email,
+        "is_verified": True,
+        "telegram_id": tg_id or (existing_user.get("telegram_id", "") if existing_user else ""),
+        "telegram_username": tg_user or (existing_user.get("telegram_username", "") if existing_user else ""),
+        "verified_at": time.time(),
+        "created_at": existing_user.get("created_at", time.time()) if existing_user else time.time()
+    }
+    users[email] = user_record
+    await db.sync_to_telegram()
+    await db.log_event_to_channel("🟢 Telegram Kod Doğrulaması Başarılı", f"E-Posta: <code>{email}</code>\nTelegram: @{tg_user} ({tg_id})")
+
+    token = auth.create_access_token({"sub": email})
+    return {"success": True, "message": "Giriş başarılı! Hoş geldiniz.", "token": token, "email": email}
 
 @app.get("/api/test-email")
 async def test_email_endpoint(to: str = "gulderenabdullah@gmail.com"):

@@ -454,30 +454,104 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // Seamless Auth Submit (0-click passwordless verification)
-  document.getElementById("form-seamless")?.addEventListener("submit", async (e) => {
+  let currentAuthEmail = "";
+
+  // Step 1: Send Telegram Code
+  document.getElementById("form-send-code")?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const email = document.getElementById("seamless-email").value;
+    const emailInput = document.getElementById("auth-email");
+    const email = emailInput ? emailInput.value.trim() : "";
     const tgData = getTgUserData();
+    const errBox = document.getElementById("auth-error");
+    if (errBox) errBox.classList.add("hidden");
+
+    if (!email) return;
+
+    const btn = document.getElementById("btn-send-code");
+    if (btn) {
+      btn.disabled = true;
+      btn.innerText = "⏳ Telegram'a Kod Gönderiliyor...";
+    }
 
     try {
-      const resp = await fetch("/api/seamless-auth", {
+      const resp = await fetch("/api/send-telegram-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password: "seamless", ...tgData })
+        body: JSON.stringify({ email, ...tgData })
       });
       const data = await resp.json();
+
+      if (resp.ok && data.success) {
+        currentAuthEmail = email;
+        document.getElementById("form-send-code")?.classList.add("hidden");
+        document.getElementById("form-verify-code")?.classList.remove("hidden");
+        const subtitle = document.getElementById("auth-subtitle");
+        if (subtitle) subtitle.innerText = `${email} adresine 6 haneli Telegram doğrulama kodu gönderildi.`;
+        document.getElementById("auth-code")?.focus();
+      } else {
+        showAuthError(data.detail || "Kod gönderilemedi.");
+      }
+    } catch (err) {
+      showAuthError("Bağlantı hatası oluştu. Lütfen tekrar deneyin.");
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerText = "🔑 Telegram'a Doğrulama Kodu Gönder";
+      }
+    }
+  });
+
+  // Step 2: Verify 6-Digit OTP Code
+  document.getElementById("form-verify-code")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const codeInput = document.getElementById("auth-code");
+    const code = codeInput ? codeInput.value.trim() : "";
+    const tgData = getTgUserData();
+    const errBox = document.getElementById("auth-error");
+    if (errBox) errBox.classList.add("hidden");
+
+    if (!code || !currentAuthEmail) return;
+
+    const btn = document.getElementById("btn-verify-code");
+    if (btn) {
+      btn.disabled = true;
+      btn.innerText = "⏳ Kod Doğrulanıyor...";
+    }
+
+    try {
+      const resp = await fetch("/api/verify-telegram-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: currentAuthEmail, code, ...tgData })
+      });
+      const data = await resp.json();
+
       if (resp.ok && data.success) {
         localStorage.setItem("radtracker_token", data.token);
         localStorage.setItem("radtracker_email", data.email);
         checkAuthStatus();
         closeAuthModal();
       } else {
-        showAuthError(data.detail || "Giriş başarısız.");
+        showAuthError(data.detail || "Kod doğrulama başarısız.");
       }
     } catch (err) {
       showAuthError("Bağlantı hatası oluştu.");
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerText = "🔓 Kodu Doğrula & Canlı Paneli Aç";
+      }
     }
+  });
+
+  // Back to Email Step
+  document.getElementById("btn-back-to-email")?.addEventListener("click", () => {
+    document.getElementById("form-verify-code")?.classList.add("hidden");
+    document.getElementById("form-send-code")?.classList.remove("hidden");
+    const subtitle = document.getElementById("auth-subtitle");
+    if (subtitle) subtitle.innerText = "Canlı takip panelini açmak için yetkili e-posta adresinizi giriniz.";
+    const errBox = document.getElementById("auth-error");
+    if (errBox) errBox.classList.add("hidden");
   });
 
   // Save PC Note

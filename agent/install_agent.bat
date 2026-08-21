@@ -7,8 +7,8 @@ echo  Radiology PC Tracker v1 - Silent Agent Installer
 echo ==================================================
 echo.
 
-set /p SERVER_URL="Lutfen Sunucu Adresini Girin (Varsayilan: http://localhost:8000): "
-if "%SERVER_URL%"=="" set SERVER_URL=http://localhost:8000
+set /p SERVER_URL="Lutfen Sunucu Adresini Girin (Varsayilan: https://radtrackertest.onrender.com): "
+if "%SERVER_URL%"=="" set SERVER_URL=https://radtrackertest.onrender.com
 
 set AGENT_DIR=%~dp0
 set AGENT_PS1=%AGENT_DIR%agent.ps1

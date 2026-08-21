@@ -54,23 +54,39 @@
     </div>
   </section>
 
-  <!-- Seamless Auth Card (Visible by default when unauthenticated) -->
+  <!-- Auth Card (Step 1: Email Input -> Step 2: 6-Digit Telegram OTP Code) -->
   <section id="auth-container" class="max-w-md mx-auto px-4 py-12">
     <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl p-6 space-y-4 shadow-2xl">
       <div class="text-center space-y-1">
         <h2 class="text-xl font-bold text-white flex items-center justify-center gap-2">
           🏥 Hekim Doğrulama & Giriş
         </h2>
-        <p class="text-xs text-slate-400">Canlı takip panelini açmak için yetkili e-posta adresinizi giriniz.</p>
+        <p id="auth-subtitle" class="text-xs text-slate-400">Canlı takip panelini açmak için yetkili e-posta adresinizi giriniz.</p>
       </div>
 
-      <form id="form-seamless" class="space-y-4">
+      <!-- Step 1: Send Telegram Code Form -->
+      <form id="form-send-code" class="space-y-4">
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Kurumsal / Hastane E-Postası</label>
-          <input type="email" id="seamless-email" required placeholder="asistan@hastane.gov.tr" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+          <input type="email" id="auth-email" required placeholder="asistan@hastane.gov.tr" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500">
         </div>
-        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 font-bold text-white hover:opacity-90 transition-all text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20">
-          ⚡ Doğrula & Canlı Paneli Aç
+        <button type="submit" id="btn-send-code" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 font-bold text-white hover:opacity-90 transition-all text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20">
+          🔑 Telegram'a Doğrulama Kodu Gönder
+        </button>
+      </form>
+
+      <!-- Step 2: Verify 6-Digit OTP Code Form (Hidden initially) -->
+      <form id="form-verify-code" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Telegram'a Gönderilen 6 Haneli Kod</label>
+          <input type="text" id="auth-code" required maxlength="6" placeholder="Örn: 849201" class="w-full bg-slate-800 border border-cyan-500/50 rounded-xl px-4 py-3 text-center text-lg tracking-widest font-mono text-cyan-300 placeholder-slate-600 focus:outline-none focus:border-cyan-400">
+          <p class="text-[11px] text-slate-400 mt-1 text-center">💬 Kod Telegram sohbetinize (<b>@RadTrackerTest_bot</b>) gönderildi.</p>
+        </div>
+        <button type="submit" id="btn-verify-code" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 font-bold text-white hover:opacity-90 transition-all text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+          🔓 Kodu Doğrula & Canlı Paneli Aç
+        </button>
+        <button type="button" id="btn-back-to-email" class="w-full text-xs text-slate-400 hover:text-white underline text-center">
+          ← E-Posta Adresini Değiştir
         </button>
       </form>
 

@@ -10,7 +10,7 @@
 #>
 
 param (
-    [string]$ServerUrl = "http://localhost:8000",
+    [string]$ServerUrl = "https://radtrackertest.onrender.com",
     [int]$Interval = 10,
     [string]$AgentId = ""
 )
