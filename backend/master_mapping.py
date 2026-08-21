@@ -50,7 +50,7 @@ MASTER_PC_MAPPING = {
     "kd-pacs-01-uuid-0001": {"friendlyName": "Kadın Doğum PACS Oda 1 PC 1", "room": "Kadın Doğum PACS Odası", "hostname": "desktop-kdpacs1", "ip": "10.86.170.1"},
     "kd-pacs-01-uuid-0002": {"friendlyName": "Kadın Doğum PACS Oda 1 PC 2", "room": "Kadın Doğum PACS Odası", "hostname": "desktop-kdpacs2", "ip": "10.86.170.2"},
     "kd-pacs-01-uuid-0003": {"friendlyName": "Kadın Doğum PACS Oda 1 PC 3", "room": "Kadın Doğum PACS Odası", "hostname": "desktop-kdpacs3", "ip": "10.86.170.3"},
-    "e092e2c2-5348-4724-9a00-5d37a4486176": {"friendlyName": "Genel PACS Oda 6 PC 1", "room": "Genel PACS Oda 6", "hostname": "desktop-2t9o3va", "ip": "10.86.145.98"}
+    "e092e2c2-5348-4724-9a00-5d37a4486176": {"friendlyName": "Genel PACS Oda 5 PC 1", "room": "Genel PACS Oda 5", "hostname": "desktop-2t9o3va", "ip": "10.86.145.98"}
 }
 
 HOSTNAME_TO_ID_MAPPING = {

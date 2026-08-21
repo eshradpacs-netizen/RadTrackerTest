@@ -35,7 +35,7 @@ echo  [1]  Genel PACS Oda 1 (PC 1 - 8)
 echo  [2]  Genel PACS Oda 2 (PC 1 - 8)
 echo  [3]  Genel PACS Oda 3 (PC 1 - 11)
 echo  [4]  Genel PACS Oda 4 (PC 1 - 10)
-echo  [5]  Genel PACS Oda 6 (Sirius)
+echo  [5]  Genel PACS Oda 5 (Tek Masa)
 echo  [6]  Toplanti Odasi (PC 1 - 3)
 echo  [7]  KVC PACS Odasi (PC 1 - 2)
 echo  [8]  Kadin Dogum PACS Odasi (PC 1 - 3)
@@ -119,7 +119,7 @@ powershell -ExecutionPolicy Bypass -NoProfile -Command "& {
         '4_9' = @{ id = '523499fe-5bee-4489-90d9-7cbca5388240'; name = 'Genel PACS Oda 4 PC 9'; room = 'Genel PACS Oda 4' }
         '4_10' = @{ id = '3709a075-ffa2-4724-9d78-74684c95882b'; name = 'Genel PACS Oda 4 PC 10'; room = 'Genel PACS Oda 4' }
 
-        '5_1' = @{ id = 'e092e2c2-5348-4724-9a00-5d37a4486176'; name = 'Genel PACS Oda 6 PC 1'; room = 'Genel PACS Oda 6' }
+        '5_1' = @{ id = 'e092e2c2-5348-4724-9a00-5d37a4486176'; name = 'Genel PACS Oda 5 PC 1'; room = 'Genel PACS Oda 5' }
         
         '6_1' = @{ id = '6c5f9782-8754-4d33-a647-b2e4100269ce'; name = 'Toplanti Odasi PC 1'; room = 'Toplanti Odasi' }
         '6_2' = @{ id = 'aa6b1c56-86bd-40be-9f14-417e94791ec9'; name = 'Toplanti Odasi PC 2'; room = 'Toplanti Odasi' }
