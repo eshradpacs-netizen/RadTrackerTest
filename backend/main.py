@@ -406,7 +406,6 @@ if not os.path.exists(os.path.join(frontend_dir, "index.html")):
 
 @app.get("/")
 @app.get("/index.html")
-@app.get("/miniapp.html")
 async def serve_index():
     index_path = os.path.join(frontend_dir, "index.html")
     if os.path.exists(index_path):
@@ -416,6 +415,17 @@ async def serve_index():
             "Expires": "0"
         })
     raise HTTPException(status_code=404, detail="index.html not found")
+
+@app.get("/miniapp.html")
+async def serve_miniapp():
+    miniapp_path = os.path.join(frontend_dir, "miniapp.html")
+    if os.path.exists(miniapp_path):
+        return FileResponse(miniapp_path, headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+            "Expires": "0"
+        })
+    raise HTTPException(status_code=404, detail="miniapp.html not found")
 
 @app.get("/app.js")
 async def serve_app_js():
