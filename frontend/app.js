@@ -311,11 +311,14 @@ function switchKrokiLayout(layoutId) {
 
 function showPCLocationOnKroki(pcId) {
   const pc = pcs.find(p => p.id === pcId || p.hostname === pcId || p.friendlyName === pcId);
-  if (!pc) return;
+  if (!pc) {
+    console.warn("PC not found for location show:", pcId);
+    return;
+  }
 
   closeModal();
 
-  // 1. Activate Kroki View Tab
+  // 1. Activate Kroki View Mode
   document.getElementById("pc-grid-container")?.classList.add("hidden");
   document.getElementById("kroki-container")?.classList.remove("hidden");
   
@@ -363,11 +366,19 @@ function showPCLocationOnKroki(pcId) {
 
   if (!wsEl) {
     for (const [wsId, fn] of Object.entries(KROKI_MAP)) {
-      if (fn === pc.friendlyName || fn === pc.hostname || wsId === pc.id) {
+      if (fn.toLowerCase() === (pc.friendlyName || "").toLowerCase() || 
+          fn.toLowerCase() === (pc.hostname || "").toLowerCase() || 
+          wsId === pc.id) {
         wsEl = document.getElementById(wsId);
         if (wsEl) break;
       }
     }
+  }
+
+  // Fallback: search by title attribute
+  if (!wsEl && pc.friendlyName) {
+    wsEl = document.querySelector(`.ws[title*="${pc.friendlyName}"]`) || 
+           document.querySelector(`[title*="${pc.friendlyName}"]`);
   }
 
   if (wsEl) {
@@ -375,6 +386,8 @@ function showPCLocationOnKroki(pcId) {
     setTimeout(() => {
       wsEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
     }, 150);
+  } else {
+    console.warn("Could not find workstation DOM element for PC:", pc);
   }
 }
 
