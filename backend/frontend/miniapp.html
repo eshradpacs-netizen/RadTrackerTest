@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=160000">
+  <link rel="stylesheet" href="styles.css?v=170000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative">
 
@@ -306,7 +306,7 @@
               </span>
             </div>
 
-            <!-- SAĞ KANAT -->
+                        <!-- SAĞ KANAT -->
             <div class="flex flex-col gap-4">
               
               <!-- Oda 1 & Oda 2 Side-by-Side -->
@@ -350,24 +350,24 @@
 
               </div>
 
-              <!-- Koridor 2 -->
-              <div class="corridor-box h-12 w-full">
-                KORİDOR 2
-              </div>
-
-              <!-- N (Dr. Nurcan Hoca) & Nöroloji (Lyra) Container -->
-              <div class="flex items-start justify-between gap-4 mt-2">
+              <!-- Koridor 2 + N & T. ODASI Side-by-Side -->
+              <div class="flex items-start gap-4">
                 
-                <!-- N (Dr. Nurcan Hoca) -->
-                <div class="ml-16">
-                  <div class="landmark-box landmark-n w-16 h-14" title="Dr. Nurcan Hoca Odası (Referans)">
-                    <span class="text-xl">N</span>
+                <!-- Left Sub-column: Koridor 2 + N (Dr. Nurcan Hoca) -->
+                <div class="flex flex-col gap-3 flex-1 min-w-[135px]">
+                  <div class="corridor-box h-12 w-full">
+                    KORİDOR 2
+                  </div>
+                  <div class="flex justify-center">
+                    <div class="landmark-box landmark-n w-16 h-14" title="Dr. Nurcan Hoca Odası (Referans)">
+                      <span class="text-xl">N</span>
+                    </div>
                   </div>
                 </div>
 
-                <!-- Nöroloji PACS (3 PCs) -->
+                <!-- Right Sub-column: Toplantı Odası (T. ODASI) (3 PCs) -->
                 <div class="floor-room room-lyra min-w-[135px]">
-                  <div class="floor-room-pill pill-lyra">TOPLANTI ODASI</div>
+                  <div class="floor-room-pill pill-lyra">T. ODASI</div>
                   <div class="grid grid-cols-2 gap-2 mt-1">
                     <div class="h-[38px]"></div>
                     <div class="ws floor-ws" id="Perseus-γ" title="Nöroloji PACS Oda 1 PC 3">3</div>
@@ -553,6 +553,6 @@
     </form>
   </div>
 
-  <script src="app.js?v=160000"></script>
+  <script src="app.js?v=170000"></script>
 </body>
 </html>
