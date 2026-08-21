@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=50000">
+  <link rel="stylesheet" href="styles.css?v=60000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative">
 
@@ -170,53 +170,115 @@
         <!-- Computer Cards rendered dynamically by app.js -->
       </div>
     
-      <!-- Layout 1: Genel PACS Oda 1 -->
-      <div class="kroki-view-wrapper" id="kroki-pacs-oda-1">
-        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-4xl mx-auto text-center space-y-6 shadow-2xl">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-bold">
-            🏛️ Genel PACS Oda 1 Krokisi
+      <!-- Layout 1: Genel PACS Kat Krokisi (Tüm Genel Odalar Tek Sayfada) -->
+      <div class="kroki-view-wrapper" id="kroki-pacs-raporlama">
+        <div class="space-y-8 max-w-6xl mx-auto">
+          <div class="text-center space-y-1">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold">
+              🏛️ Genel PACS Kat Krokisi (Tüm Odalar Tek Sayfada)
+            </div>
+            <p class="text-xs text-slate-400">Ana Raporlama Katındaki Tüm Genel PACS Odaları ve Masa Plânları</p>
           </div>
-          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı (8 Çalışma İstasyonu)</p>
-          <div class="grid grid-cols-4 gap-5 max-w-3xl mx-auto py-4">
-            <div class="ws dept-kroki-card" id="ws-y-01" title="Genel PACS Oda 1 PC 1">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">1</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 1</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 1</span>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Oda 1 Box -->
+            <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+              <h4 class="text-sm font-bold text-amber-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                <span>🏛️ Genel PACS Oda 1</span>
+                <span class="text-xs font-mono text-slate-400">8 PC</span>
+              </h4>
+              <div class="grid grid-cols-4 gap-3">
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-01" title="Genel PACS Oda 1 PC 1"><div class="text-2xl font-black text-amber-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-02" title="Genel PACS Oda 1 PC 2"><div class="text-2xl font-black text-amber-300 pointer-events-none">2</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 2</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-03" title="Genel PACS Oda 1 PC 3"><div class="text-2xl font-black text-amber-300 pointer-events-none">3</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 3</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-04" title="Genel PACS Oda 1 PC 4"><div class="text-2xl font-black text-amber-300 pointer-events-none">4</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 4</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-05" title="Genel PACS Oda 1 PC 5"><div class="text-2xl font-black text-amber-300 pointer-events-none">5</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 5</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-06" title="Genel PACS Oda 1 PC 6"><div class="text-2xl font-black text-amber-300 pointer-events-none">6</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 6</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-07" title="Genel PACS Oda 1 PC 7"><div class="text-2xl font-black text-amber-300 pointer-events-none">7</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 7</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-08" title="Genel PACS Oda 1 PC 8"><div class="text-2xl font-black text-amber-300 pointer-events-none">8</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 8</span></div>
+              </div>
             </div>
-            <div class="ws dept-kroki-card" id="ws-y-02" title="Genel PACS Oda 1 PC 2">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">2</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 2</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 2</span>
+
+            <!-- Oda 2 Box -->
+            <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+              <h4 class="text-sm font-bold text-purple-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                <span>🏛️ Genel PACS Oda 2</span>
+                <span class="text-xs font-mono text-slate-400">8 PC</span>
+              </h4>
+              <div class="grid grid-cols-4 gap-3">
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-01" title="Genel PACS Oda 2 PC 1"><div class="text-2xl font-black text-purple-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-02" title="Genel PACS Oda 2 PC 2"><div class="text-2xl font-black text-purple-300 pointer-events-none">2</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 2</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-03" title="Genel PACS Oda 2 PC 3"><div class="text-2xl font-black text-purple-300 pointer-events-none">3</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 3</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-04" title="Genel PACS Oda 2 PC 4"><div class="text-2xl font-black text-purple-300 pointer-events-none">4</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 4</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-05" title="Genel PACS Oda 2 PC 5"><div class="text-2xl font-black text-purple-300 pointer-events-none">5</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 5</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-06" title="Genel PACS Oda 2 PC 6"><div class="text-2xl font-black text-purple-300 pointer-events-none">6</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 6</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-07" title="Genel PACS Oda 2 PC 7"><div class="text-2xl font-black text-purple-300 pointer-events-none">7</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 7</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-08" title="Genel PACS Oda 2 PC 8"><div class="text-2xl font-black text-purple-300 pointer-events-none">8</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 8</span></div>
+              </div>
             </div>
-            <div class="ws dept-kroki-card" id="ws-y-03" title="Genel PACS Oda 1 PC 3">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">3</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 3</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 3</span>
+
+            <!-- Oda 3 Box -->
+            <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+              <h4 class="text-sm font-bold text-cyan-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                <span>🏛️ Genel PACS Oda 3</span>
+                <span class="text-xs font-mono text-slate-400">11 PC</span>
+              </h4>
+              <div class="grid grid-cols-4 gap-3">
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-01" title="Genel PACS Oda 3 PC 1"><div class="text-2xl font-black text-cyan-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-02" title="Genel PACS Oda 3 PC 2"><div class="text-2xl font-black text-cyan-300 pointer-events-none">2</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 2</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-03" title="Genel PACS Oda 3 PC 3"><div class="text-2xl font-black text-cyan-300 pointer-events-none">3</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 3</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-04" title="Genel PACS Oda 3 PC 4"><div class="text-2xl font-black text-cyan-300 pointer-events-none">4</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 4</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-05" title="Genel PACS Oda 3 PC 5"><div class="text-2xl font-black text-cyan-300 pointer-events-none">5</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 5</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-06" title="Genel PACS Oda 3 PC 6"><div class="text-2xl font-black text-cyan-300 pointer-events-none">6</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 6</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-07" title="Genel PACS Oda 3 PC 7"><div class="text-2xl font-black text-cyan-300 pointer-events-none">7</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 7</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-08" title="Genel PACS Oda 3 PC 8"><div class="text-2xl font-black text-cyan-300 pointer-events-none">8</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 8</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-09" title="Genel PACS Oda 3 PC 9"><div class="text-2xl font-black text-cyan-300 pointer-events-none">9</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 9</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-10" title="Genel PACS Oda 3 PC 10"><div class="text-2xl font-black text-cyan-300 pointer-events-none">10</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 10</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-11" title="Genel PACS Oda 3 PC 11"><div class="text-2xl font-black text-cyan-300 pointer-events-none">11</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 11</span></div>
+              </div>
             </div>
-            <div class="ws dept-kroki-card" id="ws-y-04" title="Genel PACS Oda 1 PC 4">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">4</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 4</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 4</span>
+
+            <!-- Oda 4 Box -->
+            <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+              <h4 class="text-sm font-bold text-blue-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                <span>🏛️ Genel PACS Oda 4</span>
+                <span class="text-xs font-mono text-slate-400">10 PC</span>
+              </h4>
+              <div class="grid grid-cols-4 gap-3">
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-01" title="Genel PACS Oda 4 PC 1"><div class="text-2xl font-black text-blue-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-02" title="Genel PACS Oda 4 PC 2"><div class="text-2xl font-black text-blue-300 pointer-events-none">2</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 2</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-03" title="Genel PACS Oda 4 PC 3"><div class="text-2xl font-black text-blue-300 pointer-events-none">3</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 3</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-04" title="Genel PACS Oda 4 PC 4"><div class="text-2xl font-black text-blue-300 pointer-events-none">4</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 4</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-05" title="Genel PACS Oda 4 PC 5"><div class="text-2xl font-black text-blue-300 pointer-events-none">5</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 5</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-06" title="Genel PACS Oda 4 PC 6"><div class="text-2xl font-black text-blue-300 pointer-events-none">6</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 6</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-07" title="Genel PACS Oda 4 PC 7"><div class="text-2xl font-black text-blue-300 pointer-events-none">7</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 7</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-08" title="Genel PACS Oda 4 PC 8"><div class="text-2xl font-black text-blue-300 pointer-events-none">8</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 8</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-09" title="Genel PACS Oda 4 PC 9"><div class="text-2xl font-black text-blue-300 pointer-events-none">9</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 9</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-10" title="Genel PACS Oda 4 PC 10"><div class="text-2xl font-black text-blue-300 pointer-events-none">10</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 10</span></div>
+              </div>
             </div>
-            <div class="ws dept-kroki-card" id="ws-y-05" title="Genel PACS Oda 1 PC 5">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">5</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 5</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 5</span>
-            </div>
-            <div class="ws dept-kroki-card" id="ws-y-06" title="Genel PACS Oda 1 PC 6">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">6</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 6</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 6</span>
-            </div>
-            <div class="ws dept-kroki-card" id="ws-y-07" title="Genel PACS Oda 1 PC 7">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">7</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 7</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 7</span>
-            </div>
-            <div class="ws dept-kroki-card" id="ws-y-08" title="Genel PACS Oda 1 PC 8">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">8</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 8</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 8</span>
+
+            <!-- Oda 5 & Oda 6 Box -->
+            <div class="grid grid-cols-2 gap-6 col-span-1 md:col-span-2">
+              <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+                <h4 class="text-sm font-bold text-pink-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                  <span>🏛️ Genel PACS Oda 5</span>
+                  <span class="text-xs font-mono text-slate-400">1 PC</span>
+                </h4>
+                <div class="flex justify-center">
+                  <div class="ws dept-kroki-card !p-4 max-w-[160px]" id="ws-pi-01" title="Genel PACS Oda 5 PC 1"><div class="text-2xl font-black text-pink-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                </div>
+              </div>
+
+              <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+                <h4 class="text-sm font-bold text-teal-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                  <span>🏛️ Genel PACS Oda 6</span>
+                  <span class="text-xs font-mono text-slate-400">1 PC</span>
+                </h4>
+                <div class="flex justify-center">
+                  <div class="ws dept-kroki-card !p-4 max-w-[160px]" id="e092e2c2-5348-4724-9a00-5d37a4486176" title="Genel PACS Oda 6 PC 1"><div class="text-2xl font-black text-teal-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -475,89 +537,139 @@
 
         <!-- Kroki Layout Dropdown / Button Switcher -->
         <div class="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs">
-          <button class="kroki-layout-btn active px-3.5 py-2 rounded-xl font-bold bg-cyan-500 text-white shadow transition-all border border-cyan-400/30" data-layout="kroki-pacs-oda-1">
-            🏛️ Genel Oda 1
-          </button>
-          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-pacs-oda-2">
-            🏛️ Genel Oda 2
-          </button>
-          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-pacs-oda-3">
-            🏛️ Genel Oda 3
-          </button>
-          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-pacs-oda-4">
-            🏛️ Genel Oda 4
-          </button>
-          <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-pacs-oda-5">
-            🏛️ Genel Oda 5
+          <button class="kroki-layout-btn active px-3.5 py-2 rounded-xl font-bold bg-cyan-500 text-white shadow transition-all border border-cyan-400/30" data-layout="kroki-pacs-raporlama">
+            🏛️ Genel PACS Kat Krokisi (Tüm Odalar)
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-cassiopeia">
-            ❤️ KVC PACS
+            ❤️ KVC PACS Odası
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-kadin-dogum-pacs">
-            🤰 Kadın Doğum PACS
+            🤰 Kadın Doğum PACS Odası
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-kadin-dogum">
-            🤰 Kadın Doğum Toplantı
+            🤰 Kadın Doğum Toplantı Odası
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-noroloji">
-            🧠 Nöroloji PACS
+            🧠 Nöroloji PACS Odası
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-onkoloji">
-            🎗️ Onkoloji PACS
+            🎗️ Onkoloji PACS Odası
           </button>
           <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-ftr">
-            🦾 FTR PACS
+            🦾 FTR PACS Odası
           </button>
         </div>
       </div>
 
-      <!-- Layout 1: Genel PACS Oda 1 -->
-      <div class="kroki-view-wrapper" id="kroki-pacs-oda-1">
-        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-8 max-w-4xl mx-auto text-center space-y-6 shadow-2xl">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-bold">
-            🏛️ Genel PACS Oda 1 Krokisi
+      <!-- Layout 1: Genel PACS Kat Krokisi (Tüm Genel Odalar Tek Sayfada) -->
+      <div class="kroki-view-wrapper" id="kroki-pacs-raporlama">
+        <div class="space-y-8 max-w-6xl mx-auto">
+          <div class="text-center space-y-1">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-bold">
+              🏛️ Genel PACS Kat Krokisi (Tüm Odalar Tek Sayfada)
+            </div>
+            <p class="text-xs text-slate-400">Ana Raporlama Katındaki Tüm Genel PACS Odaları ve Masa Plânları</p>
           </div>
-          <p class="text-xs text-slate-400">Raporlama Odası Masa Plânı (8 Çalışma İstasyonu)</p>
-          <div class="grid grid-cols-4 gap-5 max-w-3xl mx-auto py-4">
-            <div class="ws dept-kroki-card" id="ws-y-01" title="Genel PACS Oda 1 PC 1">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">1</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 1</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 1</span>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Oda 1 Box -->
+            <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+              <h4 class="text-sm font-bold text-amber-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                <span>🏛️ Genel PACS Oda 1</span>
+                <span class="text-xs font-mono text-slate-400">8 PC</span>
+              </h4>
+              <div class="grid grid-cols-4 gap-3">
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-01" title="Genel PACS Oda 1 PC 1"><div class="text-2xl font-black text-amber-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-02" title="Genel PACS Oda 1 PC 2"><div class="text-2xl font-black text-amber-300 pointer-events-none">2</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 2</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-03" title="Genel PACS Oda 1 PC 3"><div class="text-2xl font-black text-amber-300 pointer-events-none">3</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 3</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-04" title="Genel PACS Oda 1 PC 4"><div class="text-2xl font-black text-amber-300 pointer-events-none">4</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 4</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-05" title="Genel PACS Oda 1 PC 5"><div class="text-2xl font-black text-amber-300 pointer-events-none">5</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 5</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-06" title="Genel PACS Oda 1 PC 6"><div class="text-2xl font-black text-amber-300 pointer-events-none">6</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 6</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-07" title="Genel PACS Oda 1 PC 7"><div class="text-2xl font-black text-amber-300 pointer-events-none">7</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 7</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-y-08" title="Genel PACS Oda 1 PC 8"><div class="text-2xl font-black text-amber-300 pointer-events-none">8</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 8</span></div>
+              </div>
             </div>
-            <div class="ws dept-kroki-card" id="ws-y-02" title="Genel PACS Oda 1 PC 2">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">2</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 2</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 2</span>
+
+            <!-- Oda 2 Box -->
+            <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+              <h4 class="text-sm font-bold text-purple-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                <span>🏛️ Genel PACS Oda 2</span>
+                <span class="text-xs font-mono text-slate-400">8 PC</span>
+              </h4>
+              <div class="grid grid-cols-4 gap-3">
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-01" title="Genel PACS Oda 2 PC 1"><div class="text-2xl font-black text-purple-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-02" title="Genel PACS Oda 2 PC 2"><div class="text-2xl font-black text-purple-300 pointer-events-none">2</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 2</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-03" title="Genel PACS Oda 2 PC 3"><div class="text-2xl font-black text-purple-300 pointer-events-none">3</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 3</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-04" title="Genel PACS Oda 2 PC 4"><div class="text-2xl font-black text-purple-300 pointer-events-none">4</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 4</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-05" title="Genel PACS Oda 2 PC 5"><div class="text-2xl font-black text-purple-300 pointer-events-none">5</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 5</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-06" title="Genel PACS Oda 2 PC 6"><div class="text-2xl font-black text-purple-300 pointer-events-none">6</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 6</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-07" title="Genel PACS Oda 2 PC 7"><div class="text-2xl font-black text-purple-300 pointer-events-none">7</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 7</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-p-08" title="Genel PACS Oda 2 PC 8"><div class="text-2xl font-black text-purple-300 pointer-events-none">8</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 8</span></div>
+              </div>
             </div>
-            <div class="ws dept-kroki-card" id="ws-y-03" title="Genel PACS Oda 1 PC 3">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">3</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 3</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 3</span>
+
+            <!-- Oda 3 Box -->
+            <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+              <h4 class="text-sm font-bold text-cyan-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                <span>🏛️ Genel PACS Oda 3</span>
+                <span class="text-xs font-mono text-slate-400">11 PC</span>
+              </h4>
+              <div class="grid grid-cols-4 gap-3">
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-01" title="Genel PACS Oda 3 PC 1"><div class="text-2xl font-black text-cyan-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-02" title="Genel PACS Oda 3 PC 2"><div class="text-2xl font-black text-cyan-300 pointer-events-none">2</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 2</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-03" title="Genel PACS Oda 3 PC 3"><div class="text-2xl font-black text-cyan-300 pointer-events-none">3</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 3</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-04" title="Genel PACS Oda 3 PC 4"><div class="text-2xl font-black text-cyan-300 pointer-events-none">4</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 4</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-05" title="Genel PACS Oda 3 PC 5"><div class="text-2xl font-black text-cyan-300 pointer-events-none">5</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 5</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-06" title="Genel PACS Oda 3 PC 6"><div class="text-2xl font-black text-cyan-300 pointer-events-none">6</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 6</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-07" title="Genel PACS Oda 3 PC 7"><div class="text-2xl font-black text-cyan-300 pointer-events-none">7</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 7</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-08" title="Genel PACS Oda 3 PC 8"><div class="text-2xl font-black text-cyan-300 pointer-events-none">8</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 8</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-09" title="Genel PACS Oda 3 PC 9"><div class="text-2xl font-black text-cyan-300 pointer-events-none">9</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 9</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-10" title="Genel PACS Oda 3 PC 10"><div class="text-2xl font-black text-cyan-300 pointer-events-none">10</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 10</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-t-11" title="Genel PACS Oda 3 PC 11"><div class="text-2xl font-black text-cyan-300 pointer-events-none">11</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 11</span></div>
+              </div>
             </div>
-            <div class="ws dept-kroki-card" id="ws-y-04" title="Genel PACS Oda 1 PC 4">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">4</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 4</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 4</span>
+
+            <!-- Oda 4 Box -->
+            <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+              <h4 class="text-sm font-bold text-blue-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                <span>🏛️ Genel PACS Oda 4</span>
+                <span class="text-xs font-mono text-slate-400">10 PC</span>
+              </h4>
+              <div class="grid grid-cols-4 gap-3">
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-01" title="Genel PACS Oda 4 PC 1"><div class="text-2xl font-black text-blue-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-02" title="Genel PACS Oda 4 PC 2"><div class="text-2xl font-black text-blue-300 pointer-events-none">2</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 2</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-03" title="Genel PACS Oda 4 PC 3"><div class="text-2xl font-black text-blue-300 pointer-events-none">3</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 3</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-04" title="Genel PACS Oda 4 PC 4"><div class="text-2xl font-black text-blue-300 pointer-events-none">4</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 4</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-05" title="Genel PACS Oda 4 PC 5"><div class="text-2xl font-black text-blue-300 pointer-events-none">5</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 5</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-06" title="Genel PACS Oda 4 PC 6"><div class="text-2xl font-black text-blue-300 pointer-events-none">6</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 6</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-07" title="Genel PACS Oda 4 PC 7"><div class="text-2xl font-black text-blue-300 pointer-events-none">7</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 7</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-08" title="Genel PACS Oda 4 PC 8"><div class="text-2xl font-black text-blue-300 pointer-events-none">8</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 8</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-09" title="Genel PACS Oda 4 PC 9"><div class="text-2xl font-black text-blue-300 pointer-events-none">9</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 9</span></div>
+                <div class="ws dept-kroki-card !p-3 !min-h-[85px]" id="ws-b-10" title="Genel PACS Oda 4 PC 10"><div class="text-2xl font-black text-blue-300 pointer-events-none">10</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 10</span></div>
+              </div>
             </div>
-            <div class="ws dept-kroki-card" id="ws-y-05" title="Genel PACS Oda 1 PC 5">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">5</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 5</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 5</span>
-            </div>
-            <div class="ws dept-kroki-card" id="ws-y-06" title="Genel PACS Oda 1 PC 6">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">6</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 6</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 6</span>
-            </div>
-            <div class="ws dept-kroki-card" id="ws-y-07" title="Genel PACS Oda 1 PC 7">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">7</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 7</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 7</span>
-            </div>
-            <div class="ws dept-kroki-card" id="ws-y-08" title="Genel PACS Oda 1 PC 8">
-              <div class="text-3xl font-black mb-1 text-amber-300 pointer-events-none">8</div>
-              <span class="text-xs text-slate-100 font-bold block text-center pointer-events-none">PC 8</span>
-              <span class="text-[11px] text-slate-400 mt-1 font-medium block text-center pointer-events-none">Masa 8</span>
+
+            <!-- Oda 5 & Oda 6 Box -->
+            <div class="grid grid-cols-2 gap-6 col-span-1 md:col-span-2">
+              <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+                <h4 class="text-sm font-bold text-pink-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                  <span>🏛️ Genel PACS Oda 5</span>
+                  <span class="text-xs font-mono text-slate-400">1 PC</span>
+                </h4>
+                <div class="flex justify-center">
+                  <div class="ws dept-kroki-card !p-4 max-w-[160px]" id="ws-pi-01" title="Genel PACS Oda 5 PC 1"><div class="text-2xl font-black text-pink-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                </div>
+              </div>
+
+              <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4">
+                <h4 class="text-sm font-bold text-teal-400 flex items-center justify-between border-b border-slate-800 pb-3">
+                  <span>🏛️ Genel PACS Oda 6</span>
+                  <span class="text-xs font-mono text-slate-400">1 PC</span>
+                </h4>
+                <div class="flex justify-center">
+                  <div class="ws dept-kroki-card !p-4 max-w-[160px]" id="e092e2c2-5348-4724-9a00-5d37a4486176" title="Genel PACS Oda 6 PC 1"><div class="text-2xl font-black text-teal-300 pointer-events-none">1</div><span class="text-[11px] font-bold text-slate-200 pointer-events-none">PC 1</span></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -873,6 +985,6 @@
     </form>
   </div>
 
-  <script src="app.js?v=50000"></script>
+  <script src="app.js?v=60000"></script>
 </body>
 </html>

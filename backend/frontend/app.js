@@ -329,21 +329,11 @@ function showPCLocationOnKroki(pcId) {
   document.getElementById("kroki-container")?.classList.remove("hidden");
 
   // 2. Exact Target Kroki Room Layout Matching
-  let targetLayout = "kroki-pacs-oda-1";
+  let targetLayout = "kroki-pacs-raporlama";
   const name = (pc.friendlyName || "").toLowerCase();
   const room = (pc.room || "").toLowerCase();
 
-  if (room.includes("oda 1") || name.includes("oda 1 pc")) {
-    targetLayout = "kroki-pacs-oda-1";
-  } else if (room.includes("oda 2") || name.includes("oda 2 pc")) {
-    targetLayout = "kroki-pacs-oda-2";
-  } else if (room.includes("oda 3") || name.includes("oda 3 pc")) {
-    targetLayout = "kroki-pacs-oda-3";
-  } else if (room.includes("oda 4") || name.includes("oda 4 pc")) {
-    targetLayout = "kroki-pacs-oda-4";
-  } else if (room.includes("oda 5") || name.includes("oda 5 pc")) {
-    targetLayout = "kroki-pacs-oda-5";
-  } else if (name.includes("kvc") || room.includes("kvc")) {
+  if (name.includes("kvc") || room.includes("kvc")) {
     targetLayout = "kroki-cassiopeia";
   } else if (name.includes("kadın doğum toplantı") || room.includes("toplantı")) {
     targetLayout = "kroki-kadin-dogum";
@@ -355,6 +345,9 @@ function showPCLocationOnKroki(pcId) {
     targetLayout = "kroki-onkoloji";
   } else if (name.includes("ftr") || room.includes("ftr")) {
     targetLayout = "kroki-ftr";
+  } else {
+    // All Genel PACS Rooms (Oda 1..6) are on single master page
+    targetLayout = "kroki-pacs-raporlama";
   }
 
   switchKrokiLayout(targetLayout);
