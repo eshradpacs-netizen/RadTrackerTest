@@ -424,3 +424,241 @@ div.ws.ws-aktif,
   box-shadow: 0 0 16px rgba(2, 132, 199, 0.8) !important;
   animation: sonar-pulse 1.2s infinite ease-in-out !important;
 }
+
+
+/* Vibrant Floor Canvas for Telegram Mini App & Web */
+.floor-canvas {
+  background: rgba(15, 23, 42, 0.95);
+  border-radius: 28px;
+  padding: 24px sm:padding: 32px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  display: inline-flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.floor-room {
+  position: relative;
+  border-radius: 20px;
+  border-width: 2px;
+  border-style: solid;
+  padding: 18px 14px 14px 14px;
+  transition: all 0.25s ease;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.floor-room-pill {
+  position: absolute;
+  top: -12px;
+  left: 14px;
+  padding: 2px 12px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.room-vega {
+  background: rgba(14, 165, 233, 0.08);
+  border-color: #0284c7;
+}
+.pill-vega {
+  background: #0284c7;
+  color: #ffffff;
+  border: 1px solid #38bdf8;
+}
+
+.room-sirius {
+  background: rgba(244, 63, 94, 0.08);
+  border-color: #e11d48;
+}
+.pill-sirius {
+  background: #e11d48;
+  color: #ffffff;
+  border: 1px solid #fb7185;
+}
+
+.room-cygnus {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: #2563eb;
+}
+.pill-cygnus {
+  background: #2563eb;
+  color: #ffffff;
+  border: 1px solid #60a5fa;
+}
+
+.room-orion {
+  background: rgba(234, 179, 8, 0.08);
+  border-color: #ca8a04;
+}
+.pill-orion {
+  background: #ca8a04;
+  color: #ffffff;
+  border: 1px solid #fde047;
+}
+
+.room-andromeda {
+  background: rgba(168, 85, 247, 0.08);
+  border-color: #9333ea;
+}
+.pill-andromeda {
+  background: #9333ea;
+  color: #ffffff;
+  border: 1px solid #c084fc;
+}
+
+.room-lyra {
+  background: rgba(249, 115, 22, 0.08);
+  border-color: #ea580c;
+}
+.pill-lyra {
+  background: #ea580c;
+  color: #ffffff;
+  border: 1px solid #fb923c;
+}
+
+.corridor-box {
+  background: rgba(30, 41, 59, 0.6);
+  border: 2px dashed rgba(148, 163, 184, 0.5);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #cbd5e1;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.landmark-box {
+  border-radius: 16px;
+  border-width: 2px;
+  border-style: solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+.landmark-box:hover {
+  transform: scale(1.08);
+}
+
+.landmark-m {
+  background: rgba(236, 72, 153, 0.15);
+  border-color: #ec4899;
+  color: #f472b6;
+}
+
+.landmark-n {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: #6366f1;
+  color: #818cf8;
+}
+
+/* Floor Plan Workstation Pills */
+.floor-ws {
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(30, 41, 59, 0.9);
+  color: #f8fafc;
+  font-weight: 900;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 48px;
+  height: 40px;
+  padding: 4px 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.floor-ws:hover {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
+
+.floor-ws.ws-idle {
+  background: rgba(34, 197, 94, 0.25) !important;
+  border-color: #22c55e !important;
+  color: #4ade80 !important;
+}
+
+.floor-ws.ws-active {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border-color: #ef4444 !important;
+  color: #f87171 !important;
+}
+
+.floor-ws.ws-lunch-break {
+  background: rgba(249, 115, 22, 0.25) !important;
+  border-color: #f97316 !important;
+  color: #fb923c !important;
+}
+
+.floor-ws.ws-probably-idle {
+  background: rgba(234, 179, 8, 0.25) !important;
+  border-color: #eab308 !important;
+  color: #fde047 !important;
+}
+
+.floor-ws.ws-offline {
+  background: rgba(71, 85, 105, 0.25) !important;
+  border-color: #64748b !important;
+  color: #94a3b8 !important;
+}
+
+/* Super Powerful Sonar Radar Pulse */
+.floor-ws.ws-aktif,
+.ws.ws-aktif,
+div.ws.ws-aktif,
+.ws-aktif {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border: 3px solid #38bdf8 !important;
+  box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.9), 0 0 35px rgba(14, 165, 233, 1) !important;
+  animation: sonar-pulse 0.9s infinite ease-in-out !important;
+  transform: scale(1.35) !important;
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+@keyframes sonar-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(14, 165, 233, 1), 0 0 25px rgba(14, 165, 233, 1);
+    transform: scale(1.3);
+  }
+  50% {
+    box-shadow: 0 0 0 20px rgba(14, 165, 233, 0), 0 0 40px rgba(14, 165, 233, 1);
+    transform: scale(1.42);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(14, 165, 233, 0), 0 0 25px rgba(14, 165, 233, 1);
+    transform: scale(1.3);
+  }
+}
+
+/* Floating Kroki Location Toast Banner */
+#kroki-location-banner {
+  animation: slide-down 0.3s ease-out;
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -318,7 +318,7 @@ function showPCLocationOnKroki(pcId) {
 
   closeModal();
 
-  // 1. Activate Kroki View Mode
+  // 1. Activate Kroki View Tab
   document.getElementById("pc-grid-container")?.classList.add("hidden");
   document.getElementById("kroki-container")?.classList.remove("hidden");
   
@@ -381,13 +381,19 @@ function showPCLocationOnKroki(pcId) {
            document.querySelector(`[title*="${pc.friendlyName}"]`);
   }
 
+  // 4. Show Notification Banner and Pulse
+  const banner = document.getElementById("kroki-location-banner");
+  const bannerText = document.getElementById("kroki-banner-text");
+  if (banner && bannerText) {
+    bannerText.innerText = `${pc.friendlyName || pc.hostname} (${pc.room || 'Genel'}) krokide mavi halka ile işaretlendi.`;
+    banner.classList.remove("hidden");
+  }
+
   if (wsEl) {
     wsEl.classList.add('ws-aktif');
     setTimeout(() => {
       wsEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
     }, 150);
-  } else {
-    console.warn("Could not find workstation DOM element for PC:", pc);
   }
 }
 
