@@ -7,6 +7,7 @@ Telegram Mini App launch buttons, and real-time push notifications.
 import os
 import re
 import json
+import random
 import asyncio
 import logging
 from typing import Dict, Any, List
@@ -36,7 +37,7 @@ class TelegramBotController:
     def __init__(self):
         self.bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "")
         self.mini_app_url = os.getenv("TELEGRAM_MINI_APP_URL", "")
-        self.subscriptions: Dict[str, List[int]] = {} # pc_id -> list of chat_ids
+        self.subscriptions: Dict[str, List[int]] = {}
 
     async def send_message(self, chat_id: int, text: str, reply_markup: Dict = None):
         """Sends a Telegram message with optional inline or reply keyboard."""
@@ -52,7 +53,9 @@ class TelegramBotController:
             payload["reply_markup"] = reply_markup
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
-                await client.post(url, json=payload)
+                resp = await client.post(url, json=payload)
+                if resp.status_code != 200:
+                    logger.warning(f"Telegram API returned {resp.status_code}: {resp.text}")
         except Exception as e:
             logger.error(f"Telegram send_message error: {e}")
 
@@ -114,32 +117,37 @@ class TelegramBotController:
                     "email": email_found,
                     "telegram_id": str(chat_id),
                     "chat_id": chat_id,
-                    "telegram_username": message.get("from", {}).get("username", ""),
-                    "bound_at": str(asyncio.get_event_loop().time())
+                    "telegram_username": message.get("from", {}).get("username", "")
                 }
-                asyncio.create_task(db.save_to_telegram())
+                asyncio.create_task(db.sync_to_telegram())
                 
-                # Check for pending verification code from web
+                # Generate new active verification code
                 from main import VERIFICATION_CODES
-                pending = VERIFICATION_CODES.get(email_found)
-                if pending and pending.get("code"):
-                    code = pending["code"]
-                    msg = (
-                        f"✅ <b>Telegram Eşleştirmesi Başarılı!</b>\n\n"
-                        f"E-Posta: <code>{email_found}</code>\n"
-                        f"Web Giriş Kodunuz: <b>{code}</b>\n\n"
-                        f"<i>Bu kodu web ekranındaki kutucuğa yazabilirsiniz.</i>"
-                    )
-                    await self.send_message(chat_id, msg)
-                    return
-                else:
-                    msg = (
-                        f"✅ <b>Tebrikler! Telegram Hesabınız Eşleştirildi.</b>\n\n"
-                        f"E-Posta: <code>{email_found}</code>\n\n"
-                        f"Artık webden her giriş kodu istediğinizde şifreniz anında bu sohbete gelecektir."
-                    )
-                    await self.send_message(chat_id, msg)
-                    return
+                import time
+                code = f"{random.randint(100000, 999999)}"
+                VERIFICATION_CODES[email_found] = {
+                    "code": code,
+                    "expires_at": time.time() + 300,
+                    "telegram_id": str(chat_id),
+                    "telegram_username": message.get("from", {}).get("username", "")
+                }
+                
+                msg = (
+                    f"✅ <b>Telegram Hesabınız Başarıyla Eşleştirildi!</b>\n\n"
+                    f"E-Posta: <code>{email_found}</code>\n"
+                    f"Web Giriş Kodunuz: <b>{code}</b>\n\n"
+                    f"<i>Bu 6 haneli kodu web giriş ekranına yazarak hemen oturum açabilirsiniz.</i>"
+                )
+                await self.send_message(chat_id, msg)
+                return
+            else:
+                msg = (
+                    f"⚠️ <b>E-Posta Bulunamadı</b>\n\n"
+                    f"<code>{email_found}</code> adresi yetkili hekim listesinde kayıtlı değil. "
+                    f"Lütfen yetkili e-posta adresinizi giriniz."
+                )
+                await self.send_message(chat_id, msg)
+                return
 
         # Main Command / Text Handlers
         if text.startswith("/start") or text.startswith("/help") or text.startswith("/menu"):
@@ -169,7 +177,6 @@ class TelegramBotController:
         """Welcome message with prioritized Big Free PCs button & Persistent Keyboard."""
         app_url = self.mini_app_url or "https://radtrackertest.onrender.com/miniapp.html"
         
-        # 1. Inline Action Keyboard (Prioritizing Free PC access at the very top)
         inline_keyboard = {
             "inline_keyboard": [
                 [{"text": "🟢 ⚡ BOŞ BİLGİSAYARLARI GÖR (Hemen Listele)", "callback_data": "cmd_bos"}],
@@ -179,7 +186,6 @@ class TelegramBotController:
             ]
         }
 
-        # 2. Persistent Bottom Reply Keyboard (Quick access without typing)
         reply_keyboard = {
             "keyboard": [
                 [{"text": "🟢 Boş Bilgisayarlar"}, {"text": "🗺️ Canlı Kroki", "web_app": {"url": app_url}}],
@@ -196,14 +202,13 @@ class TelegramBotController:
             "⚡ <b>Hızlı İşlemler:</b> Aşağıdaki butonlardan dilediğinize dokunabilirsiniz."
         )
         
-        # Send welcome message with inline buttons and setup bottom keyboard
         await self.send_message(chat_id, text, inline_keyboard)
 
     async def cmd_free_pcs(self, chat_id: int, state_mgr):
         """Lists currently idle / probably-idle PCs with quick Kroki open button."""
         app_url = self.mini_app_url or "https://radtrackertest.onrender.com/miniapp.html"
-        pcs = state_mgr.get_all_states()
-        idle_pcs = [p for p in pcs if p.status in ["idle", "probably-idle"]]
+        pcs = state_mgr.get_all_computers()
+        idle_pcs = [p for p in pcs if p.get("status") in ["idle", "probably-idle"]]
         
         keyboard = {
             "inline_keyboard": [
@@ -218,8 +223,11 @@ class TelegramBotController:
 
         lines = ["🟢 <b>Kullanılabilir / Boş PACS Bilgisayarları:</b>\n"]
         for p in idle_pcs:
-            durum_str = "Tamamen Boş" if p.status == "idle" else f"Muhtemelen Boş (~{p.idle_time_seconds//60} dk hareketsiz)"
-            lines.append(f"• <b>{p.friendly_name}</b> ({p.room}) ➔ <i>{durum_str}</i>")
+            idle_sec = int(p.get("idleTimeSeconds", 0))
+            durum_str = "Tamamen Boş" if p.get("status") == "idle" else f"Muhtemelen Boş (~{idle_sec//60} dk hareketsiz)"
+            p_name = p.get("friendlyName") or p.get("hostname", "PC")
+            p_room = p.get("room", "Genel")
+            lines.append(f"• <b>{p_name}</b> ({p_room}) ➔ <i>{durum_str}</i>")
 
         lines.append(f"\n🎯 Toplam <b>{len(idle_pcs)}</b> adet masa şu an çalışmaya hazır!")
         await self.send_message(chat_id, "\n".join(lines), keyboard)
@@ -227,13 +235,13 @@ class TelegramBotController:
     async def cmd_status(self, chat_id: int, state_mgr):
         """General summary report."""
         app_url = self.mini_app_url or "https://radtrackertest.onrender.com/miniapp.html"
-        pcs = state_mgr.get_all_states()
+        pcs = state_mgr.get_all_computers()
         total = len(pcs)
-        active = sum(1 for p in pcs if p.status == "active")
-        idle = sum(1 for p in pcs if p.status in ["idle", "probably-idle"])
-        lunch = sum(1 for p in pcs if p.status == "lunch-break")
-        offline = sum(1 for p in pcs if p.status == "offline")
-        suspicious = sum(1 for p in pcs if p.status == "suspicious")
+        active = sum(1 for p in pcs if p.get("status") == "active")
+        idle = sum(1 for p in pcs if p.get("status") in ["idle", "probably-idle"])
+        lunch = sum(1 for p in pcs if p.get("status") == "lunch-break")
+        offline = sum(1 for p in pcs if p.get("status") == "offline")
+        suspicious = sum(1 for p in pcs if p.get("status") == "suspicious")
 
         keyboard = {
             "inline_keyboard": [
@@ -256,14 +264,15 @@ class TelegramBotController:
     async def cmd_rooms(self, chat_id: int, state_mgr):
         """Room-by-room PC breakdown."""
         app_url = self.mini_app_url or "https://radtrackertest.onrender.com/miniapp.html"
-        pcs = state_mgr.get_all_states()
+        pcs = state_mgr.get_all_computers()
         rooms: Dict[str, List[Any]] = {}
         for p in pcs:
-            rooms.setdefault(p.room, []).append(p)
+            r = p.get("room", "Genel")
+            rooms.setdefault(r, []).append(p)
 
         lines = ["🏢 <b>Oda Bazında Bilgisayar Dağılımı:</b>\n"]
         for room_name, room_pcs in sorted(rooms.items()):
-            idle_count = sum(1 for p in room_pcs if p.status in ["idle", "probably-idle"])
+            idle_count = sum(1 for p in room_pcs if p.get("status") in ["idle", "probably-idle"])
             total_count = len(room_pcs)
             emoji = "🟢" if idle_count > 0 else "🔴"
             lines.append(f"{emoji} <b>{room_name}:</b> {idle_count}/{total_count} Boş")
@@ -285,16 +294,18 @@ class TelegramBotController:
             return
 
         target = parts[1].strip()
-        matched_pcs = [p for p in state_mgr.get_all_states() if target.lower() in p.id.lower() or target.lower() in p.room.lower() or target.lower() in p.friendly_name.lower()]
+        matched_pcs = [p for p in state_mgr.get_all_computers() if target.lower() in p.get("id", "").lower() or target.lower() in p.get("room", "").lower() or target.lower() in p.get("friendlyName", "").lower()]
 
         if not matched_pcs:
             await self.send_message(chat_id, f"❌ '{target}' ile eşleşen bilgisayar veya oda bulunamadı.")
             return
 
         for p in matched_pcs:
-            self.subscriptions.setdefault(p.id, []).append(chat_id)
+            p_id = p.get("id")
+            if p_id:
+                self.subscriptions.setdefault(p_id, []).append(chat_id)
 
-        pc_names = ", ".join([p.friendly_name for p in matched_pcs])
+        pc_names = ", ".join([p.get("friendlyName", "") for p in matched_pcs])
         await self.send_message(chat_id, f"🔔 Takip başlatıldı! <b>{pc_names}</b> boşaldığında size bildirim gönderilecektir.")
 
     async def cmd_kod(self, chat_id: int):
@@ -315,7 +326,7 @@ class TelegramBotController:
             admin_list = db.state.setdefault("admin_chat_ids", [])
             if target_id not in admin_list:
                 admin_list.append(target_id)
-                await db.save_to_telegram()
+                await db.sync_to_telegram()
                 await self.send_message(chat_id, f"✅ Chat ID <code>{target_id}</code> başarıyla yönetici listesine eklendi.")
             else:
                 await self.send_message(chat_id, "ℹ️ Bu ID zaten yönetici listesinde.")
@@ -334,7 +345,7 @@ class TelegramBotController:
         allowed = db.state.setdefault("allowed_emails", [])
         if email not in [e.lower() for e in allowed]:
             allowed.append(email)
-            await db.save_to_telegram()
+            await db.sync_to_telegram()
             await self.send_message(chat_id, f"✅ <code>{email}</code> başarıyla izinli hekim listesine eklendi.")
         else:
             await self.send_message(chat_id, "ℹ️ Bu e-posta zaten izinli listede.")
@@ -351,7 +362,7 @@ class TelegramBotController:
         allowed = db.state.get("allowed_emails", [])
         if email in allowed:
             allowed.remove(email)
-            await db.save_to_telegram()
+            await db.sync_to_telegram()
             await self.send_message(chat_id, f"🗑️ <code>{email}</code> listeden çıkarıldı.")
         else:
             await self.send_message(chat_id, "❌ Bu e-posta izinli listede bulunamadı.")
@@ -381,18 +392,20 @@ class TelegramBotController:
 
     async def notify_pc_free(self, pc):
         """Sends alert to users who subscribed to this PC."""
-        subscribers = self.subscriptions.get(pc.id, [])
+        pc_id = pc.get("id") if isinstance(pc, dict) else getattr(pc, "id", "")
+        subscribers = self.subscriptions.get(pc_id, [])
         if not subscribers:
             return
+        p_name = pc.get("friendlyName") if isinstance(pc, dict) else getattr(pc, "friendly_name", "PC")
+        p_room = pc.get("room") if isinstance(pc, dict) else getattr(pc, "room", "Genel")
         text = (
             f"🎉 <b>Masa Boşaldı!</b>\n\n"
-            f"💻 <b>{pc.friendly_name}</b> ({pc.room}) şu anda kullanılabilir duruma geldi.\n"
+            f"💻 <b>{p_name}</b> ({p_room}) şu anda kullanılabilir duruma geldi.\n"
             f"📍 Hemen kullanmaya başlayabilirsiniz."
         )
         for chat_id in subscribers:
             await self.send_message(chat_id, text)
-        self.subscriptions[pc.id] = []
-
+        self.subscriptions[pc_id] = []
 
     async def start_polling(self, state_mgr):
         """Continuously polls Telegram getUpdates API for incoming messages."""

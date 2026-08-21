@@ -143,6 +143,9 @@ class PCStateManager:
             "new_status": new_status
         }
 
+    def get_all_states(self) -> List[Dict[str, Any]]:
+        return self.get_all_computers()
+
     def get_all_computers(self) -> List[Dict[str, Any]]:
         """Returns the evaluated list of all 45 Radiology PCs."""
         now_ts = datetime.now(TR_TZ).timestamp()
