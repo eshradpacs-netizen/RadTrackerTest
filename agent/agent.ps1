@@ -13,8 +13,8 @@ param (
     [string]$AgentId = ""
 )
 
-# Sanitize inputs and enforce TLS 1.2 / TLS 1.3
-$ServerUrl = $ServerUrl -creplace '[^\x20-\x7E]', ''
+# Sanitize inputs and enforce TLS 1.2
+$ServerUrl = $ServerUrl -creplace '[^ -~]', ''
 $ServerUrl = $ServerUrl.Trim().Trim('"').Trim("'").TrimEnd('/')
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls
 
@@ -120,13 +120,8 @@ while ($true) {
         
         $endpoint = "$ServerUrl/api/heartbeat?id=$encAgentId&hostname=$encHostname&ip=$encIp&username=$encUsername&idleTimeSeconds=$idleSec&suspicious=$isSuspicious"
         
-        $req = [System.Net.HttpWebRequest]::Create($endpoint)
-        $req.Method = "GET"
-        $req.Timeout = 6000
-        $req.UserAgent = "RadTrackerAgent-v1/Enterprise"
-        
-        $resp = $req.GetResponse()
-        $resp.Close()
+        # Primary method: Invoke-RestMethod
+        $response = Invoke-RestMethod -Uri $endpoint -Method Get -TimeoutSec 6 -Headers @{ "User-Agent" = "RadTrackerAgent-v1/Enterprise" }
         $script:ConsecutiveFailures = 0
     }
     catch {
