@@ -3,14 +3,8 @@
     Radiology PC Tracker v1 - Production Enterprise Silent Agent (Windows)
 .DESCRIPTION
     High-resilience, zero-footprint background monitor for hospital PACS workstations.
-    Tracks real-time user activity (Win32 input idle time), active reporting software,
-    and anti-cheat (jiggler) processes. Sends periodic heartbeats to FastAPI server.
-.PARAMETER ServerUrl
-    Server endpoint URL (Default: https://radtrackertest.onrender.com)
-.PARAMETER Interval
-    Heartbeat interval in seconds (Default: 10)
-.PARAMETER AgentId
-    Workstation UUID (Optional - server resolves automatically by Hostname/IP)
+    Reads dedicated hardware UUID configuration from C:\ProgramData\RadTracker\config.json
+    and sends periodic 10s heartbeats to FastAPI server.
 #>
 
 param (
@@ -23,6 +17,16 @@ param (
 $ServerUrl = $ServerUrl -creplace '[^\x20-\x7E]', ''
 $ServerUrl = $ServerUrl.Trim().Trim('"').Trim("'").TrimEnd('/')
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls
+
+# Read persistent local config if available
+$configPath = "C:\ProgramData\RadTracker\config.json"
+if (Test-Path $configPath) {
+    try {
+        $cfg = Get-Content $configPath -Raw | ConvertFrom-Json
+        if ($cfg.agentId) { $AgentId = $cfg.agentId }
+        if ($cfg.serverUrl) { $ServerUrl = $cfg.serverUrl }
+    } catch { }
+}
 
 # Define Win32 GetLastInputInfo API for ultra-accurate hardware input monitoring
 $Win32Source = @'
