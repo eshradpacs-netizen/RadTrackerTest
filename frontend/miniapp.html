@@ -172,7 +172,35 @@
     <main id="kroki-container" class="max-w-7xl mx-auto px-4 py-4 hidden">
       <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 mb-3 text-center">
         <h3 class="text-sm font-bold text-cyan-400">🗺️ PACS Raporlama Odaları Fiziksel Yerleşim Krokisi</h3>
-        <p class="text-xs text-slate-400">Masaların üzerindeki renkler canlı bilgisayar durumlarını gösterir. Masaya dokunarak not ekleyebilirsiniz.</p>
+        <p class="text-xs text-slate-400 mb-2">Masaların üzerindeki renkler canlı bilgisayar durumlarını gösterir. Masaya dokunarak detayları inceleyebilirsiniz.</p>
+        
+        <!-- Room Kroki Sub-Filter Selector -->
+        <div class="flex items-center justify-center gap-1.5 overflow-x-auto pt-1 no-scrollbar text-xs">
+          <button class="kroki-sub-tab active px-3 py-1.5 rounded-xl font-bold bg-cyan-500 text-white shadow whitespace-nowrap" data-kroki-room="ALL">
+            🏛️ Tüm Kat Krokisi
+          </button>
+          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Cassiopeia">
+            ❤️ Cassiopeia / KVC
+          </button>
+          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Orion">
+            🌌 Orion Odası
+          </button>
+          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Andromeda">
+            🌠 Andromeda Odası
+          </button>
+          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Lyra">
+            🎶 Lyra Odası
+          </button>
+          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Vega">
+            ⭐ Vega Odası
+          </button>
+          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Cygnus">
+            🦢 Cygnus Odası
+          </button>
+          <button class="kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap" data-kroki-room="Perseus">
+            🛡️ Perseus Odası
+          </button>
+        </div>
       </div>
 
       <div class="kroki-wrapper">

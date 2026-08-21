@@ -277,6 +277,48 @@ function updateKrokiColors() {
   });
 }
 
+let activeKrokiRoom = "ALL";
+
+function filterKrokiByRoom(roomName) {
+  activeKrokiRoom = roomName;
+  document.querySelectorAll(".kroki-sub-tab").forEach(tab => {
+    if (tab.getAttribute("data-kroki-room") === roomName) {
+      tab.className = "kroki-sub-tab active px-3 py-1.5 rounded-xl font-bold bg-cyan-500 text-white shadow whitespace-nowrap";
+    } else {
+      tab.className = "kroki-sub-tab px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700 whitespace-nowrap";
+    }
+  });
+
+  const allBlocks = document.querySelectorAll(".pacs-blok");
+  if (!roomName || roomName === "ALL") {
+    allBlocks.forEach(b => {
+      b.style.opacity = "1";
+      b.style.filter = "none";
+    });
+  } else {
+    const roomBlockClass = {
+      "Cassiopeia": "blok-teal-sag",
+      "Orion": "blok-teal-sol",
+      "Andromeda": "blok-pink",
+      "Lyra": "blok-blue",
+      "Vega": "blok-yellow",
+      "Cygnus": "blok-purple",
+      "Perseus": "blok-pe"
+    };
+
+    allBlocks.forEach(b => {
+      const targetCls = roomBlockClass[roomName];
+      if (targetCls && b.classList.contains(targetCls)) {
+        b.style.opacity = "1";
+        b.style.filter = "drop-shadow(0 0 12px rgba(6,182,212,0.6))";
+      } else {
+        b.style.opacity = "0.35";
+        b.style.filter = "grayscale(50%)";
+      }
+    });
+  }
+}
+
 function showPCLocationOnKroki(pcId) {
   const pc = pcs.find(p => p.id === pcId || p.hostname === pcId || p.friendlyName === pcId);
   if (!pc) return;
@@ -296,6 +338,12 @@ function showPCLocationOnKroki(pcId) {
 
   document.getElementById("pc-grid-container")?.classList.add("hidden");
   document.getElementById("kroki-container")?.classList.remove("hidden");
+
+  if (pc.room) {
+    filterKrokiByRoom(pc.room);
+  } else {
+    filterKrokiByRoom("ALL");
+  }
 
   updateKrokiColors();
 
@@ -399,6 +447,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("view-kroki-btn").className = "px-3 py-2 text-xs font-bold rounded-xl bg-cyan-500 text-white shadow transition-all";
     document.getElementById("view-card-btn").className = "px-3 py-2 text-xs font-bold rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700";
     updateKrokiColors();
+  });
+
+  // Kroki Sub-Tab Room Filter Buttons
+  document.querySelectorAll(".kroki-sub-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      const roomName = tab.getAttribute("data-kroki-room");
+      filterKrokiByRoom(roomName);
+    });
   });
 
   // Search input
