@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=310000">
+  <link rel="stylesheet" href="styles.css?v=320000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative w-full max-w-full overflow-x-hidden">
 
@@ -218,10 +218,29 @@
         </button>
       </div>
 
+            <!-- Mobile Zoom & View Scale Controller -->
+      <div class="flex items-center justify-between px-2 py-1 bg-slate-800/80 rounded-2xl border border-slate-700/80 max-w-md mx-auto mb-3 text-xs">
+        <span class="text-[11px] font-bold text-slate-300 flex items-center gap-1.5 pl-2">
+          <span>📱 Görünüm:</span>
+        </span>
+        <div class="flex items-center gap-1">
+          <button type="button" onclick="setKrokiZoom(0.65)" id="zoom-btn-65" class="zoom-btn px-2.5 py-1 rounded-xl text-[11px] font-bold bg-slate-700 text-slate-300 hover:bg-cyan-500 hover:text-white transition-all">
+            📐 Ekrana Sığdır
+          </button>
+          <button type="button" onclick="setKrokiZoom(0.85)" id="zoom-btn-85" class="zoom-btn px-2.5 py-1 rounded-xl text-[11px] font-bold bg-cyan-500 text-white shadow transition-all">
+            🔍 %85
+          </button>
+          <button type="button" onclick="setKrokiZoom(1.0)" id="zoom-btn-100" class="zoom-btn px-2.5 py-1 rounded-xl text-[11px] font-bold bg-slate-700 text-slate-300 hover:bg-cyan-500 hover:text-white transition-all">
+            🔍 %100
+          </button>
+        </div>
+      </div>
+
       <!-- Layout 1: Genel PACS Kat Krokisi (Mimarî Çizim - media_1787326693070.png) -->
       <div class="kroki-view-wrapper" id="kroki-pacs-raporlama">
-        <div class="flex justify-center p-1 sm:p-4 overflow-x-auto w-full max-w-full">
-          <div class="floor-canvas">
+        <div class="kroki-touch-viewport w-full" id="kroki-scroll-area">
+          <div class="kroki-scale-wrapper" id="kroki-scale-target">
+            <div class="floor-canvas">
             
             <!-- SOL KANAT -->
             <div class="flex flex-col gap-4">
@@ -720,7 +739,7 @@
     </form>
   </div>
 
-  <script src="app.js?v=310000"></script>
+  <script src="app.js?v=320000"></script>
     <!-- Admin Whitelist & Dynamic Role Management Modal -->
   <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden">
     <div class="glass-card bg-slate-900/95 border border-cyan-500/30 rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-5 text-slate-100 max-h-[90vh] overflow-y-auto">

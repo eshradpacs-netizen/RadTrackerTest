@@ -982,3 +982,71 @@ async function adminRemoveEmail(email) {
     alert("Yetki silme başarısız oldu.");
   }
 }
+
+// ==========================================================================
+// Mobile Kroki Zoom & Touch Drag Engine
+// ==========================================================================
+let currentKrokiZoom = 0.85;
+
+function setKrokiZoom(scale) {
+  currentKrokiZoom = scale;
+  const target = document.getElementById('kroki-scale-target');
+  if (target) {
+    target.style.transform = `scale(${scale})`;
+  }
+  
+  // Update button active state
+  document.querySelectorAll('.zoom-btn').forEach(btn => {
+    btn.classList.remove('bg-cyan-500', 'text-white', 'shadow');
+    btn.classList.add('bg-slate-700', 'text-slate-300');
+  });
+
+  const activeBtnId = scale === 0.65 ? 'zoom-btn-65' : (scale === 1.0 ? 'zoom-btn-100' : 'zoom-btn-85');
+  const activeBtn = document.getElementById(activeBtnId);
+  if (activeBtn) {
+    activeBtn.classList.remove('bg-slate-700', 'text-slate-300');
+    activeBtn.classList.add('bg-cyan-500', 'text-white', 'shadow');
+  }
+}
+
+// Auto-detect mobile screen width and set optimal zoom on startup
+function autoFitKrokiOnMobile() {
+  if (window.innerWidth < 640) {
+    setKrokiZoom(0.65);
+  } else if (window.innerWidth < 1024) {
+    setKrokiZoom(0.85);
+  } else {
+    setKrokiZoom(1.0);
+  }
+}
+
+window.addEventListener('resize', () => {
+  // Only adjust on initial load or major screen orientation change
+});
+
+// Enable Mouse & Touch Drag on Kroki
+document.addEventListener('DOMContentLoaded', () => {
+  autoFitKrokiOnMobile();
+  const slider = document.getElementById('kroki-scroll-area');
+  if (!slider) return;
+
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.classList.add('active');
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+  });
+  slider.addEventListener('mouseleave', () => { isDown = false; });
+  slider.addEventListener('mouseup', () => { isDown = false; });
+  slider.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - slider.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    slider.scrollLeft = scrollLeft - walk;
+  });
+});

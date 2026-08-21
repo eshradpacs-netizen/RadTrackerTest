@@ -680,3 +680,39 @@ div.ws.ws-aktif,
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
+
+
+/* ==========================================================================
+   Smooth Touch Scrolling & Zoom Engine for Floor Krokis
+   ========================================================================== */
+
+.kroki-touch-viewport {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto !important;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  text-align: center;
+  padding: 12px 6px;
+  cursor: grab;
+  user-select: none;
+}
+
+.kroki-touch-viewport:active {
+  cursor: grabbing;
+}
+
+.kroki-scale-wrapper {
+  display: inline-block;
+  text-align: left;
+  transform-origin: top center;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 0 auto;
+}
+
+.floor-canvas {
+  display: inline-flex !important;
+  text-align: left;
+  margin: 0 auto;
+}
