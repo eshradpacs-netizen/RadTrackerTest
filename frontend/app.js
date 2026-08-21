@@ -585,8 +585,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Search input
-  document.getElementById("search-input")?.addEventListener("input", (e) => {
+    document.getElementById("search-input")?.addEventListener("input", (e) => {
     searchQuery = e.target.value;
+    if (searchQuery.trim().length > 0) {
+      document.getElementById("kroki-container")?.classList.add("hidden");
+      document.getElementById("pc-grid-container")?.classList.remove("hidden");
+    }
     renderGrid();
   });
 
@@ -601,14 +605,25 @@ document.addEventListener("DOMContentLoaded", () => {
       tab.classList.add("bg-cyan-500", "text-white", "active");
 
       const targetRoom = tab.getAttribute("data-room");
-      if (targetRoom === "KROKI") {
+      
+      if (targetRoom === "ALL") {
+        // Tüm Odalar -> Show card grid list
+        document.getElementById("kroki-container")?.classList.add("hidden");
+        document.getElementById("pc-grid-container")?.classList.remove("hidden");
+        activeRoom = "ALL";
+        renderGrid();
+      } else if (targetRoom === "KROKI" || targetRoom === "GENEL_PACS") {
+        // Genel PACS (Ana Kat) or Kroki Haritasi -> Open Main Floor Kroki
         document.getElementById("pc-grid-container")?.classList.add("hidden");
         document.getElementById("kroki-container")?.classList.remove("hidden");
         switchKrokiLayout('kroki-pacs-raporlama');
-      } else if (ROOM_TO_KROKI_LAYOUT[targetRoom] && !document.getElementById("kroki-container")?.classList.contains("hidden")) {
-        // If already in Kroki view and user taps a room tab, switch to that room's Kroki!
+      } else if (ROOM_TO_KROKI_LAYOUT[targetRoom]) {
+        // Branch Department -> Directly open that department's Kroki!
+        document.getElementById("pc-grid-container")?.classList.add("hidden");
+        document.getElementById("kroki-container")?.classList.remove("hidden");
         switchKrokiLayout(ROOM_TO_KROKI_LAYOUT[targetRoom]);
       } else {
+        // Fallback
         document.getElementById("kroki-container")?.classList.add("hidden");
         document.getElementById("pc-grid-container")?.classList.remove("hidden");
         activeRoom = targetRoom;
