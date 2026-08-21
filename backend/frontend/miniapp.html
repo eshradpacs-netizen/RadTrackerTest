@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=270000">
+  <link rel="stylesheet" href="styles.css?v=280000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative">
 
@@ -390,41 +390,45 @@
         </div>
       </div>
 
-            <!-- Layout 2: KVC PACS Odası -->
+                  <!-- Layout 2: KVC PACS Odası -->
       <div class="kroki-view-wrapper hidden" id="kroki-cassiopeia">
-        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 sm:p-8 max-w-xl mx-auto space-y-6 shadow-2xl">
-          <div class="text-center space-y-1">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs sm:text-sm font-bold shadow-sm">
+        <div class="glass-card dept-kroki-container border border-rose-500/40 rounded-3xl p-6 sm:p-8 max-w-xl mx-auto space-y-6">
+          <div class="text-center space-y-1.5">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-rose-500/20 to-red-500/20 border border-rose-500/50 text-rose-300 text-xs sm:text-sm font-black shadow-lg shadow-rose-500/20">
               ❤️ KVC PACS Odası Krokisi
             </div>
-            <p class="text-[11px] text-slate-400">Kalp Damar Cerrahisi PACS Raporlama Odası</p>
+            <p class="text-xs text-slate-300 font-medium">Kalp Damar Cerrahisi PACS Raporlama Odası</p>
           </div>
 
           <!-- Room Architectural Box -->
-          <div class="p-6 rounded-2xl bg-slate-950/80 border border-rose-500/30 relative max-w-md mx-auto shadow-inner">
+          <div class="p-6 sm:p-7 rounded-3xl kroki-room-box room-theme-rose max-w-md mx-auto">
             <!-- Room Pill Header -->
-            <div class="absolute -top-3.5 left-6 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/40">
+            <div class="absolute -top-4 left-6 px-3.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-lg shadow-rose-600/50 border border-rose-400/60">
               KVC PACS (ODA 1)
             </div>
 
             <!-- Door Indicator -->
-            <div class="flex justify-between items-center mb-6 text-[10px] text-slate-500 font-semibold px-2 border-b border-slate-800 pb-2">
-              <span class="flex items-center gap-1">🚪 Giriş Kapısı</span>
-              <span>2 Çalışma İstasyonu</span>
+            <div class="flex justify-between items-center mb-6 text-xs text-rose-200/80 font-bold px-2 border-b border-rose-500/30 pb-2.5">
+              <span class="flex items-center gap-1.5 text-amber-400">🚪 Giriş Kapısı</span>
+              <span class="text-slate-300">2 Çalışma İstasyonu</span>
             </div>
 
             <!-- Desks Grid -->
             <div class="grid grid-cols-2 gap-4">
-              <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col items-center gap-2">
-                <div class="ws floor-ws w-12 h-12 text-base font-bold flex items-center justify-center rounded-xl" id="Cassiopeia-β" title="KVC PACS Oda 1 PC 1">1</div>
-                <span class="text-[11px] font-bold text-slate-200 text-center">Sol Masa</span>
-                <span class="text-[9px] text-slate-400">KVC PACS PC 1</span>
+              <div class="ws kroki-desk-card p-4 rounded-2xl bg-slate-900/90 border border-rose-500/30 hover:border-rose-400 flex flex-col items-center gap-2.5" id="Cassiopeia-β" title="KVC PACS Oda 1 PC 1">
+                <div class="w-14 h-14 text-xl font-black flex items-center justify-center rounded-2xl ws-badge-rose pointer-events-none">1</div>
+                <div class="text-center pointer-events-none">
+                  <span class="text-xs font-bold text-slate-100 block">Sol Masa</span>
+                  <span class="text-[10px] text-rose-300 font-semibold">KVC PACS PC 1</span>
+                </div>
               </div>
 
-              <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col items-center gap-2">
-                <div class="ws floor-ws w-12 h-12 text-base font-bold flex items-center justify-center rounded-xl" id="Cassiopeia-α" title="KVC PACS Oda 1 PC 2">2</div>
-                <span class="text-[11px] font-bold text-slate-200 text-center">Sağ Masa</span>
-                <span class="text-[9px] text-slate-400">KVC PACS PC 2</span>
+              <div class="ws kroki-desk-card p-4 rounded-2xl bg-slate-900/90 border border-rose-500/30 hover:border-rose-400 flex flex-col items-center gap-2.5" id="Cassiopeia-α" title="KVC PACS Oda 1 PC 2">
+                <div class="w-14 h-14 text-xl font-black flex items-center justify-center rounded-2xl ws-badge-rose pointer-events-none">2</div>
+                <div class="text-center pointer-events-none">
+                  <span class="text-xs font-bold text-slate-100 block">Sağ Masa</span>
+                  <span class="text-[10px] text-rose-300 font-semibold">KVC PACS PC 2</span>
+                </div>
               </div>
             </div>
           </div>
@@ -433,45 +437,51 @@
 
       <!-- Layout 3: Kadın Doğum PACS Odası -->
       <div class="kroki-view-wrapper hidden" id="kroki-kadin-dogum-pacs">
-        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 sm:p-8 max-w-2xl mx-auto space-y-6 shadow-2xl">
-          <div class="text-center space-y-1">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-400 text-xs sm:text-sm font-bold shadow-sm">
+        <div class="glass-card dept-kroki-container border border-pink-500/40 rounded-3xl p-6 sm:p-8 max-w-2xl mx-auto space-y-6">
+          <div class="text-center space-y-1.5">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-pink-500/20 to-rose-500/20 border border-pink-500/50 text-pink-300 text-xs sm:text-sm font-black shadow-lg shadow-pink-500/20">
               🤰 Kadın Doğum PACS Odası Krokisi
             </div>
-            <p class="text-[11px] text-slate-400">Kadın Hastalıkları ve Doğum PACS Raporlama Odası</p>
+            <p class="text-xs text-slate-300 font-medium">Kadın Hastalıkları ve Doğum PACS Raporlama Odası</p>
           </div>
 
           <!-- Room Architectural Box -->
-          <div class="p-6 rounded-2xl bg-slate-950/80 border border-pink-500/30 relative max-w-lg mx-auto shadow-inner">
+          <div class="p-6 sm:p-7 rounded-3xl kroki-room-box room-theme-pink max-w-lg mx-auto">
             <!-- Room Pill Header -->
-            <div class="absolute -top-3.5 left-6 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-pink-500/20 text-pink-300 border border-pink-500/40">
+            <div class="absolute -top-4 left-6 px-3.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-600/50 border border-pink-400/60">
               KADIN DOĞUM PACS
             </div>
 
             <!-- Door Indicator -->
-            <div class="flex justify-between items-center mb-6 text-[10px] text-slate-500 font-semibold px-2 border-b border-slate-800 pb-2">
-              <span class="flex items-center gap-1">🚪 Giriş Kapısı</span>
-              <span>3 Çalışma İstasyonu</span>
+            <div class="flex justify-between items-center mb-6 text-xs text-pink-200/80 font-bold px-2 border-b border-pink-500/30 pb-2.5">
+              <span class="flex items-center gap-1.5 text-amber-400">🚪 Giriş Kapısı</span>
+              <span class="text-slate-300">3 Çalışma İstasyonu</span>
             </div>
 
             <!-- Desks Grid -->
             <div class="grid grid-cols-3 gap-3 sm:gap-4">
-              <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col items-center gap-2">
-                <div class="ws floor-ws w-12 h-12 text-base font-bold flex items-center justify-center rounded-xl" id="KD-PACS-01" title="Kadın Doğum PACS Oda 1 PC 1">1</div>
-                <span class="text-[11px] font-bold text-slate-200 text-center">Masa 1</span>
-                <span class="text-[9px] text-slate-400">KD-PACS-01</span>
+              <div class="ws kroki-desk-card p-3.5 rounded-2xl bg-slate-900/90 border border-pink-500/30 hover:border-pink-400 flex flex-col items-center gap-2.5" id="KD-PACS-01" title="Kadın Doğum PACS Oda 1 PC 1">
+                <div class="w-12 h-12 text-lg font-black flex items-center justify-center rounded-2xl ws-badge-pink pointer-events-none">1</div>
+                <div class="text-center pointer-events-none">
+                  <span class="text-xs font-bold text-slate-100 block">Masa 1</span>
+                  <span class="text-[10px] text-pink-300 font-semibold">KD-PACS-01</span>
+                </div>
               </div>
 
-              <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col items-center gap-2">
-                <div class="ws floor-ws w-12 h-12 text-base font-bold flex items-center justify-center rounded-xl" id="KD-PACS-02" title="Kadın Doğum PACS Oda 1 PC 2">2</div>
-                <span class="text-[11px] font-bold text-slate-200 text-center">Masa 2</span>
-                <span class="text-[9px] text-slate-400">KD-PACS-02</span>
+              <div class="ws kroki-desk-card p-3.5 rounded-2xl bg-slate-900/90 border border-pink-500/30 hover:border-pink-400 flex flex-col items-center gap-2.5" id="KD-PACS-02" title="Kadın Doğum PACS Oda 1 PC 2">
+                <div class="w-12 h-12 text-lg font-black flex items-center justify-center rounded-2xl ws-badge-pink pointer-events-none">2</div>
+                <div class="text-center pointer-events-none">
+                  <span class="text-xs font-bold text-slate-100 block">Masa 2</span>
+                  <span class="text-[10px] text-pink-300 font-semibold">KD-PACS-02</span>
+                </div>
               </div>
 
-              <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col items-center gap-2">
-                <div class="ws floor-ws w-12 h-12 text-base font-bold flex items-center justify-center rounded-xl" id="KD-PACS-03" title="Kadın Doğum PACS Oda 1 PC 3">3</div>
-                <span class="text-[11px] font-bold text-slate-200 text-center">Masa 3</span>
-                <span class="text-[9px] text-slate-400">KD-PACS-03</span>
+              <div class="ws kroki-desk-card p-3.5 rounded-2xl bg-slate-900/90 border border-pink-500/30 hover:border-pink-400 flex flex-col items-center gap-2.5" id="KD-PACS-03" title="Kadın Doğum PACS Oda 1 PC 3">
+                <div class="w-12 h-12 text-lg font-black flex items-center justify-center rounded-2xl ws-badge-pink pointer-events-none">3</div>
+                <div class="text-center pointer-events-none">
+                  <span class="text-xs font-bold text-slate-100 block">Masa 3</span>
+                  <span class="text-[10px] text-pink-300 font-semibold">KD-PACS-03</span>
+                </div>
               </div>
             </div>
           </div>
@@ -480,33 +490,33 @@
 
       <!-- Layout 4: Kadın Doğum Toplantı Odası -->
       <div class="kroki-view-wrapper hidden" id="kroki-kadin-dogum">
-        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 sm:p-8 max-w-lg mx-auto space-y-6 shadow-2xl">
-          <div class="text-center space-y-1">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs sm:text-sm font-bold shadow-sm">
+        <div class="glass-card dept-kroki-container border border-amber-500/40 rounded-3xl p-6 sm:p-8 max-w-lg mx-auto space-y-6">
+          <div class="text-center space-y-1.5">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-500/50 text-amber-300 text-xs sm:text-sm font-black shadow-lg shadow-amber-500/20">
               🤰 Kadın Doğum Toplantı Odası
             </div>
-            <p class="text-[11px] text-slate-400">Poliklinik & Seminer Toplantı Odası</p>
+            <p class="text-xs text-slate-300 font-medium">Poliklinik & Seminer Toplantı Odası</p>
           </div>
 
           <!-- Room Architectural Box -->
-          <div class="p-6 rounded-2xl bg-slate-950/80 border border-amber-500/30 relative max-w-sm mx-auto shadow-inner">
+          <div class="p-6 sm:p-7 rounded-3xl kroki-room-box room-theme-amber max-w-sm mx-auto">
             <!-- Room Pill Header -->
-            <div class="absolute -top-3.5 left-6 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">
+            <div class="absolute -top-4 left-6 px-3.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-lg shadow-amber-500/50 border border-amber-300/70">
               K. DOĞUM TOPLANTI
             </div>
 
             <!-- Door Indicator -->
-            <div class="flex justify-between items-center mb-6 text-[10px] text-slate-500 font-semibold px-2 border-b border-slate-800 pb-2">
-              <span class="flex items-center gap-1">🚪 Giriş Kapısı</span>
-              <span>1 Sunum Masası</span>
+            <div class="flex justify-between items-center mb-6 text-xs text-amber-200/80 font-bold px-2 border-b border-amber-500/30 pb-2.5">
+              <span class="flex items-center gap-1.5 text-amber-400">🚪 Giriş Kapısı</span>
+              <span class="text-slate-300">1 Sunum Masası</span>
             </div>
 
             <!-- Meeting Table with Centered Desk -->
-            <div class="p-5 rounded-2xl bg-slate-900/90 border border-dashed border-amber-500/40 flex flex-col items-center gap-3">
-              <div class="ws floor-ws w-14 h-14 text-lg font-bold flex items-center justify-center rounded-xl" id="Aquila-α" title="Kadın Doğum Toplantı Odası PC 1">1</div>
-              <div class="text-center">
-                <span class="text-xs font-bold text-slate-200 block">Toplantı Masası PC 1</span>
-                <span class="text-[10px] text-amber-300/80 font-medium">Seminer / Vaka Tartışma</span>
+            <div class="ws kroki-desk-card p-5 rounded-2xl bg-slate-900/90 border border-dashed border-amber-400/60 hover:border-amber-400 flex flex-col items-center gap-3" id="Aquila-α" title="Kadın Doğum Toplantı Odası PC 1">
+              <div class="w-16 h-16 text-2xl font-black flex items-center justify-center rounded-2xl ws-badge-amber pointer-events-none">1</div>
+              <div class="text-center pointer-events-none">
+                <span class="text-xs font-bold text-slate-100 block">Toplantı Masası PC 1</span>
+                <span class="text-[10px] text-amber-300 font-semibold">Seminer / Vaka Tartışma</span>
               </div>
             </div>
           </div>
@@ -515,80 +525,33 @@
 
       <!-- Layout 5: Onkoloji PACS Odası -->
       <div class="kroki-view-wrapper hidden" id="kroki-onkoloji">
-        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 sm:p-8 max-w-lg mx-auto space-y-6 shadow-2xl">
-          <div class="text-center space-y-1">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-xs sm:text-sm font-bold shadow-sm">
+        <div class="glass-card dept-kroki-container border border-yellow-500/40 rounded-3xl p-6 sm:p-8 max-w-lg mx-auto space-y-6">
+          <div class="text-center space-y-1.5">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/50 text-yellow-300 text-xs sm:text-sm font-black shadow-lg shadow-yellow-500/20">
               🎗️ Onkoloji PACS Odası Krokisi
             </div>
-            <p class="text-[11px] text-slate-400">Radyasyon Onkolojisi PACS Raporlama Odası</p>
+            <p class="text-xs text-slate-300 font-medium">Radyasyon Onkolojisi PACS Raporlama Odası</p>
           </div>
 
           <!-- Room Architectural Box -->
-          <div class="p-6 rounded-2xl bg-slate-950/80 border border-yellow-500/30 relative max-w-sm mx-auto shadow-inner">
+          <div class="p-6 sm:p-7 rounded-3xl kroki-room-box room-theme-yellow max-w-sm mx-auto">
             <!-- Room Pill Header -->
-            <div class="absolute -top-3.5 left-6 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-yellow-500/20 text-yellow-300 border border-yellow-500/40">
+            <div class="absolute -top-4 left-6 px-3.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-gradient-to-r from-yellow-500 to-amber-500 text-slate-950 shadow-lg shadow-yellow-500/50 border border-yellow-300/70">
               ONKOLOJİ PACS (ODA 1)
             </div>
 
             <!-- Door Indicator -->
-            <div class="flex justify-between items-center mb-6 text-[10px] text-slate-500 font-semibold px-2 border-b border-slate-800 pb-2">
-              <span class="flex items-center gap-1">🚪 Giriş Kapısı</span>
-              <span>1 Raporlama İstasyonu</span>
+            <div class="flex justify-between items-center mb-6 text-xs text-yellow-200/80 font-bold px-2 border-b border-yellow-500/30 pb-2.5">
+              <span class="flex items-center gap-1.5 text-amber-400">🚪 Giriş Kapısı</span>
+              <span class="text-slate-300">1 Raporlama İstasyonu</span>
             </div>
 
             <!-- Desk Card -->
-            <div class="p-5 rounded-2xl bg-slate-900/90 border border-yellow-500/30 flex flex-col items-center gap-3">
-              <div class="ws floor-ws w-14 h-14 text-lg font-bold flex items-center justify-center rounded-xl" id="ws-onkoloji-01" title="Onkoloji PACS Oda 1 PC 1">1</div>
-              <div class="text-center">
-                <span class="text-xs font-bold text-slate-200 block">Raporlama Masası PC 1</span>
-                <span class="text-[10px] text-yellow-300/80 font-medium">Onkoloji Raporlama</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-            <!-- Layout 7: Nöroloji PACS Odası -->
-      <div class="kroki-view-wrapper hidden" id="kroki-noroloji">
-        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 sm:p-8 max-w-2xl mx-auto space-y-6 shadow-2xl">
-          <div class="text-center space-y-1">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs sm:text-sm font-bold shadow-sm">
-              🧠 Nöroloji PACS Odası Krokisi
-            </div>
-            <p class="text-[11px] text-slate-400">Nöroloji & Beyin Cerrahisi PACS Raporlama Odası</p>
-          </div>
-
-          <!-- Room Architectural Box -->
-          <div class="p-6 rounded-2xl bg-slate-950/80 border border-purple-500/30 relative max-w-lg mx-auto shadow-inner">
-            <!-- Room Pill Header -->
-            <div class="absolute -top-3.5 left-6 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/40">
-              NÖROLOJİ PACS (ODA 1)
-            </div>
-
-            <!-- Door Indicator -->
-            <div class="flex justify-between items-center mb-6 text-[10px] text-slate-500 font-semibold px-2 border-b border-slate-800 pb-2">
-              <span class="flex items-center gap-1">🚪 Giriş Kapısı</span>
-              <span>3 Çalışma İstasyonu</span>
-            </div>
-
-            <!-- Desks Grid -->
-            <div class="grid grid-cols-3 gap-3 sm:gap-4">
-              <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col items-center gap-2">
-                <div class="ws floor-ws w-12 h-12 text-base font-bold flex items-center justify-center rounded-xl" id="ws-noroloji-01" title="Nöroloji PACS Oda 1 PC 1">1</div>
-                <span class="text-[11px] font-bold text-slate-200 text-center">Masa 1</span>
-                <span class="text-[9px] text-slate-400">Nöro-PACS 1</span>
-              </div>
-
-              <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col items-center gap-2">
-                <div class="ws floor-ws w-12 h-12 text-base font-bold flex items-center justify-center rounded-xl" id="ws-noroloji-02" title="Nöroloji PACS Oda 1 PC 2">2</div>
-                <span class="text-[11px] font-bold text-slate-200 text-center">Masa 2</span>
-                <span class="text-[9px] text-slate-400">Nöro-PACS 2</span>
-              </div>
-
-              <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col items-center gap-2">
-                <div class="ws floor-ws w-12 h-12 text-base font-bold flex items-center justify-center rounded-xl" id="ws-noroloji-03" title="Nöroloji PACS Oda 1 PC 3">3</div>
-                <span class="text-[11px] font-bold text-slate-200 text-center">Masa 3</span>
-                <span class="text-[9px] text-slate-400">Nöro-PACS 3</span>
+            <div class="ws kroki-desk-card p-5 rounded-2xl bg-slate-900/90 border border-yellow-500/30 hover:border-yellow-400 flex flex-col items-center gap-3" id="ws-onkoloji-01" title="Onkoloji PACS Oda 1 PC 1">
+              <div class="w-16 h-16 text-2xl font-black flex items-center justify-center rounded-2xl ws-badge-yellow pointer-events-none">1</div>
+              <div class="text-center pointer-events-none">
+                <span class="text-xs font-bold text-slate-100 block">Raporlama Masası PC 1</span>
+                <span class="text-[10px] text-yellow-300 font-semibold">Onkoloji Raporlama</span>
               </div>
             </div>
           </div>
@@ -597,33 +560,86 @@
 
       <!-- Layout 6: FTR PACS Odası -->
       <div class="kroki-view-wrapper hidden" id="kroki-ftr">
-        <div class="glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 sm:p-8 max-w-lg mx-auto space-y-6 shadow-2xl">
-          <div class="text-center space-y-1">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs sm:text-sm font-bold shadow-sm">
+        <div class="glass-card dept-kroki-container border border-indigo-500/40 rounded-3xl p-6 sm:p-8 max-w-lg mx-auto space-y-6">
+          <div class="text-center space-y-1.5">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-indigo-500/20 to-blue-500/20 border border-indigo-500/50 text-indigo-300 text-xs sm:text-sm font-black shadow-lg shadow-indigo-500/20">
               🦾 FTR PACS Odası Krokisi
             </div>
-            <p class="text-[11px] text-slate-400">Fizik Tedavi ve Rehabilitasyon PACS Odası</p>
+            <p class="text-xs text-slate-300 font-medium">Fizik Tedavi ve Rehabilitasyon PACS Odası</p>
           </div>
 
           <!-- Room Architectural Box -->
-          <div class="p-6 rounded-2xl bg-slate-950/80 border border-indigo-500/30 relative max-w-sm mx-auto shadow-inner">
+          <div class="p-6 sm:p-7 rounded-3xl kroki-room-box room-theme-indigo max-w-sm mx-auto">
             <!-- Room Pill Header -->
-            <div class="absolute -top-3.5 left-6 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+            <div class="absolute -top-4 left-6 px-3.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-lg shadow-indigo-500/50 border border-indigo-300/60">
               FTR PACS (ODA 1)
             </div>
 
             <!-- Door Indicator -->
-            <div class="flex justify-between items-center mb-6 text-[10px] text-slate-500 font-semibold px-2 border-b border-slate-800 pb-2">
-              <span class="flex items-center gap-1">🚪 Giriş Kapısı</span>
-              <span>1 Raporlama İstasyonu</span>
+            <div class="flex justify-between items-center mb-6 text-xs text-indigo-200/80 font-bold px-2 border-b border-indigo-500/30 pb-2.5">
+              <span class="flex items-center gap-1.5 text-amber-400">🚪 Giriş Kapısı</span>
+              <span class="text-slate-300">1 Raporlama İstasyonu</span>
             </div>
 
             <!-- Desk Card -->
-            <div class="p-5 rounded-2xl bg-slate-900/90 border border-indigo-500/30 flex flex-col items-center gap-3">
-              <div class="ws floor-ws w-14 h-14 text-lg font-bold flex items-center justify-center rounded-xl" id="ws-ftr-01" title="FTR PACS Oda 1 PC 1">1</div>
-              <div class="text-center">
-                <span class="text-xs font-bold text-slate-200 block">Raporlama Masası PC 1</span>
-                <span class="text-[10px] text-indigo-300/80 font-medium">FTR Raporlama</span>
+            <div class="ws kroki-desk-card p-5 rounded-2xl bg-slate-900/90 border border-indigo-500/30 hover:border-indigo-400 flex flex-col items-center gap-3" id="ws-ftr-01" title="FTR PACS Oda 1 PC 1">
+              <div class="w-16 h-16 text-2xl font-black flex items-center justify-center rounded-2xl ws-badge-indigo pointer-events-none">1</div>
+              <div class="text-center pointer-events-none">
+                <span class="text-xs font-bold text-slate-100 block">Raporlama Masası PC 1</span>
+                <span class="text-[10px] text-indigo-300 font-semibold">FTR Raporlama</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout 7: Nöroloji PACS Odası -->
+      <div class="kroki-view-wrapper hidden" id="kroki-noroloji">
+        <div class="glass-card dept-kroki-container border border-purple-500/40 rounded-3xl p-6 sm:p-8 max-w-2xl mx-auto space-y-6">
+          <div class="text-center space-y-1.5">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border border-purple-500/50 text-purple-300 text-xs sm:text-sm font-black shadow-lg shadow-purple-500/20">
+              🧠 Nöroloji PACS Odası Krokisi
+            </div>
+            <p class="text-xs text-slate-300 font-medium">Nöroloji & Beyin Cerrahisi PACS Raporlama Odası</p>
+          </div>
+
+          <!-- Room Architectural Box -->
+          <div class="p-6 sm:p-7 rounded-3xl kroki-room-box room-theme-purple max-w-lg mx-auto">
+            <!-- Room Pill Header -->
+            <div class="absolute -top-4 left-6 px-3.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-600/50 border border-purple-400/60">
+              NÖROLOJİ PACS (ODA 1)
+            </div>
+
+            <!-- Door Indicator -->
+            <div class="flex justify-between items-center mb-6 text-xs text-purple-200/80 font-bold px-2 border-b border-purple-500/30 pb-2.5">
+              <span class="flex items-center gap-1.5 text-amber-400">🚪 Giriş Kapısı</span>
+              <span class="text-slate-300">3 Çalışma İstasyonu</span>
+            </div>
+
+            <!-- Desks Grid -->
+            <div class="grid grid-cols-3 gap-3 sm:gap-4">
+              <div class="ws kroki-desk-card p-3.5 rounded-2xl bg-slate-900/90 border border-purple-500/30 hover:border-purple-400 flex flex-col items-center gap-2.5" id="ws-noroloji-01" title="Nöroloji PACS Oda 1 PC 1">
+                <div class="w-12 h-12 text-lg font-black flex items-center justify-center rounded-2xl ws-badge-purple pointer-events-none">1</div>
+                <div class="text-center pointer-events-none">
+                  <span class="text-xs font-bold text-slate-100 block">Masa 1</span>
+                  <span class="text-[10px] text-purple-300 font-semibold">Nöro-PACS 1</span>
+                </div>
+              </div>
+
+              <div class="ws kroki-desk-card p-3.5 rounded-2xl bg-slate-900/90 border border-purple-500/30 hover:border-purple-400 flex flex-col items-center gap-2.5" id="ws-noroloji-02" title="Nöroloji PACS Oda 1 PC 2">
+                <div class="w-12 h-12 text-lg font-black flex items-center justify-center rounded-2xl ws-badge-purple pointer-events-none">2</div>
+                <div class="text-center pointer-events-none">
+                  <span class="text-xs font-bold text-slate-100 block">Masa 2</span>
+                  <span class="text-[10px] text-purple-300 font-semibold">Nöro-PACS 2</span>
+                </div>
+              </div>
+
+              <div class="ws kroki-desk-card p-3.5 rounded-2xl bg-slate-900/90 border border-purple-500/30 hover:border-purple-400 flex flex-col items-center gap-2.5" id="ws-noroloji-03" title="Nöroloji PACS Oda 1 PC 3">
+                <div class="w-12 h-12 text-lg font-black flex items-center justify-center rounded-2xl ws-badge-purple pointer-events-none">3</div>
+                <div class="text-center pointer-events-none">
+                  <span class="text-xs font-bold text-slate-100 block">Masa 3</span>
+                  <span class="text-[10px] text-purple-300 font-semibold">Nöro-PACS 3</span>
+                </div>
               </div>
             </div>
           </div>
@@ -697,7 +713,7 @@
     </form>
   </div>
 
-  <script src="app.js?v=270000"></script>
+  <script src="app.js?v=280000"></script>
     <!-- Admin Whitelist & Dynamic Role Management Modal -->
   <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden">
     <div class="glass-card bg-slate-900/95 border border-cyan-500/30 rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-5 text-slate-100 max-h-[90vh] overflow-y-auto">
