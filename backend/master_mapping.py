@@ -48,9 +48,11 @@ MASTER_PC_MAPPING = {
     "523499fe-5bee-4489-90d9-7cbca5388240": {"friendlyName": "Genel PACS Oda 4 PC 9", "room": "Genel PACS Oda 4", "hostname": "desktop-5qc9t01", "ip": "10.86.144.49"},
     "3709a075-ffa2-4724-9d78-74684c95882b": {"friendlyName": "Genel PACS Oda 4 PC 10", "room": "Genel PACS Oda 4", "hostname": "desktop-1aqlqsk", "ip": "10.86.144.242"},
     "62ea8688-2b98-4008-a716-aa454392929e": {"friendlyName": "Nöroloji PACS Oda 1 PC 3", "room": "Nöroloji PACS Odası", "hostname": "desktop-v6dtf9o", "ip": "10.86.155.114"},
-    "6c5f9782-8754-4d33-a647-b2e4100269ce": {"friendlyName": "Nöroloji PACS Oda 1 PC 2", "room": "Nöroloji PACS Odası", "hostname": "desktop-kat7tjb", "ip": "10.86.154.107"},
-    "920f0bfc-333c-4aef-a83c-84e6ff71ed6a": {"friendlyName": "Nöroloji PACS Oda 1 PC 1", "room": "Nöroloji PACS Odası", "hostname": "desktop-1g3s7fm", "ip": "10.86.155.237"},
-    "aa6b1c56-86bd-40be-9f14-417e94791ec9": {"friendlyName": "Aquila - α", "room": "Kadın Doğum Toplantı Odası", "hostname": "desktop-mkjsfr1", "ip": "10.86.145.247"},
+    "6c5f9782-8754-4d33-a647-b2e4100269ce": {"friendlyName": "Nöroloji PACS Oda 1 PC 1", "room": "Nöroloji PACS Odası", "hostname": "desktop-kat7tjb", "ip": "10.86.155.115"},
+    "aa6b1c56-86bd-40be-9f14-417e94791ec9": {"friendlyName": "Nöroloji PACS Oda 1 PC 2", "room": "Nöroloji PACS Odası", "hostname": "desktop-mkjsfr1", "ip": "10.86.155.116"},
+    "kd-pacs-01-uuid-0001": {"friendlyName": "Kadın Doğum PACS Oda 1 PC 1", "room": "Kadın Doğum PACS Odası", "hostname": "desktop-kdpacs1", "ip": "10.86.170.1"},
+    "kd-pacs-01-uuid-0002": {"friendlyName": "Kadın Doğum PACS Oda 1 PC 2", "room": "Kadın Doğum PACS Odası", "hostname": "desktop-kdpacs2", "ip": "10.86.170.2"},
+    "kd-pacs-01-uuid-0003": {"friendlyName": "Kadın Doğum PACS Oda 1 PC 3", "room": "Kadın Doğum PACS Odası", "hostname": "desktop-kdpacs3", "ip": "10.86.170.3"},
     "e092e2c2-5348-4724-9a00-5d37a4486176": {"friendlyName": "Sirius - α", "room": "Genel PACS Oda 6", "hostname": "desktop-2t9o3va", "ip": "10.86.145.98"}
 }
 

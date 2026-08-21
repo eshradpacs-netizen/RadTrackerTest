@@ -210,6 +210,9 @@ function closeModal() {
 }
 
 const KROKI_MAP = {
+  'KD-PACS-01': 'Kadın Doğum PACS Oda 1 PC 1',
+  'KD-PACS-02': 'Kadın Doğum PACS Oda 1 PC 2',
+  'KD-PACS-03': 'Kadın Doğum PACS Oda 1 PC 3',
   'Cassiopeia-β': 'KVC PACS Oda 1 PC 1',
   'Cassiopeia-α': 'KVC PACS Oda 1 PC 2',
   'Aquila-α': 'Kadın Doğum Toplantı Odası PC 1',
@@ -336,6 +339,8 @@ function showPCLocationOnKroki(pcId) {
     targetLayout = "kroki-kadin-dogum";
   } else if (fn.includes("perseus") || room.includes("nöroloji") || room.includes("noroloji")) {
     targetLayout = "kroki-noroloji";
+  } else if (fn.includes("kdpacs") || (room.includes("kadin") && room.includes("pacs"))) {
+    targetLayout = "kroki-kadin-dogum-pacs";
   } else if (room.includes("onkoloji")) {
     targetLayout = "kroki-onkoloji";
   } else if (room.includes("ftr")) {
