@@ -546,3 +546,10 @@ async def serve_styles_css():
 
 if os.path.exists(frontend_dir):
     app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
+
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", 8000))
+    logger.info(f"Starting Radiology PC Tracker Server on port {port}...")
+    uvicorn.run(app, host="0.0.0.0", port=port)
