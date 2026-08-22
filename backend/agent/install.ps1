@@ -43,7 +43,7 @@ Write-Host " BU BILGISAYAR FIZIKSEL OLARAK HANGI ODADA BULUNUYOR?" -ForegroundCo
 Write-Host "----------------------------------------------------------------------------" -ForegroundColor DarkCyan
 Write-Host " [1]  Genel PACS Oda 1 (PC 1 - 8)" -ForegroundColor Gray
 Write-Host " [2]  Genel PACS Oda 2 (PC 1 - 8)" -ForegroundColor Gray
-Write-Host " [3]  Genel PACS Oda 3 (PC 1 - 11)" -ForegroundColor Gray
+Write-Host " [3]  Genel PACS Oda 3 (PC 1, 5, 6, 7, 8, 9, 10, 11)" -ForegroundColor Gray
 Write-Host " [4]  Genel PACS Oda 4 (PC 1 - 10)" -ForegroundColor Gray
 Write-Host " [5]  Genel PACS Oda 5 (Tek Masa)" -ForegroundColor Gray
 Write-Host " [6]  Toplanti Odasi (PC 1 - Tek Masa)" -ForegroundColor Gray
@@ -60,7 +60,7 @@ $masaSek = "1"
 
 if ($odaSec -eq "1") { $masaSek = Read-Host "Genel PACS Oda 1 icindeki Masa Numarasi [1-8]" }
 elseif ($odaSec -eq "2") { $masaSek = Read-Host "Genel PACS Oda 2 icindeki Masa Numarasi [1-8]" }
-elseif ($odaSec -eq "3") { $masaSek = Read-Host "Genel PACS Oda 3 icindeki Masa Numarasi [1-11]" }
+elseif ($odaSec -eq "3") { $masaSek = Read-Host "Genel PACS Oda 3 icindeki Masa Numarasi [1, 5, 6, 7, 8, 9, 10, 11]" }
 elseif ($odaSec -eq "4") { $masaSek = Read-Host "Genel PACS Oda 4 icindeki Masa Numarasi [1-10]" }
 elseif ($odaSec -eq "6") { $masaSek = "1" }
 elseif ($odaSec -eq "7") { $masaSek = Read-Host "KVC PACS Odasi icindeki Masa Numarasi [1-2]" }
@@ -87,9 +87,6 @@ $uuidMap = @{
     '2_8' = @{ id = '8d6f236c-d407-4777-a1a4-acb28d1425f8'; name = 'Genel PACS Oda 2 PC 8'; room = 'Genel PACS Oda 2' }
 
     '3_1' = @{ id = '60677442-626e-4a01-bf3c-7813257a051c'; name = 'Genel PACS Oda 3 PC 1'; room = 'Genel PACS Oda 3' }
-    '3_2' = @{ id = '0dc40f21-f20e-46d2-a9dc-4d96225bb95b'; name = 'Genel PACS Oda 3 PC 2'; room = 'Genel PACS Oda 3' }
-    '3_3' = @{ id = '1f375a3c-5714-45d5-9815-af77966d233a'; name = 'Genel PACS Oda 3 PC 3'; room = 'Genel PACS Oda 3' }
-    '3_4' = @{ id = '8f8a4aa4-02e0-4498-bfc2-a4f84df0d9a0'; name = 'Genel PACS Oda 3 PC 4'; room = 'Genel PACS Oda 3' }
     '3_5' = @{ id = '33e3c64f-9199-4d91-a182-d8be64c9a182'; name = 'Genel PACS Oda 3 PC 5'; room = 'Genel PACS Oda 3' }
     '3_6' = @{ id = '025b8f0c-28c9-40e1-98fb-90e9c53dca46'; name = 'Genel PACS Oda 3 PC 6'; room = 'Genel PACS Oda 3' }
     '3_7' = @{ id = 'e8ec0325-fec6-417b-8383-227074dbc797'; name = 'Genel PACS Oda 3 PC 7'; room = 'Genel PACS Oda 3' }
