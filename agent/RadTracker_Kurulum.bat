@@ -24,10 +24,11 @@ echo.
 set TARGET_DIR=C:\ProgramData\RadTracker
 set SERVER_URL=https://esh-radtracker.onrender.com
 
-echo [1/4] Bilgisayardaki eski/cakisan tum ajanlar temizleniyor...
+echo [1/4] Bilgisayardaki eski calisan ajanlar guvenle durduruluyor...
 
-:: Eski calisan processleri durdur
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like '*RadTracker*' -or $_.CommandLine -like '*agent.ps1*' -or $_.CommandLine -like '*radtrack*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }" >nul 2>&1
+:: SADECE eski arka plan agent.ps1 powershell sureclerini durdur (KENDINI VE CMD'YI ASLA KAPATMAZ)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'powershell.exe' -and $_.CommandLine -like '*agent.ps1*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }" >nul 2>&1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'pythonw.exe' -and $_.CommandLine -like '*pc_agent*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }" >nul 2>&1
 
 :: Eski baslangic dosyalarini temizle
 del /F /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\RadTracker*.vbs" >nul 2>&1
@@ -40,7 +41,7 @@ schtasks /Delete /TN "RadTrackerAgentTask" /F >nul 2>&1
 :: Hedef klasoru hazirla
 if not exist "%TARGET_DIR%" mkdir "%TARGET_DIR%" >nul 2>&1
 
-echo [TAMAMLANDI] Eski ajan kalintilari temizlendi.
+echo [TAMAMLANDI] Eski ajanlar guvenle temizlendi.
 echo.
 
 echo [2/4] Ajan dosyalari kalici sisteme aktariliyor (%TARGET_DIR%)...
