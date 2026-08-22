@@ -427,25 +427,68 @@ function updateKrokiColors() {
 
     const friendly = KROKI_MAP[wsId];
     const pc = pcs.find(p => p.friendlyName === friendly || p.hostname === friendly || p.id === wsId);
+    const st = (pc && pc.status) ? pc.status : 'offline';
 
-    el.classList.remove('ws-idle', 'ws-active', 'ws-lunch-break', 'ws-offline');
+    el.classList.remove('ws-idle', 'ws-probably-idle', 'ws-active', 'ws-lunch-break', 'ws-offline');
 
-    if (pc) {
-      const st = pc.status || 'offline';
-      if (st === 'idle') el.classList.add('ws-idle');
-      else if (st === 'active') el.classList.add('ws-active');
-      else if (st === 'lunch-break') el.classList.add('ws-lunch-break');
-      else el.classList.add('ws-offline');
+    // Handle large detailed desk cards (KVC, Nöroloji, Kadın Doğum, Onkoloji, FTR)
+    const innerBadge = el.querySelector('[class*="ws-badge"]') || el.querySelector('.w-14') || el.querySelector('.w-12');
+    const statusSpan = el.querySelector('span:last-child');
 
-      el.onclick = (e) => {
-        e.stopPropagation();
-        openModal(pc);
-      };
+    if (st === 'idle') {
+      el.classList.add('ws-idle');
+      if (innerBadge) {
+        innerBadge.className = "w-14 h-14 text-xl font-black flex items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 text-white shadow-lg shadow-emerald-500/50 border border-emerald-300 pointer-events-none";
+      }
+      if (statusSpan && statusSpan.parentElement && statusSpan.parentElement !== el) {
+        statusSpan.className = "text-[10px] text-emerald-400 font-bold block";
+        statusSpan.innerText = `${friendly} • 🟢 Boşta`;
+      }
+    } else if (st === 'probably-idle') {
+      el.classList.add('ws-probably-idle');
+      if (innerBadge) {
+        innerBadge.className = "w-14 h-14 text-xl font-black flex items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-500 text-slate-950 shadow-lg shadow-amber-400/50 border border-amber-300 pointer-events-none";
+      }
+      if (statusSpan && statusSpan.parentElement && statusSpan.parentElement !== el) {
+        statusSpan.className = "text-[10px] text-amber-400 font-bold block";
+        statusSpan.innerText = `${friendly} • 🟡 Muhtemelen Boş`;
+      }
+    } else if (st === 'active') {
+      el.classList.add('ws-active');
+      if (innerBadge) {
+        innerBadge.className = "w-14 h-14 text-xl font-black flex items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 text-white shadow-lg shadow-red-500/50 border border-red-400 pointer-events-none";
+      }
+      if (statusSpan && statusSpan.parentElement && statusSpan.parentElement !== el) {
+        statusSpan.className = "text-[10px] text-red-400 font-bold block";
+        statusSpan.innerText = `${friendly} • 🔴 Dolu (Aktif)`;
+      }
+    } else if (st === 'lunch-break') {
+      el.classList.add('ws-lunch-break');
+      if (innerBadge) {
+        innerBadge.className = "w-14 h-14 text-xl font-black flex items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 to-amber-600 text-white shadow-lg shadow-orange-500/50 border border-orange-300 pointer-events-none";
+      }
+      if (statusSpan && statusSpan.parentElement && statusSpan.parentElement !== el) {
+        statusSpan.className = "text-[10px] text-orange-400 font-bold block";
+        statusSpan.innerText = `${friendly} • 🍱 Öğle Arası`;
+      }
     } else {
+      // OFFLINE / SİNYAL YOK
       el.classList.add('ws-offline');
-      el.onclick = (e) => {
-        e.stopPropagation();
-        const dummyPc = {
+      if (innerBadge) {
+        innerBadge.className = "w-14 h-14 text-xl font-bold flex items-center justify-center rounded-2xl bg-slate-800/90 text-slate-500 border border-slate-700/80 shadow-none pointer-events-none";
+      }
+      if (statusSpan && statusSpan.parentElement && statusSpan.parentElement !== el) {
+        statusSpan.className = "text-[10px] text-slate-500 font-medium block";
+        statusSpan.innerText = `${friendly} • ⚪ Çevrimdışı`;
+      }
+    }
+
+    el.onclick = (e) => {
+      e.stopPropagation();
+      if (pc) {
+        openModal(pc);
+      } else {
+        openModal({
           id: wsId,
           friendlyName: friendly || wsId,
           hostname: wsId,
@@ -455,10 +498,9 @@ function updateKrokiColors() {
           ip: '-',
           idleTimeSeconds: 0,
           lastSeen: 0
-        };
-        openModal(dummyPc);
-      };
-    }
+        });
+      }
+    };
   });
 }
 
