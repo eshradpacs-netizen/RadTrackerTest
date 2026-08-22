@@ -198,11 +198,118 @@ async def seamless_auth(payload: UserRegister):
 
 import random
 
-# Store verification codes in memory: email -> { "code": "849201", "expires_at": 1787..., "telegram_id": "123456" }
+# Store verification codes & magic links in memory
+import secrets
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+SMTP_EMAIL = os.getenv("SMTP_EMAIL", "eshradpacs@gmail.com")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "ynjiltigvdwfsvtc")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
+
 VERIFICATION_CODES: Dict[str, Dict[str, Any]] = {}
+MAGIC_TOKENS: Dict[str, Dict[str, Any]] = {}
+
+def send_real_email(to_email: str, code: str, magic_link: str) -> bool:
+    """Sends real email via Gmail SMTP or Resend API synchronously/cleanly."""
+    html_content = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #0f172a; padding: 20px; color: #f8fafc;">
+  <div style="max-width: 500px; margin: 0 auto; background: #1e293b; border: 1px solid #334155; border-radius: 20px; padding: 32px 24px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);">
+    <div style="font-size: 36px; margin-bottom: 8px;">🏥</div>
+    <h1 style="color: #38bdf8; font-size: 20px; font-weight: 800; margin: 0 0 8px 0;">RadTracker PACS Giriş</h1>
+    <p style="color: #94a3b8; font-size: 14px; line-height: 1.5; margin: 0 0 24px 0;">Merhaba Sayın Hekimimiz,<br>Canlı PACS Takip Paneline giriş yapmak için aşağıdaki butona tıklayabilirsiniz:</p>
+    
+    <a href="{magic_link}" style="display: inline-block; background: linear-gradient(135deg, #06b6d4 0%, #4f46e5 100%); background-color: #06b6d4; color: #ffffff !important; font-weight: bold; font-size: 15px; text-decoration: none; padding: 14px 32px; border-radius: 12px; margin-bottom: 24px;">🚀 RadTracker'a Tek Tıkla Giriş Yap</a>
+    
+    <div style="background: #0f172a; border: 1px solid #06b6d4; border-radius: 12px; padding: 14px; margin: 0 auto 16px auto; max-width: 240px;">
+      <div style="font-size: 10px; color: #38bdf8; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; margin-bottom: 4px;">Veya 6 Haneli Giriş Kodunuz</div>
+      <div style="font-size: 28px; font-weight: 900; letter-spacing: 6px; color: #ffffff; font-family: monospace;">{code}</div>
+    </div>
+    
+    <p style="font-size: 11px; color: #64748b; margin-top: 20px; border-top: 1px solid #334155; padding-top: 14px;">
+      Bu bağlantı ve kod 10 dakika süreyle geçerlidir.<br>
+      Giriş yaptıktan sonra oturumunuz 30 gün boyunca açık kalacaktır.
+    </p>
+  </div>
+</body>
+</html>"""
+
+    # 1. Primary: Gmail SMTP SSL (Sends to ANY email worldwide)
+    if SMTP_EMAIL and SMTP_PASSWORD:
+        try:
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = f"🏥 RadTracker PACS Giriş Kodunuz: {code}"
+            msg["From"] = f"RadTracker PACS <{SMTP_EMAIL}>"
+            msg["To"] = to_email
+            msg.attach(MIMEText(html_content, "html", "utf-8"))
+            
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=8) as server:
+                server.login(SMTP_EMAIL, SMTP_PASSWORD)
+                server.sendmail(SMTP_EMAIL, to_email, msg.as_string())
+            logger.info(f"✅ Email successfully sent via Gmail SMTP to {to_email}")
+            return True
+        except Exception as e:
+            logger.warning(f"❌ Gmail SMTP error: {e}")
+
+    # 2. Fallback: Resend API
+    if RESEND_API_KEY:
+        try:
+            payload = {
+                "from": "RadTracker PACS <onboarding@resend.dev>",
+                "to": [to_email],
+                "subject": f"🏥 RadTracker Giriş Kodunuz: {code}",
+                "html": html_content
+            }
+            req = urllib.request.Request(
+                "https://api.resend.com/emails",
+                data=json.dumps(payload).encode("utf-8"),
+                headers={
+                    "Authorization": f"Bearer {RESEND_API_KEY}",
+                    "Content-Type": "application/json",
+                    "User-Agent": "RadTracker-Server/1.0"
+                }
+            )
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                logger.info(f"✅ Email sent via Resend to {to_email}")
+                return True
+        except Exception as e:
+            logger.warning(f"❌ Resend API error: {e}")
+
+    return False
+
+@app.post("/api/verify-magic-token")
+async def verify_magic_token(payload: Dict[str, Any]):
+    token = payload.get("token", "").strip()
+    if not token or token not in MAGIC_TOKENS:
+        raise HTTPException(status_code=400, detail="Geçersiz veya süresi dolmuş giriş bağlantısı.")
+    
+    data = MAGIC_TOKENS[token]
+    if time.time() > data["expires_at"]:
+        del MAGIC_TOKENS[token]
+        raise HTTPException(status_code=400, detail="Bu giriş bağlantısının süresi dolmuş. Lütfen yeni bir bağlantı isteyiniz.")
+    
+    email = data["email"]
+    del MAGIC_TOKENS[token]
+    
+    roles = db.state.get("roles", {})
+    user_role = roles.get(email, "doctor")
+    jwt_token = auth_mgr.create_token(email, role=user_role)
+    
+    return {
+        "success": True,
+        "token": jwt_token,
+        "email": email,
+        "role": user_role
+    }
 
 @app.post("/api/send-telegram-code")
-async def send_telegram_code(payload: Dict[str, Any]):
+@app.post("/api/send-email-code")
+async def send_auth_code(payload: Dict[str, Any]):
     email = payload.get("email", "").lower().strip()
     tg_id = payload.get("telegram_id", "").strip()
     tg_user = payload.get("telegram_username", "").strip()
@@ -210,67 +317,63 @@ async def send_telegram_code(payload: Dict[str, Any]):
     if not email:
         raise HTTPException(status_code=400, detail="Lütfen geçerli bir e-posta adresi giriniz.")
 
-    # 1. Whitelist Check
+    # 1. Whitelist Check (Auto-whitelist admin & user)
     allowed = [e.lower() for e in db.state.get("allowed_emails", [])]
     if email not in allowed:
-        raise HTTPException(status_code=403, detail="Bu e-posta adresi yetkili hekim listesinde bulunamadı. Lütfen yöneticinize başvurun.")
+        if "gulderenabdullah@gmail.com" in email or "eshradpacs@gmail.com" in email or len(allowed) == 0:
+            db.state.setdefault("allowed_emails", []).append(email)
+            db.state.setdefault("roles", {})[email] = "admin"
+            db.save_state()
+        else:
+            raise HTTPException(status_code=403, detail="Bu e-posta adresi yetkili hekim listesinde bulunamadı. Lütfen yöneticinize başvurun.")
 
-    # 2. Telegram Identity Matching & Binding Check
-    users = db.state.get("users", {})
-    existing_user = users.get(email)
-
-    if existing_user and existing_user.get("telegram_id"):
-        bound_tg_id = str(existing_user["telegram_id"])
-        if tg_id and bound_tg_id != tg_id:
-            raise HTTPException(status_code=403, detail=f"Güvenlik Uyarısı: Bu e-posta adresi başka bir Telegram hesabına (@{existing_user.get('telegram_username', 'kilitli')}) kilitlidir!")
-
-    # Find target chat ID from payload or stored user binding
-    target_chat_id = tg_id or (existing_user.get("chat_id") or existing_user.get("telegram_id") if existing_user else None)
-
-    # Generate 6-digit random code
+    # Generate 6-digit random code and Magic Token
     code = f"{random.randint(100000, 999999)}"
+    magic_token = secrets.token_urlsafe(32)
+    
     VERIFICATION_CODES[email] = {
         "code": code,
-        "expires_at": time.time() + 300, # 5 minutes
+        "expires_at": time.time() + 600, # 10 minutes
         "telegram_id": tg_id,
         "telegram_username": tg_user
     }
+    
+    MAGIC_TOKENS[magic_token] = {
+        "email": email,
+        "expires_at": time.time() + 600
+    }
+
+    magic_link = f"https://esh-radtracker.onrender.com/miniapp.html?magic_token={magic_token}"
+
+    # 1. Send via Real Email (Gmail SMTP / Resend)
+    email_sent = send_real_email(email, code, magic_link)
+
+    # 2. Also send via Telegram Bot if available
+    users = db.state.get("users", {})
+    existing_user = users.get(email)
+    target_chat_id = tg_id or (existing_user.get("chat_id") or existing_user.get("telegram_id") if existing_user else None)
 
     msg_text = (
         f"🔑 <b>RadTracker Hekim Giriş Kodu</b>\n\n"
         f"E-Posta: <code>{email}</code>\n"
-        f"Doğrulama Kodunuz: <b>{code}</b>\n\n"
-        f"<i>Bu kod 5 dakika süreyle geçerlidir. Lütfen kimseyle paylaşmayınız.</i>"
+        f"Doğrulama Kodunuz: <b>{code}</b>\n"
+        f"Tek Tıkla Giriş: {magic_link}\n\n"
+        f"<i>Bu kod 10 dakika süreyle geçerlidir.</i>"
     )
 
-    sent_via_bot = False
     if target_chat_id:
         try:
             await telegram_bot.send_message(int(target_chat_id), msg_text)
-            sent_via_bot = True
-        except Exception as e:
-            logger.warning(f"Could not send direct chat message to {target_chat_id}: {e}")
+        except Exception:
+            pass
 
-    # Also log to admin channel for audit
-    await db.log_event_to_channel("🔑 Hekim Giriş Kodu", msg_text)
-
-    if sent_via_bot:
-        return {
-            "success": True,
-            "bot_linked": True,
-            "code": code,
-            "message": f"6 haneli doğrulama kodu Telegram sohbetinize (@ESH Radtracker) gönderildi!",
-            "email": email
-        }
-    else:
-        return {
-            "success": True,
-            "bot_linked": False,
-            "code": code,
-            "message": f"Telegram botunuz henüz eşleştirilmemiş. Lütfen @ESH Radtracker botuna girip e-posta adresinizi ({email}) mesaj atınız.",
-            "bot_url": "https://t.me/ESH_RadTracker_bot",
-            "email": email
-        }
+    return {
+        "success": True,
+        "code": code,
+        "email_sent": email_sent,
+        "message": f"Giriş kodunuz ve bağlantınız {email} adresine e-posta olarak gönderildi!",
+        "email": email
+    }
 
 @app.post("/api/verify-telegram-code")
 async def verify_telegram_code(payload: Dict[str, Any]):
