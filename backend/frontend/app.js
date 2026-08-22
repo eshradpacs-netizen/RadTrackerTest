@@ -178,21 +178,23 @@ function connectWebSocket() {
 
 // Render Summary Statistics Counter
 function renderStats() {
-  let active = 0, idle = 0, lunch = 0, offline = 0, suspicious = 0;
+  let active = 0, idle = 0, probablyIdle = 0, lunch = 0, offline = 0, suspicious = 0;
   pcs.forEach(p => {
     const st = p.status || 'offline';
     if (st === 'active') active++;
-    else if (st === 'idle' || st === 'probably-idle') idle++;
+    else if (st === 'idle') idle++;
+    else if (st === 'probably-idle') probablyIdle++;
     else if (st === 'lunch-break') lunch++;
     else if (st === 'suspicious') suspicious++;
     else offline++;
   });
 
-  document.getElementById("stat-active").innerText = active;
-  document.getElementById("stat-idle").innerText = idle;
-  document.getElementById("stat-lunch").innerText = lunch;
-  document.getElementById("stat-offline").innerText = offline;
-  document.getElementById("stat-suspicious").innerText = suspicious;
+  if (document.getElementById("stat-active")) document.getElementById("stat-active").innerText = active;
+  if (document.getElementById("stat-idle")) document.getElementById("stat-idle").innerText = idle;
+  if (document.getElementById("stat-probably-idle")) document.getElementById("stat-probably-idle").innerText = probablyIdle;
+  if (document.getElementById("stat-lunch")) document.getElementById("stat-lunch").innerText = lunch;
+  if (document.getElementById("stat-offline")) document.getElementById("stat-offline").innerText = offline;
+  if (document.getElementById("stat-suspicious")) document.getElementById("stat-suspicious").innerText = suspicious;
 }
 
 // Format Last Seen relative time
@@ -229,7 +231,9 @@ function renderGrid() {
     // 2. Status Filter
     let matchStatus = true;
     if (activeStatusFilter === 'idle') {
-      matchStatus = (p.status === 'idle' || p.status === 'probably-idle');
+      matchStatus = (p.status === 'idle');
+    } else if (activeStatusFilter === 'probably-idle') {
+      matchStatus = (p.status === 'probably-idle');
     } else if (activeStatusFilter !== 'ALL') {
       matchStatus = (p.status === activeStatusFilter);
     }
@@ -250,7 +254,8 @@ function renderGrid() {
     let filterMsg = "Aramaya uygun bilgisayar bulunamadı.";
     if (activeStatusFilter !== "ALL") {
       const filterNames = {
-        'idle': 'Boşta (Kullanılabilir)',
+        'idle': 'Boşta (45+ dk)',
+        'probably-idle': 'Muhtemelen Boş (30-45 dk)',
         'active': 'Dolu (Aktif)',
         'lunch-break': 'Öğle Arası',
         'offline': 'Çevrimdışı / Kapalı',
