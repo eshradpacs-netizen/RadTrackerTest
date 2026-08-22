@@ -1,0 +1,22 @@
+name: Render Morning Keep-Alive Pinger
+
+on:
+  schedule:
+    # Runs every 8 minutes between 05:00 UTC and 07:59 UTC (08:00 - 11:00 Turkey Time UTC+3)
+    - cron: '*/8 5-7 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  ping-render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping RadTracker Render Server
+        run: |
+          echo "Pinging https://esh-radtracker.onrender.com to keep server warm..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://esh-radtracker.onrender.com/miniapp.html)
+          echo "Ping Response Status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -eq 200 ]; then
+            echo "✅ Render server is awake and healthy!"
+          else
+            echo "⚠️ Server returned status $HTTP_STATUS, waking up..."
+          fi
