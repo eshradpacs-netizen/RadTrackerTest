@@ -312,7 +312,7 @@ async def handle_magic_link(token: str = Query("")):
 
     roles = db.state.get("roles", {})
     user_role = roles.get(email, "doctor")
-    jwt_token = auth_mgr.create_token(email, role=user_role)
+    jwt_token = auth.create_access_token({"sub": email, "role": user_role})
 
     html = f"""<!DOCTYPE html>
 <html>
@@ -361,7 +361,7 @@ async def verify_magic_token(payload: Dict[str, Any]):
     
     roles = db.state.get("roles", {})
     user_role = roles.get(email, "doctor")
-    jwt_token = auth_mgr.create_token(email, role=user_role)
+    jwt_token = auth.create_access_token({"sub": email, "role": user_role})
     
     return {
         "success": True,
