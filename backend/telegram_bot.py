@@ -180,7 +180,7 @@ class TelegramBotController:
         inline_keyboard = {
             "inline_keyboard": [
                 [{"text": "🟢 ⚡ BOŞ BİLGİSAYARLARI GÖR (Hemen Listele)", "callback_data": "cmd_bos"}],
-                [{"text": "🗺️ 🚀 RadTracker Canlı Krokisini Aç", "web_app": {"url": app_url}}],
+                [{"text": "🗺️ 🚀 RadTracker Canlı Krokiyi Aç", "web_app": {"url": app_url}}],
                 [{"text": "📊 Genel PACS Durumu", "callback_data": "cmd_durum"}, {"text": "🏢 Oda Dağılımı", "callback_data": "cmd_odalar"}],
                 [{"text": "🔑 Web Giriş Kodu Al", "callback_data": "cmd_kod"}]
             ]
