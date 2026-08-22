@@ -874,7 +874,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById("btn-send-code");
     if (btn) {
       btn.disabled = true;
-      btn.innerText = "⏳ Telegram'a Kod Gönderiliyor...";
+      btn.innerText = "⏳ E-Posta Gönderiliyor...";
     }
 
     try {
@@ -890,7 +890,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("form-send-code")?.classList.add("hidden");
         document.getElementById("form-verify-code")?.classList.remove("hidden");
         const subtitle = document.getElementById("auth-subtitle");
-        if (subtitle) subtitle.innerText = `${email} adresine 6 haneli Telegram doğrulama kodu gönderildi.`;
+        if (subtitle) subtitle.innerText = `${email} adresine 6 haneli e-posta doğrulama kodu ve giriş bağlantısı gönderildi.`;
         
         // Show code directly on screen & auto-fill input
         if (data.code) {
@@ -915,7 +915,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } finally {
       if (btn) {
         btn.disabled = false;
-        btn.innerText = "🔑 Telegram'a Doğrulama Kodu Gönder";
+        btn.innerText = "🔑 E-Postama Giriş Bağlantısı & Kod Gönder";
       }
     }
   });
