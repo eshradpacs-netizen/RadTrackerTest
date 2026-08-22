@@ -468,7 +468,7 @@ async def get_version_endpoint():
 
 # Instantiate Services
 chat_service = ChatService(db, state_manager.ws_manager)
-pc_notes_service = PCNotesService(db, state_manager.ws_manager)
+pc_notes_service = PCNotesService(db, state_manager.ws_manager, telegram_bot)
 analytics_service = AnalyticsService(db, state_manager)
 
 # -----------------------------------------------------------------------------
@@ -505,17 +505,33 @@ async def send_private_chat_message(payload: Dict[str, Any]):
 async def get_pc_notes():
     return {"success": True, "notes": pc_notes_service.get_all_notes()}
 
+
+@app.get("/api/pc/notes/{pc_id}")
+async def get_pc_notes(pc_id: str):
+    entry = pc_notes_service.get_pc_entry(pc_id)
+    return {"success": True, "pc_id": pc_id, "messages": entry.get("messages", []), "notes": entry.get("notes", "")}
+
 @app.post("/api/pc/notes")
-async def update_pc_note(payload: Dict[str, Any]):
-    pc_id = payload.get("pc_id", "")
-    notes = payload.get("notes", "")
-    friendly_name = payload.get("friendlyName", None)
-    room = payload.get("room", None)
-    author = payload.get("author", "Hekim")
-    if not pc_id:
-        raise HTTPException(status_code=400, detail="pc_id zorunludur.")
-    res = await pc_notes_service.update_pc_note(pc_id, notes, friendly_name, room, author)
-    return {"success": True, "metadata": res}
+async def add_pc_note(payload: Dict[str, Any]):
+    pc_id = payload.get("pc_id", "").strip()
+    text = payload.get("notes", "").strip() or payload.get("text", "").strip()
+    author_email = payload.get("author", "").strip().lower() or payload.get("author_email", "").strip().lower()
+    friendly_name = payload.get("friendly_name", "")
+
+    if not pc_id or not text:
+        raise HTTPException(status_code=400, detail="Masa ID ve not metni gereklidir.")
+
+    res = await pc_notes_service.add_message(pc_id, author_email, text, pc_friendly_name=friendly_name)
+    return {"success": True, "pc_id": pc_id, "entry": res}
+
+@app.delete("/api/pc/notes/{pc_id}/{message_id}")
+async def delete_pc_note(pc_id: str, message_id: str, email: str = Query(""), role: str = Query("doctor")):
+    is_admin = (role == "admin")
+    success = await pc_notes_service.delete_message(pc_id, message_id, email, is_admin=is_admin)
+    if not success:
+        raise HTTPException(status_code=403, detail="Yalnızca kendi yazdığınız notu silebilirsiniz.")
+    return {"success": True, "pc_id": pc_id, "message_id": message_id}
+
 
 @app.get("/api/analytics")
 async def get_analytics_summary():

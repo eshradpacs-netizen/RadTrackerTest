@@ -357,29 +357,191 @@ function renderGrid() {
 }
 
 // Open Detail Modal
-function openModal(pc) {
+async function openModal(pc) {
   selectedPc = pc;
   if (tgApp?.HapticFeedback) {
     tgApp.HapticFeedback.impactOccurred('light');
   }
 
-  document.getElementById("modal-title").innerText = pc.friendlyName || pc.hostname;
-  const rName = pc.room || "Genel"; document.getElementById("modal-room").innerText = rName.toLowerCase().endsWith("odası") ? rName : `${rName} Odası`;
-  document.getElementById("modal-user").innerText = pc.username && pc.username !== 'unknown' ? pc.username : 'Belirtilmedi';
-  document.getElementById("modal-hostname").innerText = pc.hostname || 'Bilinmiyor';
-  document.getElementById("modal-ip").innerText = pc.ip || 'Bilinmiyor';
-  document.getElementById("modal-idle").innerText = `${pc.idleTimeSeconds || 0} saniye`;
-  document.getElementById("modal-lastseen").innerText = formatLastSeen(pc.lastSeen);
+  const titleEl = document.getElementById("modal-title-text");
+  if (titleEl) titleEl.innerText = pc.friendlyName || pc.hostname;
 
-  const statusIcons = { 'active': '🔴', 'idle': '🟢', 'lunch-break': '🍱', 'offline': '⚪', 'suspicious': '⚠️' };
-  document.getElementById("modal-status-icon").innerText = statusIcons[pc.status] || '⚪';
+  const rName = pc.room || "Genel";
+  const roomEl = document.getElementById("modal-room-text");
+  if (roomEl) roomEl.innerText = rName.toLowerCase().endsWith("odası") ? rName : `${rName} Odası`;
 
-  const notesInput = document.getElementById("modal-notes-input");
-  if (notesInput) notesInput.value = pc.notes || "";
+  const userEl = document.getElementById("modal-user");
+  if (userEl) userEl.innerText = pc.username && pc.username !== 'unknown' ? pc.username : 'Belirtilmedi';
+
+  const hostEl = document.getElementById("modal-hostname");
+  if (hostEl) hostEl.innerText = pc.hostname || 'Bilinmiyor';
+
+  const ipEl = document.getElementById("modal-ip");
+  if (ipEl) ipEl.innerText = pc.ip || 'Bilinmiyor';
+
+  const idleEl = document.getElementById("modal-idle");
+  if (idleEl) {
+    if (pc.status === 'offline') {
+      idleEl.innerText = "Kapalı";
+      idleEl.className = "text-sm font-black text-slate-500 block";
+    } else if (pc.status === 'active') {
+      idleEl.innerText = "Kullanımda (0 dk)";
+      idleEl.className = "text-sm font-black text-rose-400 block";
+    } else if (pc.status === 'probably-idle') {
+      const min = Math.floor((pc.idleTimeSeconds || 0) / 60);
+      idleEl.innerText = `${min} Dk Boşta`;
+      idleEl.className = "text-sm font-black text-amber-400 block";
+    } else {
+      const min = Math.floor((pc.idleTimeSeconds || 0) / 60);
+      idleEl.innerText = `${min > 0 ? min + ' Dakika' : (pc.idleTimeSeconds||0) + ' Saniye'}`;
+      idleEl.className = "text-sm font-black text-emerald-400 block";
+    }
+  }
+
+  const lastSeenEl = document.getElementById("modal-lastseen");
+  if (lastSeenEl) lastSeenEl.innerText = formatLastSeen(pc.lastSeen);
+
+  // Status Badge UI
+  const badgeEl = document.getElementById("modal-status-badge");
+  const badgeText = document.getElementById("modal-status-text");
+  const badgeDot = document.getElementById("modal-status-dot");
+  const subscribeBtn = document.getElementById("modal-subscribe-btn");
+
+  if (pc.status === 'idle') {
+    if (badgeEl) badgeEl.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-black tracking-wide bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-lg shadow-emerald-500/20";
+    if (badgeText) badgeText.innerText = "🟢 BOŞTA (KULLANILABİLİR)";
+    if (badgeDot) badgeDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
+    if (subscribeBtn) subscribeBtn.classList.add("hidden");
+  } else if (pc.status === 'probably-idle') {
+    if (badgeEl) badgeEl.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-black tracking-wide bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-lg shadow-amber-500/20";
+    if (badgeText) badgeText.innerText = "🟡 MUHTEMELEN BOŞ (30+ dk)";
+    if (badgeDot) badgeDot.className = "w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse";
+    if (subscribeBtn) subscribeBtn.classList.add("hidden");
+  } else if (pc.status === 'active') {
+    if (badgeEl) badgeEl.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-black tracking-wide bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-lg shadow-rose-500/20";
+    if (badgeText) badgeText.innerText = "🔴 DOLU (AKTİF KULLANIMDA)";
+    if (badgeDot) badgeDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+    if (subscribeBtn) subscribeBtn.classList.remove("hidden");
+  } else if (pc.status === 'lunch-break') {
+    if (badgeEl) badgeEl.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-black tracking-wide bg-orange-500/20 text-orange-300 border border-orange-500/40";
+    if (badgeText) badgeText.innerText = "🍱 ÖĞLE ARASI";
+    if (badgeDot) badgeDot.className = "w-2.5 h-2.5 rounded-full bg-orange-400";
+    if (subscribeBtn) subscribeBtn.classList.remove("hidden");
+  } else {
+    if (badgeEl) badgeEl.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold tracking-wide bg-slate-800 text-slate-400 border border-slate-700";
+    if (badgeText) badgeText.innerText = "⚪ ÇEVRİMDIŞI / KAPALI";
+    if (badgeDot) badgeDot.className = "w-2.5 h-2.5 rounded-full bg-slate-500";
+    if (subscribeBtn) subscribeBtn.classList.add("hidden");
+  }
+
+  // Load Threaded Notes for this PC
+  await loadPcNotes(pc.id);
 
   document.getElementById("detail-modal").classList.remove("hidden");
   document.getElementById("detail-modal").classList.add("flex");
 }
+
+async function loadPcNotes(pcId) {
+  const feed = document.getElementById("modal-notes-feed");
+  const countEl = document.getElementById("modal-notes-count");
+  if (!feed) return;
+
+  const myEmail = (localStorage.getItem("radtracker_email") || "").toLowerCase().trim();
+
+  try {
+    const res = await fetch(`/api/pc/notes/${encodeURIComponent(pcId)}`);
+    const data = await res.json();
+    const messages = data.messages || [];
+
+    if (countEl) countEl.innerText = `${messages.length} not`;
+
+    if (messages.length === 0) {
+      feed.innerHTML = '<div class="p-3 text-center text-xs text-slate-500 bg-slate-800/30 rounded-xl">Bu masada henüz not bırakılmamış.</div>';
+      return;
+    }
+
+    feed.innerHTML = "";
+    messages.forEach(msg => {
+      const isMine = myEmail && msg.author_email && (msg.author_email.toLowerCase() === myEmail);
+      const row = document.createElement("div");
+      row.className = "p-2.5 rounded-2xl bg-slate-800/80 border border-slate-700/60 flex items-start justify-between gap-2 transition-all";
+      
+      row.innerHTML = `
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1.5 mb-0.5">
+            <span class="text-[11px] font-bold ${isMine ? 'text-cyan-300' : 'text-amber-300'} truncate">${msg.author_name || msg.author_email}</span>
+            <span class="text-[9px] text-slate-500 font-mono">${msg.time_str || ''}</span>
+          </div>
+          <p class="text-xs text-slate-200 break-words leading-relaxed">${msg.text}</p>
+        </div>
+        ${isMine ? `
+          <button onclick="deletePcNote('${pcId}', '${msg.id}')" class="text-slate-500 hover:text-rose-400 text-xs p-1 rounded-lg hover:bg-slate-700/50 transition-colors" title="Kendi notunu sil">
+            🗑️
+          </button>
+        ` : ''}
+      `;
+      feed.appendChild(row);
+    });
+
+    // Scroll to bottom
+    feed.scrollTop = feed.scrollHeight;
+  } catch (e) {
+    feed.innerHTML = '<div class="p-2 text-center text-xs text-red-400">Notlar yüklenemedi.</div>';
+  }
+}
+
+async function sendPcNote() {
+  if (!selectedPc) return;
+  const input = document.getElementById("modal-new-note-text");
+  const text = input ? input.value.trim() : "";
+  if (!text) return;
+
+  const author = localStorage.getItem("radtracker_email") || "Hekim";
+  const btn = document.getElementById("modal-send-note-btn");
+  if (btn) btn.disabled = true;
+
+  try {
+    const resp = await fetch("/api/pc/notes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pc_id: selectedPc.id,
+        notes: text,
+        author: author,
+        friendly_name: selectedPc.friendlyName || selectedPc.hostname
+      })
+    });
+    const data = await resp.json();
+    if (data.success) {
+      if (input) input.value = "";
+      await loadPcNotes(selectedPc.id);
+      if (typeof showToast === 'function') showToast("📝 Not masaya eklendi!");
+    }
+  } catch (e) {
+    alert("Not gönderilemedi.");
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function deletePcNote(pcId, msgId) {
+  const email = localStorage.getItem("radtracker_email") || "";
+  try {
+    const res = await fetch(`/api/pc/notes/${encodeURIComponent(pcId)}/${encodeURIComponent(msgId)}?email=${encodeURIComponent(email)}`, {
+      method: "DELETE"
+    });
+    const data = await res.json();
+    if (data.success) {
+      await loadPcNotes(pcId);
+      if (typeof showToast === 'function') showToast("🗑️ Not silindi.");
+    } else {
+      alert(data.detail || "Not silinemedi.");
+    }
+  } catch (e) {
+    alert("Not silinirken hata oluştu.");
+  }
+}
+
 
 function closeModal() {
   document.getElementById("detail-modal").classList.add("hidden");
@@ -961,6 +1123,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Save PC Note
+  document.getElementById("modal-send-note-btn")?.addEventListener("click", sendPcNote);
+  document.getElementById("modal-new-note-text")?.addEventListener("keydown", (e) => { if (e.key === "Enter") sendPcNote(); });
+  // legacy save note
   document.getElementById("modal-save-note-btn")?.addEventListener("click", async () => {
     if (!selectedPc) return;
     const notesInput = document.getElementById("modal-notes-input");
