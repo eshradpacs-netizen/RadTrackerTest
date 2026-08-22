@@ -15,8 +15,7 @@ async function checkMagicLoginToken() {
         localStorage.setItem("radtracker_email", data.email);
         // Clean URL parameter
         window.history.replaceState({}, document.title, window.location.pathname);
-        checkMagicLoginToken();
-  checkAuthStatus();
+        checkAuthStatus();
         if (typeof showToast === 'function') {
           showToast("✅ E-posta ile giriş başarılı! Hoş geldiniz.");
         }
@@ -764,7 +763,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Stat filters handled exclusively by window.filterByStatus
 
   connectWebSocket();
-  checkMagicLoginToken();
   checkAuthStatus();
 
   // View mode switcher (Kart vs Kroki Planı)
@@ -845,8 +843,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("logout-btn")?.addEventListener("click", () => {
     localStorage.removeItem("radtracker_token");
     localStorage.removeItem("radtracker_email");
-    checkMagicLoginToken();
-  checkAuthStatus();
+    checkAuthStatus();
   });
 
   // Helper to extract Telegram WebApp User
@@ -938,8 +935,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (resp.ok && data.success) {
         localStorage.setItem("radtracker_token", data.token);
         localStorage.setItem("radtracker_email", data.email);
-        checkMagicLoginToken();
-  checkAuthStatus();
+        checkAuthStatus();
         closeAuthModal();
       } else {
         showAuthError(data.detail || "Kod doğrulama başarısız.");

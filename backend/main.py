@@ -267,6 +267,84 @@ def send_real_email(to_email: str, code: str, magic_link: str) -> bool:
             logger.warning(f"❌ Brevo API error: {e}")
 
     return False
+@app.get("/auth/magic")
+async def handle_magic_link(token: str = Query("")):
+    """Direct Server-Side Magic Login Link handler. Auto-authenticates and redirects to miniapp."""
+    token = token.strip()
+    if not token or token not in MAGIC_TOKENS:
+        return HTMLResponse("""<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"><title>RadTracker PACS - Giriş Bağlantısı</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 flex items-center justify-center min-h-screen p-4 font-sans">
+  <div class="bg-slate-800 border border-red-500/30 rounded-3xl p-6 text-center max-w-sm w-full shadow-2xl space-y-4">
+    <div class="text-4xl">⚠️</div>
+    <h2 class="text-base font-bold text-red-400">Giriş Bağlantısı Geçersiz</h2>
+    <p class="text-xs text-slate-400">Bu bağlantının süresi dolmuş veya daha önce kullanılmış. Lütfen yeni bir giriş bağlantısı isteyiniz.</p>
+    <a href="/miniapp.html" class="inline-block py-2.5 px-6 rounded-xl bg-cyan-500 hover:bg-cyan-400 font-bold text-white text-xs transition-colors">Giriş Ekranına Dön</a>
+  </div>
+</body></html>""", status_code=400)
+
+    data = MAGIC_TOKENS[token]
+    if time.time() > data["expires_at"]:
+        del MAGIC_TOKENS[token]
+        return HTMLResponse("""<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"><title>RadTracker PACS - Süresi Dolmuş</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 flex items-center justify-center min-h-screen p-4 font-sans">
+  <div class="bg-slate-800 border border-amber-500/30 rounded-3xl p-6 text-center max-w-sm w-full shadow-2xl space-y-4">
+    <div class="text-4xl">⏳</div>
+    <h2 class="text-base font-bold text-amber-400">Bağlantı Süresi Doldu</h2>
+    <p class="text-xs text-slate-400">Güvenliğiniz için bağlantı 10 dakika sonra geçersiz olur. Lütfen yeni bir bağlantı isteyiniz.</p>
+    <a href="/miniapp.html" class="inline-block py-2.5 px-6 rounded-xl bg-cyan-500 hover:bg-cyan-400 font-bold text-white text-xs transition-colors">Yeniden Giriş Yap</a>
+  </div>
+</body></html>""", status_code=400)
+
+    email = data["email"]
+    del MAGIC_TOKENS[token]
+
+    roles = db.state.get("roles", {})
+    user_role = roles.get(email, "doctor")
+    jwt_token = auth_mgr.create_token(email, role=user_role)
+
+    html = f"""<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>RadTracker PACS - Giriş Yapılıyor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 flex items-center justify-center min-h-screen p-4 font-sans">
+  <div class="bg-slate-800 border border-cyan-500/40 rounded-3xl p-8 text-center max-w-sm w-full shadow-2xl space-y-4">
+    <div class="text-5xl animate-bounce">🟢</div>
+    <h2 class="text-lg font-bold text-white">Giriş Başarılı!</h2>
+    <p class="text-xs text-cyan-300 font-semibold">{email}</p>
+    <p class="text-xs text-slate-400">Canlı takip paneli açılıyor, lütfen bekleyiniz...</p>
+  </div>
+  <script>
+    localStorage.setItem("radtracker_token", "{jwt_token}");
+    localStorage.setItem("radtracker_email", "{email}");
+    setTimeout(function() {{
+      window.location.href = "/miniapp.html";
+    }}, 400);
+  </script>
+</body>
+</html>"""
+
+    resp = HTMLResponse(html)
+    resp.set_cookie(key="radtracker_token", value=jwt_token, max_age=30*86400, httponly=False)
+    resp.set_cookie(key="radtracker_email", value=email, max_age=30*86400, httponly=False)
+    return resp
+
+
 @app.post("/api/verify-magic-token")
 async def verify_magic_token(payload: Dict[str, Any]):
     token = payload.get("token", "").strip()
@@ -328,7 +406,7 @@ async def send_auth_code(payload: Dict[str, Any]):
         "expires_at": time.time() + 600
     }
 
-    magic_link = f"https://esh-radtracker.onrender.com/miniapp.html?magic_token={magic_token}"
+    magic_link = f"https://esh-radtracker.onrender.com/auth/magic?token={magic_token}"
 
     # 1. Send via Real Email (Gmail SMTP / Resend)
     email_sent = send_real_email(email, code, magic_link)
