@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=550000">
+  <link rel="stylesheet" href="styles.css?v=560000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative w-full max-w-full overflow-x-hidden">
 
@@ -81,7 +81,7 @@
           <input type="email" id="auth-email" required placeholder="asistan@hastane.gov.tr" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500">
         </div>
         <button type="submit" id="btn-send-code" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 font-bold text-white hover:opacity-90 transition-all text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20">
-          🔑 Telegram'a Doğrulama Kodu Gönder
+          🔑 E-Postama Giriş Bağlantısı & Kod Gönder
         </button>
       </form>
 
@@ -93,7 +93,7 @@
           <p class="text-[10px] text-slate-300">Kod aşağıdaki kutuya otomatik dolduruldu. Doğrudan butona basabilirsiniz!</p>
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Telegram'a Gönderilen 6 Haneli Kod</label>
+          <label class="block text-xs font-medium text-slate-300 mb-1">E-Postanıza Gönderilen 6 Haneli Kod</label>
           <input type="text" id="auth-code" required maxlength="6" placeholder="Örn: 849201" class="w-full bg-slate-800 border border-cyan-500/50 rounded-xl px-4 py-3 text-center text-lg tracking-widest font-mono text-cyan-300 placeholder-slate-600 focus:outline-none focus:border-cyan-400">
           <p class="text-[11px] text-slate-400 mt-1 text-center">💬 Kod Telegram sohbetinize (<b>@ESH Radtracker</b>) gönderildi.</p>
         </div>
@@ -770,6 +770,6 @@
   </div>
 
   <!-- Main JS Script -->
-  <script src="app.js?v=550000"></script>
+  <script src="app.js?v=560000"></script>
 </body>
 </html>

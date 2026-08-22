@@ -1,3 +1,32 @@
+// Check for Magic Link Token in URL (?magic_token=...)
+async function checkMagicLoginToken() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const magicToken = urlParams.get('magic_token');
+  if (magicToken) {
+    try {
+      const resp = await fetch("/api/verify-magic-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: magicToken })
+      });
+      const data = await resp.json();
+      if (resp.ok && data.success) {
+        localStorage.setItem("radtracker_token", data.token);
+        localStorage.setItem("radtracker_email", data.email);
+        // Clean URL parameter
+        window.history.replaceState({}, document.title, window.location.pathname);
+        checkMagicLoginToken();
+  checkAuthStatus();
+        if (typeof showToast === 'function') {
+          showToast("✅ E-posta ile giriş başarılı! Hoş geldiniz.");
+        }
+      }
+    } catch (e) {
+      console.error("Magic token verification error:", e);
+    }
+  }
+}
+
 /**
  * Radiology PC Tracker v1 - Frontend Real-Time Client
  */
@@ -735,6 +764,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Stat filters handled exclusively by window.filterByStatus
 
   connectWebSocket();
+  checkMagicLoginToken();
   checkAuthStatus();
 
   // View mode switcher (Kart vs Kroki Planı)
@@ -815,7 +845,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("logout-btn")?.addEventListener("click", () => {
     localStorage.removeItem("radtracker_token");
     localStorage.removeItem("radtracker_email");
-    checkAuthStatus();
+    checkMagicLoginToken();
+  checkAuthStatus();
   });
 
   // Helper to extract Telegram WebApp User
@@ -917,7 +948,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (resp.ok && data.success) {
         localStorage.setItem("radtracker_token", data.token);
         localStorage.setItem("radtracker_email", data.email);
-        checkAuthStatus();
+        checkMagicLoginToken();
+  checkAuthStatus();
         closeAuthModal();
       } else {
         showAuthError(data.detail || "Kod doğrulama başarısız.");
