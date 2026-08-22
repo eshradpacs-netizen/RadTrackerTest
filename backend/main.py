@@ -269,9 +269,11 @@ def send_real_email(to_email: str, code: str, magic_link: str) -> bool:
     return False
 @app.get("/auth/magic")
 async def handle_magic_link(token: str = Query("")):
-    """Direct Server-Side Magic Login Link handler. Auto-authenticates and redirects to miniapp."""
+    """Cryptographically signed Magic Login Link handler. Immune to mail client link prefetching."""
     token = token.strip()
-    if not token or token not in MAGIC_TOKENS:
+    payload = auth.decode_access_token(token) if token else None
+
+    if not payload or payload.get("type") != "magic_login" or not payload.get("sub"):
         return HTMLResponse("""<!DOCTYPE html>
 <html>
 <head>
@@ -280,36 +282,15 @@ async def handle_magic_link(token: str = Query("")):
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 flex items-center justify-center min-h-screen p-4 font-sans">
-  <div class="bg-slate-800 border border-red-500/30 rounded-3xl p-6 text-center max-w-sm w-full shadow-2xl space-y-4">
-    <div class="text-4xl">⚠️</div>
-    <h2 class="text-base font-bold text-red-400">Giriş Bağlantısı Geçersiz</h2>
-    <p class="text-xs text-slate-400">Bu bağlantının süresi dolmuş veya daha önce kullanılmış. Lütfen yeni bir giriş bağlantısı isteyiniz.</p>
-    <a href="/miniapp.html" class="inline-block py-2.5 px-6 rounded-xl bg-cyan-500 hover:bg-cyan-400 font-bold text-white text-xs transition-colors">Giriş Ekranına Dön</a>
-  </div>
-</body></html>""", status_code=400)
-
-    data = MAGIC_TOKENS[token]
-    if time.time() > data["expires_at"]:
-        del MAGIC_TOKENS[token]
-        return HTMLResponse("""<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8"><title>RadTracker PACS - Süresi Dolmuş</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-900 text-slate-100 flex items-center justify-center min-h-screen p-4 font-sans">
   <div class="bg-slate-800 border border-amber-500/30 rounded-3xl p-6 text-center max-w-sm w-full shadow-2xl space-y-4">
     <div class="text-4xl">⏳</div>
-    <h2 class="text-base font-bold text-amber-400">Bağlantı Süresi Doldu</h2>
-    <p class="text-xs text-slate-400">Güvenliğiniz için bağlantı 10 dakika sonra geçersiz olur. Lütfen yeni bir bağlantı isteyiniz.</p>
+    <h2 class="text-base font-bold text-amber-400">Giriş Bağlantısının Süresi Doldu</h2>
+    <p class="text-xs text-slate-400">Güvenliğiniz için bağlantılar 15 dakika geçerlidir. Lütfen giriş ekranından yeni bir bağlantı isteyiniz.</p>
     <a href="/miniapp.html" class="inline-block py-2.5 px-6 rounded-xl bg-cyan-500 hover:bg-cyan-400 font-bold text-white text-xs transition-colors">Yeniden Giriş Yap</a>
   </div>
 </body></html>""", status_code=400)
 
-    email = data["email"]
-    del MAGIC_TOKENS[token]
-
+    email = payload.get("sub").lower().strip()
     roles = db.state.get("roles", {})
     user_role = roles.get(email, "doctor")
     jwt_token = auth.create_access_token({"sub": email, "role": user_role})
@@ -318,7 +299,7 @@ async def handle_magic_link(token: str = Query("")):
 <html>
 <head>
   <meta charset="utf-8">
-  <title>RadTracker PACS - Giriş Yapılıyor</title>
+  <title>RadTracker PACS - Giriş Başarılı</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -330,8 +311,11 @@ async def handle_magic_link(token: str = Query("")):
     <p class="text-xs text-slate-400">Canlı takip paneli açılıyor, lütfen bekleyiniz...</p>
   </div>
   <script>
-    localStorage.setItem("radtracker_token", "{jwt_token}");
-    localStorage.setItem("radtracker_email", "{email}");
+    try {{
+      localStorage.setItem("radtracker_token", "{jwt_token}");
+      localStorage.setItem("radtracker_email", "{email}");
+      sessionStorage.setItem("radtracker_token", "{jwt_token}");
+    }} catch(e) {{}}
     setTimeout(function() {{
       window.location.href = "/miniapp.html";
     }}, 400);
@@ -343,8 +327,6 @@ async def handle_magic_link(token: str = Query("")):
     resp.set_cookie(key="radtracker_token", value=jwt_token, max_age=30*86400, httponly=False)
     resp.set_cookie(key="radtracker_email", value=email, max_age=30*86400, httponly=False)
     return resp
-
-
 @app.post("/api/verify-magic-token")
 async def verify_magic_token(payload: Dict[str, Any]):
     token = payload.get("token", "").strip()
@@ -392,18 +374,13 @@ async def send_auth_code(payload: Dict[str, Any]):
 
     # Generate 6-digit random code and Magic Token
     code = f"{random.randint(100000, 999999)}"
-    magic_token = secrets.token_urlsafe(32)
+    magic_token = auth.create_access_token({"sub": email, "type": "magic_login"}, expires_delta=900)
     
     VERIFICATION_CODES[email] = {
         "code": code,
-        "expires_at": time.time() + 600, # 10 minutes
+        "expires_at": time.time() + 900,
         "telegram_id": tg_id,
         "telegram_username": tg_user
-    }
-    
-    MAGIC_TOKENS[magic_token] = {
-        "email": email,
-        "expires_at": time.time() + 600
     }
 
     magic_link = f"https://esh-radtracker.onrender.com/auth/magic?token={magic_token}"
