@@ -17,8 +17,8 @@ async function checkMagicLoginToken() {
       });
       const data = await resp.json();
       if (resp.ok && data.success) {
-        localStorage.setItem("radtracker_token", data.token);
-        localStorage.setItem("radtracker_email", data.email);
+        const docName = localStorage.getItem("radtracker_doctor_name") || "";
+        persistAuthSession(data.token, data.email, docName);
         // Clean URL parameter
         window.history.replaceState({}, document.title, window.location.pathname);
         checkAuthStatus();
@@ -879,29 +879,84 @@ function renderAll() {
 // Auth & Verification Modal Handlers
 let pendingEmail = "";
 
+function getRadCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+  return null;
+}
+
+function persistAuthSession(token, email, doctorName) {
+  if (!token || !email) return;
+  try {
+    localStorage.setItem("radtracker_token", token);
+    localStorage.setItem("radtracker_email", email);
+    if (doctorName) localStorage.setItem("radtracker_doctor_name", doctorName);
+    
+    sessionStorage.setItem("radtracker_token", token);
+    sessionStorage.setItem("radtracker_email", email);
+    if (doctorName) sessionStorage.setItem("radtracker_doctor_name", doctorName);
+  } catch (e) {
+    console.warn("Storage write error:", e);
+  }
+
+  // 30 Days Persistent Cookie (2592000 seconds)
+  const maxAge = 30 * 24 * 60 * 60;
+  document.cookie = `radtracker_token=${encodeURIComponent(token)}; max-age=${maxAge}; path=/; SameSite=Lax`;
+  document.cookie = `radtracker_email=${encodeURIComponent(email)}; max-age=${maxAge}; path=/; SameSite=Lax`;
+  if (doctorName) {
+    document.cookie = `radtracker_doctor_name=${encodeURIComponent(doctorName)}; max-age=${maxAge}; path=/; SameSite=Lax`;
+  }
+}
+
+function clearAuthSession() {
+  try {
+    clearAuthSession();
+    localStorage.removeItem("radtracker_doctor_name");
+    sessionStorage.clear();
+  } catch (e) {}
+  document.cookie = "radtracker_token=; max-age=0; path=/;";
+  document.cookie = "radtracker_email=; max-age=0; path=/;";
+  document.cookie = "radtracker_doctor_name=; max-age=0; path=/;";
+}
+
+
 function checkAuthStatus() {
-  const token = localStorage.getItem("radtracker_token");
-  const email = localStorage.getItem("radtracker_email");
+  let token = localStorage.getItem("radtracker_token") || sessionStorage.getItem("radtracker_token") || getRadCookie("radtracker_token");
+  let email = localStorage.getItem("radtracker_email") || sessionStorage.getItem("radtracker_email") || getRadCookie("radtracker_email");
+  let doctorName = localStorage.getItem("radtracker_doctor_name") || sessionStorage.getItem("radtracker_doctor_name") || getRadCookie("radtracker_doctor_name");
+
   const mainContent = document.getElementById("main-content");
   const authContainer = document.getElementById("auth-container");
   const authBtn = document.getElementById("auth-btn");
-  
+  const userBanner = document.getElementById("user-banner");
+
   if (token && email) {
-    document.getElementById("user-banner")?.classList.remove("hidden");
+    // Re-persist to all storage layers so session never drops
+    persistAuthSession(token, email, doctorName);
+
+    if (userBanner) userBanner.classList.remove("hidden");
+    
+    const displayName = doctorName || ("Dr. " + email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1));
+    
     if (document.getElementById("user-email-label")) {
-      document.getElementById("user-email-label").innerText = `Doğrulanmış Hekim (${email})`;
+      document.getElementById("user-email-label").innerText = `👨‍⚕️ ${displayName} (${email})`;
     }
     if (document.getElementById("auth-btn-label")) {
-      document.getElementById("auth-btn-label").innerText = email.split('@')[0];
+      document.getElementById("auth-btn-label").innerText = displayName;
     }
     if (authBtn) authBtn.classList.remove("hidden");
     if (mainContent) mainContent.classList.remove("hidden");
     if (authContainer) authContainer.classList.add("hidden");
+    
+    return true;
   } else {
-    document.getElementById("user-banner")?.classList.add("hidden");
+    if (userBanner) userBanner.classList.add("hidden");
     if (authBtn) authBtn.classList.add("hidden");
     if (mainContent) mainContent.classList.add("hidden");
     if (authContainer) authContainer.classList.remove("hidden");
+    
+    return false;
   }
 }
 
@@ -1014,8 +1069,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("auth-btn")?.addEventListener("click", openAuthModal);
 
   document.getElementById("logout-btn")?.addEventListener("click", () => {
-    localStorage.removeItem("radtracker_token");
-    localStorage.removeItem("radtracker_email");
+    clearAuthSession();
     checkAuthStatus();
   });
 
@@ -1111,8 +1165,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await resp.json();
 
       if (resp.ok && data.success) {
-        localStorage.setItem("radtracker_token", data.token);
-        localStorage.setItem("radtracker_email", data.email);
+        const docName = localStorage.getItem("radtracker_doctor_name") || "";
+        persistAuthSession(data.token, data.email, docName);
         checkAuthStatus();
         closeAuthModal();
       } else {
