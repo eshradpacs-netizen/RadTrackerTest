@@ -890,23 +890,13 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("form-send-code")?.classList.add("hidden");
         document.getElementById("form-verify-code")?.classList.remove("hidden");
         const subtitle = document.getElementById("auth-subtitle");
-        if (subtitle) subtitle.innerText = `${email} adresine 6 haneli e-posta doğrulama kodu ve giriş bağlantısı gönderildi.`;
+        if (subtitle) subtitle.innerText = `${email} adresine 6 haneli güvenlik kodu ve giriş bağlantısı gönderildi.`;
         
-        // Show code directly on screen & auto-fill input
-        if (data.code) {
-          const previewBox = document.getElementById("code-preview-box");
-          const previewVal = document.getElementById("code-preview-val");
-          if (previewBox && previewVal) {
-            previewVal.innerText = data.code;
-            previewBox.classList.remove("hidden");
-          }
-          const authInput = document.getElementById("auth-code");
-          if (authInput) {
-            authInput.value = data.code;
-          }
+        const authInput = document.getElementById("auth-code");
+        if (authInput) {
+          authInput.value = ""; // Clean input waiting for user's real email code
+          authInput.focus();
         }
-        
-        document.getElementById("auth-code")?.focus();
       } else {
         showAuthError(data.detail || "Kod gönderilemedi.");
       }
