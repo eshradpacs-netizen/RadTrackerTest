@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=490000">
+  <link rel="stylesheet" href="styles.css?v=500000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative w-full max-w-full overflow-x-hidden">
 
@@ -391,15 +391,11 @@
                   </div>
                 </div>
 
-                <!-- Right Sub-column: Toplantı Odası (T. ODASI) (3 PCs) -->
-                <div class="floor-room room-lyra min-w-[135px]">
+                <!-- Right Sub-column: Toplantı Odası (T. ODASI) (1 PC) -->
+                <div class="floor-room room-lyra min-w-[135px] flex flex-col justify-between items-center">
                   <div class="floor-room-pill pill-lyra">T. ODASI</div>
-                  <div class="grid grid-cols-2 gap-2 mt-1">
-                    <div class="h-[38px]"></div>
-                    <div class="ws floor-ws" id="Perseus-γ" title="Toplantı Odası PC 3">3</div>
-
-                    <div class="ws floor-ws" id="Perseus-β" title="Toplantı Odası PC 1">1</div>
-                    <div class="ws floor-ws" id="Perseus-α" title="Toplantı Odası PC 2">2</div>
+                  <div class="flex items-center justify-center p-2 mt-1 my-auto">
+                    <div class="ws floor-ws w-12 h-10 flex items-center justify-center font-bold text-sm rounded-xl shadow-md" id="Perseus-β" title="Toplantı Odası PC 1">1</div>
                   </div>
                 </div>
 
@@ -735,7 +731,7 @@
     </form>
   </div>
 
-  <script src="app.js?v=490000"></script>
+  <script src="app.js?v=500000"></script>
     <!-- Admin Whitelist & Dynamic Role Management Modal -->
   <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden">
     <div class="glass-card bg-slate-900/95 border border-cyan-500/30 rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-5 text-slate-100 max-h-[90vh] overflow-y-auto">
