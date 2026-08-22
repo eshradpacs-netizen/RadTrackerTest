@@ -44,9 +44,7 @@ MASTER_PC_MAPPING = {
     "08573d99-370e-4542-8072-c31f4de8e1b5": {"friendlyName": "Genel PACS Oda 4 PC 8", "room": "Genel PACS Oda 4", "hostname": "desktop-b9oibkg", "ip": "10.86.145.246"},
     "523499fe-5bee-4489-90d9-7cbca5388240": {"friendlyName": "Genel PACS Oda 4 PC 9", "room": "Genel PACS Oda 4", "hostname": "desktop-5qc9t01", "ip": "10.86.144.49"},
     "3709a075-ffa2-4724-9d78-74684c95882b": {"friendlyName": "Genel PACS Oda 4 PC 10", "room": "Genel PACS Oda 4", "hostname": "desktop-1aqlqsk", "ip": "10.86.144.242"},
-    "62ea8688-2b98-4008-a716-aa454392929e": {"friendlyName": "Toplantı Odası PC 3", "room": "Toplantı Odası", "hostname": "desktop-v6dtf9o", "ip": "10.86.155.114"},
     "6c5f9782-8754-4d33-a647-b2e4100269ce": {"friendlyName": "Toplantı Odası PC 1", "room": "Toplantı Odası", "hostname": "desktop-kat7tjb", "ip": "10.86.155.115"},
-    "aa6b1c56-86bd-40be-9f14-417e94791ec9": {"friendlyName": "Toplantı Odası PC 2", "room": "Toplantı Odası", "hostname": "desktop-mkjsfr1", "ip": "10.86.155.116"},
     "kd-pacs-01-uuid-0001": {"friendlyName": "Kadın Doğum PACS Oda 1 PC 1", "room": "Kadın Doğum PACS Odası", "hostname": "desktop-kdpacs1", "ip": "10.86.170.1"},
     "kd-pacs-01-uuid-0002": {"friendlyName": "Kadın Doğum PACS Oda 1 PC 2", "room": "Kadın Doğum PACS Odası", "hostname": "desktop-kdpacs2", "ip": "10.86.170.2"},
     "kd-pacs-01-uuid-0003": {"friendlyName": "Kadın Doğum PACS Oda 1 PC 3", "room": "Kadın Doğum PACS Odası", "hostname": "desktop-kdpacs3", "ip": "10.86.170.3"},
@@ -68,7 +66,6 @@ HOSTNAME_TO_ID_MAPPING = {
     "desktop-v3j6vdv": "beb8c80d-7d8a-46dd-9ce1-2f284084bab7",
     "desktop-b9oibkg": "08573d99-370e-4542-8072-c31f4de8e1b5",
     "desktop-1aqlqsk": "3709a075-ffa2-4724-9d78-74684c95882b",
-    "desktop-v6dtf9o": "62ea8688-2b98-4008-a716-aa454392929e",
     "desktop-1g3s7fm": "920f0bfc-333c-4aef-a83c-84e6ff71ed6a",
     "desktop-5qc9t01": "523499fe-5bee-4489-90d9-7cbca5388240",
     "desktop-bt4ibf8": "58e7e5fb-4fe5-4267-b314-346f6378ee6d",
@@ -85,7 +82,6 @@ HOSTNAME_TO_ID_MAPPING = {
     "desktop-rj2bo6f": "10bd295b-f658-43d2-aa92-09c62724a83e",
     "desktop-d5ds8nb": "92ed880c-9ed4-47af-925e-45009d3234b1",
     "desktop-kat7tjb": "6c5f9782-8754-4d33-a647-b2e4100269ce",
-    "desktop-mkjsfr1": "aa6b1c56-86bd-40be-9f14-417e94791ec9"
 }
 
 IP_TO_ID_MAPPING = {
