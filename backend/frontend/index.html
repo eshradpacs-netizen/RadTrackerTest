@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=520000">
+  <link rel="stylesheet" href="styles.css?v=530000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative w-full max-w-full overflow-x-hidden">
 
@@ -702,7 +702,19 @@
     </div>
   </div>
 
-  <button onclick="closeAdminModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors font-bold">✕</button>
+  <!-- Admin Whitelist & Dynamic Role Management Modal -->
+  <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden">
+    <div class="glass-card bg-slate-900/95 border border-cyan-500/30 rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-5 text-slate-100 max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-slate-700/80 pb-4">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">👑</span>
+          <div>
+            <h3 class="text-base font-bold text-white">Yönetici Paneli (Yetkilendirme & Roller)</h3>
+            <p class="text-xs text-slate-400">İstediğiniz hekime Kullanıcı veya Yönetici yetkisi atayın</p>
+          </div>
+        </div>
+        <button onclick="closeAdminModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors font-bold">✕</button>
       </div>
 
       <!-- Add New User with Role Selection -->
@@ -732,7 +744,6 @@
         </div>
 
         <div id="admin-email-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
-          <!-- Rendered dynamically -->
           <div class="p-3 text-center text-xs text-slate-500">Yükleniyor...</div>
         </div>
       </div>
@@ -751,5 +762,7 @@
     </div>
   </div>
 
+  <!-- Main JS Script -->
+  <script src="app.js?v=530000"></script>
 </body>
 </html>
