@@ -24,13 +24,16 @@ echo.
 set TARGET_DIR=C:\ProgramData\RadTracker
 set SERVER_URL=https://esh-radtracker.onrender.com
 
-echo [1/4] Bilgisayardaki eski calisan ajanlar guvenle durduruluyor...
+echo [1/4] Bilgisayardaki eski calisan ajanlar hafizadan zorla sonlandiriliyor...
 
-:: SADECE eski arka plan agent.ps1 powershell sureclerini durdur (KENDINI VE CMD'YI ASLA KAPATMAZ)
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'powershell.exe' -and $_.CommandLine -like '*agent.ps1*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }" >nul 2>&1
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'pythonw.exe' -and $_.CommandLine -like '*pc_agent*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }" >nul 2>&1
+:: 1. Tum wscript ve eski pythonw sureclerini aninda sonlandir
+taskkill /F /IM wscript.exe >nul 2>&1
+taskkill /F /IM pythonw.exe >nul 2>&1
 
-:: Eski baslangic dosyalarini temizle
+:: 2. Arka planda calisan eski agent.ps1 powershell sureclerini zorla oldur
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$cur = $PID; Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $cur -and $_.Name -eq 'powershell.exe' -and ($_.CommandLine -like '*agent.ps1*' -or $_.CommandLine -like '*RadTracker*') } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }" >nul 2>&1
+
+:: 3. Eski baslangic (Startup) kisayollarini sil
 del /F /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\RadTracker*.vbs" >nul 2>&1
 del /F /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\RadTracker*.bat" >nul 2>&1
 del /F /Q "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Startup\RadTracker*.vbs" >nul 2>&1
@@ -38,10 +41,10 @@ del /F /Q "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Startup\RadTracke
 schtasks /Delete /TN "RadTrackerAgent" /F >nul 2>&1
 schtasks /Delete /TN "RadTrackerAgentTask" /F >nul 2>&1
 
-:: Hedef klasoru hazirla
+:: 4. Hedef klasoru hazirla
 if not exist "%TARGET_DIR%" mkdir "%TARGET_DIR%" >nul 2>&1
 
-echo [TAMAMLANDI] Eski ajanlar guvenle temizlendi.
+echo [TAMAMLANDI] Eski calisan tum gorevler aninda sonlandirildi!
 echo.
 
 echo [2/4] Ajan dosyalari kalici sisteme aktariliyor (%TARGET_DIR%)...
