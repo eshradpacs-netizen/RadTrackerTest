@@ -521,7 +521,8 @@ async def add_pc_note(payload: Dict[str, Any]):
     if not pc_id or not text:
         raise HTTPException(status_code=400, detail="Masa ID ve not metni gereklidir.")
 
-    res = await pc_notes_service.add_message(pc_id, author_email, text, pc_friendly_name=friendly_name)
+    author_name = payload.get("author_name", "")
+    res = await pc_notes_service.add_message(pc_id, author_email, text, author_name=author_name, pc_friendly_name=friendly_name)
     return {"success": True, "pc_id": pc_id, "entry": res}
 
 @app.delete("/api/pc/notes/{pc_id}/{message_id}")

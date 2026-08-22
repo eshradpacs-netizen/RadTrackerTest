@@ -1,3 +1,9 @@
+function formatMessageTime(ts) {
+  if (!ts) return "";
+  const d = new Date(ts * 1000);
+  return d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+}
+
 // Check for Magic Link Token in URL (?magic_token=...)
 async function checkMagicLoginToken() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -470,7 +476,7 @@ async function loadPcNotes(pcId) {
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-1.5 mb-0.5">
             <span class="text-[11px] font-bold ${isMine ? 'text-cyan-300' : 'text-amber-300'} truncate">${msg.author_name || msg.author_email}</span>
-            <span class="text-[9px] text-slate-500 font-mono">${msg.time_str || ''}</span>
+            <span class="text-[9px] text-slate-500 font-mono">${formatMessageTime(msg.timestamp) || msg.time_str || ''}</span>
           </div>
           <p class="text-xs text-slate-200 break-words leading-relaxed">${msg.text}</p>
         </div>
@@ -496,7 +502,11 @@ async function sendPcNote() {
   const text = input ? input.value.trim() : "";
   if (!text) return;
 
-  const author = localStorage.getItem("radtracker_email") || "Hekim";
+  const email = (localStorage.getItem("radtracker_email") || "hekim@hastane.com").toLowerCase().trim();
+  let authorName = localStorage.getItem("radtracker_doctor_name");
+  if (!authorName) {
+    authorName = "Dr. " + email.split("@")[0].charAt(0).toUpperCase() + email.split("@")[0].slice(1);
+  }
   const btn = document.getElementById("modal-send-note-btn");
   if (btn) btn.disabled = true;
 
@@ -507,7 +517,8 @@ async function sendPcNote() {
       body: JSON.stringify({
         pc_id: selectedPc.id,
         notes: text,
-        author: author,
+        author: email,
+        author_name: authorName,
         friendly_name: selectedPc.friendlyName || selectedPc.hostname
       })
     });
@@ -1024,6 +1035,11 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const emailInput = document.getElementById("auth-email");
     const email = emailInput ? emailInput.value.trim() : "";
+    const nameInput = document.getElementById("auth-name");
+    const doctorName = nameInput && nameInput.value.trim() ? nameInput.value.trim() : "";
+    if (doctorName) {
+      localStorage.setItem("radtracker_doctor_name", doctorName);
+    }
     const tgData = getTgUserData();
     const errBox = document.getElementById("auth-error");
     if (errBox) errBox.classList.add("hidden");
@@ -1130,7 +1146,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!selectedPc) return;
     const notesInput = document.getElementById("modal-notes-input");
     const notes = notesInput ? notesInput.value : "";
-    const author = localStorage.getItem("radtracker_email") || "Hekim";
+    const email = (localStorage.getItem("radtracker_email") || "hekim@hastane.com").toLowerCase().trim();
+  let authorName = localStorage.getItem("radtracker_doctor_name");
+  if (!authorName) {
+    authorName = "Dr. " + email.split("@")[0].charAt(0).toUpperCase() + email.split("@")[0].slice(1);
+  }
 
     try {
       const resp = await fetch("/api/pc/notes", {
