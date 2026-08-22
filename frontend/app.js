@@ -149,8 +149,6 @@ function connectWebSocket() {
       if (data.type === 'init' || data.type === 'status_update') {
         pcs = data.computers || [];
         renderAll();
-      } else if (data.type === 'chat_message') {
-        appendChatMessage(data.message);
       } else if (data.type === 'pc_note_update') {
         const pc = pcs.find(p => p.id === data.pc_id);
         if (pc && data.metadata) {
@@ -919,48 +917,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Chat Toggle Drawer
-  document.getElementById("chat-toggle-btn")?.addEventListener("click", () => {
-    const drawer = document.getElementById("chat-drawer");
-    if (drawer) {
-      drawer.classList.toggle("hidden");
-      drawer.classList.toggle("flex");
-      if (!drawer.classList.contains("hidden")) {
-        loadChatHistory();
-      }
-    }
-  });
-
-  document.getElementById("chat-close-btn")?.addEventListener("click", () => {
-    const drawer = document.getElementById("chat-drawer");
-    if (drawer) {
-      drawer.classList.add("hidden");
-      drawer.classList.remove("flex");
-    }
-  });
-
-  // Send Chat Message
-  document.getElementById("chat-form")?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const input = document.getElementById("chat-input");
-    if (!input) return;
-    const text = input.value.trim();
-    const email = localStorage.getItem("radtracker_email") || "anonymous@hastane.com";
-
-    if (!text) return;
-    input.value = "";
-
-    try {
-      await fetch("/api/chat/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, text })
-      });
-    } catch (e) {
-      console.error("Error sending chat message:", e);
-    }
-  });
-
   // Subscribe button
   document.getElementById("modal-subscribe-btn")?.addEventListener("click", () => {
     if (tgApp?.sendData && selectedPc) {
@@ -972,47 +928,6 @@ document.addEventListener("DOMContentLoaded", () => {
     closeModal();
   });
 });
-
-// Chat History Loader & Message Appender
-async function loadChatHistory() {
-  try {
-    const resp = await fetch("/api/chat/messages");
-    const data = await resp.json();
-    if (data.success && data.messages) {
-      const container = document.getElementById("chat-messages-container");
-      if (container) {
-        container.innerHTML = "";
-        data.messages.forEach(appendChatMessage);
-      }
-    }
-  } catch (e) {
-    console.error("Error loading chat history:", e);
-  }
-}
-
-function appendChatMessage(msg) {
-  const container = document.getElementById("chat-messages-container");
-  if (!container || !msg) return;
-
-  const currentEmail = localStorage.getItem("radtracker_email") || "";
-  const isMe = msg.sender_email === currentEmail;
-
-  const msgDiv = document.createElement("div");
-  msgDiv.className = `p-2.5 rounded-xl max-w-[85%] ${isMe ? 'bg-cyan-600/30 text-cyan-200 border border-cyan-500/30 ml-auto' : 'bg-slate-800 text-slate-200 border border-slate-700 mr-auto'}`;
-
-  const timeStr = msg.timestamp ? new Date(msg.timestamp * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Şimdi';
-  msgDiv.innerHTML = `
-    <div class="flex justify-between items-center gap-2 mb-1 font-semibold text-[11px] ${isMe ? 'text-cyan-300' : 'text-slate-400'}">
-      <span>${msg.sender_name || 'Hekim'}</span>
-      <span class="text-[10px] text-slate-500 font-normal">${timeStr}</span>
-    </div>
-    <div class="text-xs break-words">${msg.text || ''}</div>
-  `;
-
-  container.appendChild(msgDiv);
-  container.scrollTop = container.scrollHeight;
-}
-
 
 // ============================================================================
 // ============================================================================
