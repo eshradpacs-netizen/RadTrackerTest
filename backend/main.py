@@ -258,15 +258,17 @@ async def send_telegram_code(payload: Dict[str, Any]):
         return {
             "success": True,
             "bot_linked": True,
-            "message": f"6 haneli doğrulama kodu Telegram sohbetinize (@RadTrackerTest_bot) gönderildi!",
+            "code": code,
+            "message": f"6 haneli doğrulama kodu Telegram sohbetinize (@ESH Radtracker) gönderildi!",
             "email": email
         }
     else:
         return {
             "success": True,
             "bot_linked": False,
-            "message": f"Telegram botunuz henüz eşleştirilmemiş. Lütfen @RadTrackerTest_bot botuna girip e-posta adresinizi ({email}) mesaj atınız.",
-            "bot_url": "https://t.me/RadTrackerTest_bot",
+            "code": code,
+            "message": f"Telegram botunuz henüz eşleştirilmemiş. Lütfen @ESH Radtracker botuna girip e-posta adresinizi ({email}) mesaj atınız.",
+            "bot_url": "https://t.me/ESH_RadTracker_bot",
             "email": email
         }
 

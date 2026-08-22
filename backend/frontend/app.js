@@ -815,6 +815,21 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("form-verify-code")?.classList.remove("hidden");
         const subtitle = document.getElementById("auth-subtitle");
         if (subtitle) subtitle.innerText = `${email} adresine 6 haneli Telegram doğrulama kodu gönderildi.`;
+        
+        // Show code directly on screen & auto-fill input
+        if (data.code) {
+          const previewBox = document.getElementById("code-preview-box");
+          const previewVal = document.getElementById("code-preview-val");
+          if (previewBox && previewVal) {
+            previewVal.innerText = data.code;
+            previewBox.classList.remove("hidden");
+          }
+          const authInput = document.getElementById("auth-code");
+          if (authInput) {
+            authInput.value = data.code;
+          }
+        }
+        
         document.getElementById("auth-code")?.focus();
       } else {
         showAuthError(data.detail || "Kod gönderilemedi.");
