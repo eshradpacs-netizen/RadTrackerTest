@@ -267,7 +267,6 @@ function renderStats() {
     }
   }
 }
-}
 
 // Format Last Seen relative time
 function formatLastSeen(isoStr) {
@@ -947,7 +946,8 @@ function persistAuthSession(token, email, doctorName) {
 
 function clearAuthSession() {
   try {
-    clearAuthSession();
+    localStorage.removeItem("radtracker_token");
+    localStorage.removeItem("radtracker_email");
     localStorage.removeItem("radtracker_doctor_name");
     sessionStorage.clear();
   } catch (e) {}
