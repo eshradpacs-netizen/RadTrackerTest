@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=660000">
+  <link rel="stylesheet" href="styles.css?v=670000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative w-full max-w-full overflow-x-hidden">
 
@@ -251,24 +251,20 @@
             <!-- SOL KANAT -->
             <div class="flex flex-col gap-4">
               
-              <!-- Top: Vega Ek + Vega Ana (Oda 3) -->
-              <div class="flex gap-4 items-start">
-                
-                <!-- Oda 3 Ek (4 PCs: 8, 9, 10, 11) -->
-                <div class="floor-room room-vega flex flex-col justify-center min-w-[120px]">
-                  <div class="floor-room-pill pill-vega">ODA 3</div>
-                  <div class="grid grid-cols-2 gap-2 mt-1">
+                            <!-- Oda 3 (Tek Birleşik Çerçeve - Tüm Masalar Konumları Korunarak) -->
+              <div class="floor-room room-vega w-full">
+                <div class="floor-room-pill pill-vega">ODA 3</div>
+                <div class="flex gap-4 items-center justify-center mt-1">
+                  <!-- Sol Bölüm (Masa 9, 8, 10, 11) -->
+                  <div class="grid grid-cols-2 gap-2 min-w-[110px]">
                     <div class="ws floor-ws" id="ws-t-09" title="Genel PACS Oda 3 PC 9">9</div>
                     <div class="ws floor-ws" id="ws-t-08" title="Genel PACS Oda 3 PC 8">8</div>
                     <div class="ws floor-ws" id="ws-t-10" title="Genel PACS Oda 3 PC 10">10</div>
                     <div class="ws floor-ws" id="ws-t-11" title="Genel PACS Oda 3 PC 11">11</div>
                   </div>
-                </div>
 
-                <!-- Oda 3 Ana (Aktif PCs: 1, 5, 6, 7) -->
-                <div class="floor-room room-vega min-w-[120px]">
-                  <div class="floor-room-pill pill-vega">ODA 3</div>
-                  <div class="grid grid-cols-2 gap-2 mt-1">
+                  <!-- Sağ Bölüm (Masa 7, 5, 6, 1) -->
+                  <div class="grid grid-cols-2 gap-2 min-w-[110px]">
                     <div class="h-[38px]"></div>
                     <div class="ws floor-ws" id="ws-t-07" title="Genel PACS Oda 3 PC 7">7</div>
 
@@ -279,7 +275,6 @@
                     <div class="h-[38px]"></div>
                   </div>
                 </div>
-
               </div>
 
               <!-- Sirius (Oda 6) + Koridor 1 + M (Dr. Meltem Hoca) -->
@@ -713,6 +708,6 @@
   </div>
 
   <!-- Main JS Script -->
-  <script src="app.js?v=660000"></script>
+  <script src="app.js?v=670000"></script>
 </body>
 </html>
