@@ -147,10 +147,27 @@ class PCStateManager:
         return self.get_all_computers()
 
     def get_all_computers(self) -> List[Dict[str, Any]]:
-        """Returns the evaluated list of all 45 Radiology PCs."""
+        """Returns the evaluated list of official Radiology PACS PCs strictly matching MASTER_PC_MAPPING."""
         now_ts = datetime.now(TR_TZ).timestamp()
         result = []
-        for pc in self.computers.values():
+        for pc_id, master_info in MASTER_PC_MAPPING.items():
+            pc = self.computers.get(pc_id)
+            if not pc:
+                pc = {
+                    "id": pc_id,
+                    "hostname": master_info.get("hostname", ""),
+                    "ip": master_info.get("ip", ""),
+                    "username": "unknown",
+                    "friendlyName": master_info.get("friendlyName", ""),
+                    "room": master_info.get("room", ""),
+                    "idleTimeSeconds": 0,
+                    "suspicious": 0,
+                    "lastSeen": datetime.now(TR_TZ).isoformat(),
+                    "lastSeenTimestamp": 0.0,
+                    "status": "offline",
+                    "notes": ""
+                }
+                self.computers[pc_id] = pc
             pc["status"] = self.evaluate_status(pc, now_ts)
             result.append(pc)
         return result
