@@ -32,6 +32,7 @@ class TelegramBotController:
     def __init__(self):
         self.bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "")
         self.mini_app_url = os.getenv("TELEGRAM_MINI_APP_URL", "")
+        self.subscriptions: Dict[str, List[int]] = {}
 
     async def send_message(self, chat_id: int, text: str, reply_markup: Dict = None):
         """Sends a Telegram message with optional inline or reply keyboard."""
@@ -106,7 +107,6 @@ class TelegramBotController:
             
             if is_doctor_allowed(email_found) or email_found in [e.lower() for e in db.state.get("allowed_emails", [])]:
                 doc_name = get_doctor_name(email_found)
-                # Bind telegram account
                 db.state.setdefault("users", {})[email_found] = {
                     "email": email_found,
                     "name": doc_name,
@@ -116,7 +116,6 @@ class TelegramBotController:
                 }
                 asyncio.create_task(db.sync_to_telegram())
                 
-                # Generate active verification code
                 from main import VERIFICATION_CODES
                 import time
                 code = f"{random.randint(100000, 999999)}"
@@ -160,7 +159,6 @@ class TelegramBotController:
         elif text.startswith("/admin"):
             await self.cmd_admin(chat_id, state_mgr)
         else:
-            # All other queries safely redirect to the secure mail-authenticated web portal
             await self.cmd_redirect_to_web(chat_id)
 
     async def cmd_start(self, chat_id: int):
@@ -241,6 +239,43 @@ class TelegramBotController:
             f"🔐 İzinli Hekim Sayısı: <b>{len(db.state.get('allowed_emails', []))}</b>\n"
         )
         await self.send_message(chat_id, text)
+
+    async def start_polling(self, state_mgr):
+        """Starts Telegram Long Polling loop with retry resilience."""
+        if not self.bot_token:
+            logger.warning("TELEGRAM_BOT_TOKEN not provided. Polling disabled.")
+            return
+
+        logger.info("🚀 Starting Telegram Bot Long Polling...")
+        offset = 0
+        while True:
+            try:
+                url = f"https://api.telegram.org/bot{self.bot_token}/getUpdates?offset={offset}&timeout=20"
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    resp = await client.get(url)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        for update in data.get("result", []):
+                            offset = max(offset, update.get("update_id", 0) + 1)
+                            asyncio.create_task(self.handle_update(update, state_mgr))
+            except Exception as e:
+                logger.warning(f"Telegram polling error: {e}")
+                await asyncio.sleep(5)
+            await asyncio.sleep(0.5)
+
+    async def notify_pc_free(self, pc: Dict[str, Any]):
+        """Notifies subscribed users when a PC becomes free."""
+        pc_id = pc.get("id")
+        if not pc_id or pc_id not in self.subscriptions:
+            return
+        subscribers = self.subscriptions.pop(pc_id, [])
+        if not subscribers:
+            return
+        p_name = pc.get("friendlyName") or pc.get("hostname", "PC")
+        p_room = pc.get("room", "Genel PACS")
+        msg = f"🔔 <b>Masa Boşaldı!</b>\n\n<b>{p_name}</b> ({p_room}) şu anda boşta ve kullanılabilir!"
+        for cid in set(subscribers):
+            asyncio.create_task(self.send_message(cid, msg))
 
 # Global Instance
 telegram_bot = TelegramBotController()
