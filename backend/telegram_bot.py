@@ -213,7 +213,7 @@ class TelegramBotController:
         }
 
         text = (
-            "🏥 <b>ESKİŞEHİR ŞEHİR HASTANESİ</b>\n"
+            "🏥 <b>ETLİK ŞEHİR HASTANESİ</b>\n"
             "🩺 <b>Radyoloji PACS Canlı Takip Sistemi</b>\n"
             "━━━━━━━━━━━━━━━━━━━\n\n"
             "📊 <b>ANLIK HASTANE DOLULUK DURUMU:</b>\n"
