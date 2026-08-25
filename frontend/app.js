@@ -218,7 +218,7 @@ function connectWebSocket() {
   };
 }
 
-// Render Summary Statistics Counter
+// Render Summary Statistics Counter & Live Occupancy Percentage (%)
 function renderStats() {
   let active = 0, idle = 0, probablyIdle = 0, lunch = 0, offline = 0, suspicious = 0;
   pcs.forEach(p => {
@@ -237,6 +237,35 @@ function renderStats() {
   if (document.getElementById("stat-lunch")) document.getElementById("stat-lunch").innerText = lunch;
   if (document.getElementById("stat-offline")) document.getElementById("stat-offline").innerText = offline;
   if (document.getElementById("stat-suspicious")) document.getElementById("stat-suspicious").innerText = suspicious;
+
+  // Calculate Real-Time Occupancy Rate %
+  const totalOpen = active + probablyIdle + idle + lunch;
+  const occPct = totalOpen > 0 ? Math.round((active / totalOpen) * 100) : 0;
+
+  const occEl = document.getElementById("stat-occupancy");
+  const badgeEl = document.getElementById("stat-occupancy-badge");
+
+  if (occEl) {
+    occEl.innerText = `%${occPct}`;
+    if (occPct >= 75) {
+      occEl.className = "text-xl font-black text-rose-400";
+    } else if (occPct >= 40) {
+      occEl.className = "text-xl font-black text-amber-400";
+    } else {
+      occEl.className = "text-xl font-black text-emerald-400";
+    }
+  }
+
+  if (badgeEl) {
+    badgeEl.innerText = `${active}/${totalOpen}`;
+    if (occPct >= 75) {
+      badgeEl.className = "w-9 h-9 rounded-full bg-rose-500/20 border border-rose-400/50 flex items-center justify-center font-mono text-[10px] font-bold text-rose-300 shadow-inner";
+    } else if (occPct >= 40) {
+      badgeEl.className = "w-9 h-9 rounded-full bg-amber-500/20 border border-amber-400/50 flex items-center justify-center font-mono text-[10px] font-bold text-amber-300 shadow-inner";
+    } else {
+      badgeEl.className = "w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center font-mono text-[10px] font-bold text-emerald-300 shadow-inner";
+    }
+  }
 }
 
 // Format Last Seen relative time
