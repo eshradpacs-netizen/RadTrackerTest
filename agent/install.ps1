@@ -49,13 +49,10 @@ Write-Host " [5]  Genel PACS Oda 5 (Tek Masa)" -ForegroundColor Gray
 Write-Host " [6]  Toplanti Odasi (PC 1 - Tek Masa)" -ForegroundColor Gray
 Write-Host " [7]  KVC PACS Odasi (PC 1 - 2)" -ForegroundColor Gray
 Write-Host " [8]  Kadin Dogum PACS Odasi (PC 1 - 3)" -ForegroundColor Gray
-Write-Host " [9]  Kadin Dogum Toplanti Odasi (PC 1)" -ForegroundColor Gray
-Write-Host " [10] Onkoloji PACS Odasi (PC 1)" -ForegroundColor Gray
-Write-Host " [11] FTR PACS Odasi (PC 1)" -ForegroundColor Gray
-Write-Host " [12] Noroloji PACS Odasi (PC 1 - 3)" -ForegroundColor Gray
+Write-Host " [9]  Noroloji PACS Odasi (PC 1 - 3)" -ForegroundColor Gray
 Write-Host "----------------------------------------------------------------------------" -ForegroundColor DarkCyan
 
-$odaSec = Read-Host "Oda Seciminiz [1-12]"
+$odaSec = Read-Host "Oda Seciminiz [1-9]"
 $masaSek = "1"
 
 if ($odaSec -eq "1") { $masaSek = Read-Host "Genel PACS Oda 1 icindeki Masa Numarasi [1-8]" }
@@ -65,7 +62,7 @@ elseif ($odaSec -eq "4") { $masaSek = Read-Host "Genel PACS Oda 4 icindeki Masa 
 elseif ($odaSec -eq "6") { $masaSek = "1" }
 elseif ($odaSec -eq "7") { $masaSek = Read-Host "KVC PACS Odasi icindeki Masa Numarasi [1-2]" }
 elseif ($odaSec -eq "8") { $masaSek = Read-Host "Kadin Dogum PACS Odasi icindeki Masa Numarasi [1-3]" }
-elseif ($odaSec -eq "12") { $masaSek = Read-Host "Noroloji PACS Odasi icindeki Masa Numarasi [1-3]" }
+elseif ($odaSec -eq "9") { $masaSek = Read-Host "Noroloji PACS Odasi icindeki Masa Numarasi [1-3]" }
 
 $uuidMap = @{
     '1_1' = @{ id = 'b94f7242-d702-43fb-8c48-0a757f8e5844'; name = 'Genel PACS Oda 1 PC 1'; room = 'Genel PACS Oda 1' }
@@ -117,12 +114,9 @@ $uuidMap = @{
     '8_2' = @{ id = 'kd-pacs-01-uuid-0002'; name = 'Kadin Dogum PACS Oda 1 PC 2'; room = 'Kadin Dogum PACS Odasi' }
     '8_3' = @{ id = 'kd-pacs-01-uuid-0003'; name = 'Kadin Dogum PACS Oda 1 PC 3'; room = 'Kadin Dogum PACS Odasi' }
 
-    '9_1' = @{ id = 'Aquila-α'; name = 'Kadin Dogum Toplanti Odasi PC 1'; room = 'Kadin Dogum Toplanti Odasi' }
-    '10_1' = @{ id = 'ws-onkoloji-01'; name = 'Onkoloji PACS Oda 1 PC 1'; room = 'Onkoloji PACS Odasi' }
-    '11_1' = @{ id = 'ws-ftr-01'; name = 'FTR PACS Oda 1 PC 1'; room = 'FTR PACS Odasi' }
-    '12_1' = @{ id = 'noroloji-pacs-01-uuid-0001'; name = 'Noroloji PACS Oda 1 PC 1'; room = 'Noroloji PACS Odasi' }
-    '12_2' = @{ id = 'noroloji-pacs-01-uuid-0002'; name = 'Noroloji PACS Oda 1 PC 2'; room = 'Noroloji PACS Odasi' }
-    '12_3' = @{ id = 'noroloji-pacs-01-uuid-0003'; name = 'Noroloji PACS Oda 1 PC 3'; room = 'Noroloji PACS Odasi' }
+    '9_1' = @{ id = 'noroloji-pacs-01-uuid-0001'; name = 'Noroloji PACS Oda 1 PC 1'; room = 'Noroloji PACS Odasi' }
+    '9_2' = @{ id = 'noroloji-pacs-01-uuid-0002'; name = 'Noroloji PACS Oda 1 PC 2'; room = 'Noroloji PACS Odasi' }
+    '9_3' = @{ id = 'noroloji-pacs-01-uuid-0003'; name = 'Noroloji PACS Oda 1 PC 3'; room = 'Noroloji PACS Odasi' }
 }
 
 $key = "$($odaSec)_$($masaSek)"

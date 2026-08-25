@@ -66,9 +66,6 @@ const ROOM_TO_KROKI_LAYOUT = {
   'Nöroloji PACS Odası': 'kroki-noroloji',
   'KVC PACS Odası': 'kroki-cassiopeia',
   'Kadın Doğum PACS Odası': 'kroki-kadin-dogum-pacs',
-  'Kadın Doğum Toplantı Odası': 'kroki-kadin-dogum',
-  'Onkoloji PACS Odası': 'kroki-onkoloji',
-  'FTR PACS Odası': 'kroki-ftr'
 };
 
 // Unified View Switchers
@@ -583,7 +580,6 @@ const KROKI_MAP = {
   'KD-PACS-03': 'Kadın Doğum PACS Oda 1 PC 3',
   'Cassiopeia-β': 'KVC PACS Oda 1 PC 1',
   'Cassiopeia-α': 'KVC PACS Oda 1 PC 2',
-  'Aquila-α': 'Kadın Doğum Toplantı Odası PC 1',
   'Perseus-β': 'Toplantı Odası PC 1',
   'Perseus-α': 'Toplantı Odası PC 2',
   'Perseus-γ': 'Toplantı Odası PC 3',
@@ -628,8 +624,6 @@ const KROKI_MAP = {
   'ws-b-09': 'Genel PACS Oda 4 PC 9',
   'ws-b-10': 'Genel PACS Oda 4 PC 10',
   'e092e2c2-5348-4724-9a00-5d37a4486176': 'Genel PACS Oda 5 PC 1',
-  'ws-onkoloji-01': 'Onkoloji PACS Oda 1 PC 1',
-  'ws-ftr-01': 'FTR PACS Oda 1 PC 1',
 };
 
 function updateKrokiColors() {
