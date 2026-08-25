@@ -1187,7 +1187,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("form-verify-code")?.classList.add("hidden");
     document.getElementById("form-send-code")?.classList.remove("hidden");
     const subtitle = document.getElementById("auth-subtitle");
-    if (subtitle) subtitle.innerText = "Canlı takip panelini açmak için yetkili e-posta adresinizi giriniz.";
+    if (subtitle) subtitle.innerText = "Canlı takip panelini açmak için kayıtlı mail adresinizi giriniz.";
     const errBox = document.getElementById("auth-error");
     if (errBox) errBox.classList.add("hidden");
   });
