@@ -1,3 +1,4 @@
+from doctors_registry import MASTER_DOCTORS_REGISTRY, get_doctor_name, is_doctor_allowed
 """
 Radiology PC Tracker v1 - FastAPI Backend Application
 Integrates WebSockets, Telegram-DB Engine, Telegram Bot, and Agent Heartbeat processing.
@@ -292,7 +293,8 @@ async def handle_magic_link(token: str = Query("")):
 
     email = payload.get("sub").lower().strip()
     roles = db.state.get("roles", {})
-    user_role = roles.get(email, "doctor")
+    user_role = roles.get(email, "admin" if "gulderenabdullah@gmail.com" in email or "eshradpacs@gmail.com" in email else "doctor")
+    doc_full_name = get_doctor_name(email)
     jwt_token = auth.create_access_token({"sub": email, "role": user_role})
 
     html = f"""<!DOCTYPE html>
@@ -342,14 +344,16 @@ async def verify_magic_token(payload: Dict[str, Any]):
     del MAGIC_TOKENS[token]
     
     roles = db.state.get("roles", {})
-    user_role = roles.get(email, "doctor")
+    user_role = roles.get(email, "admin" if "gulderenabdullah@gmail.com" in email or "eshradpacs@gmail.com" in email else "doctor")
+    doc_full_name = get_doctor_name(email)
     jwt_token = auth.create_access_token({"sub": email, "role": user_role})
     
     return {
         "success": True,
         "token": jwt_token,
         "email": email,
-        "role": user_role
+        "role": user_role,
+        "doctor_name": doc_full_name
     }
 
 @app.post("/api/send-telegram-code")
@@ -362,15 +366,14 @@ async def send_auth_code(payload: Dict[str, Any]):
     if not email:
         raise HTTPException(status_code=400, detail="Lütfen geçerli bir e-posta adresi giriniz.")
 
-    # 1. Whitelist Check (Auto-whitelist admin & user)
-    allowed = [e.lower() for e in db.state.get("allowed_emails", [])]
-    if email not in allowed:
-        if "gulderenabdullah@gmail.com" in email or "eshradpacs@gmail.com" in email or len(allowed) == 0:
-            db.state.setdefault("allowed_emails", []).append(email)
-            db.state.setdefault("roles", {})[email] = "admin"
-            db.save_state()
-        else:
-            raise HTTPException(status_code=403, detail="Bu e-posta adresi yetkili hekim listesinde bulunamadı. Lütfen yöneticinize başvurun.")
+    # 1. Whitelist Check from Master Doctor Registry
+    if not is_doctor_allowed(email):
+        # Also check dynamic state list
+        allowed = [e.lower() for e in db.state.get("allowed_emails", [])]
+        if email not in allowed:
+            raise HTTPException(status_code=403, detail="Bu e-posta adresi kayıtlı hekim listesinde bulunamadı. Lütfen yöneticinize başvurunuz.")
+
+    doc_full_name = get_doctor_name(email)
 
     # Generate 6-digit random code and Magic Token
     code = f"{random.randint(100000, 999999)}"
