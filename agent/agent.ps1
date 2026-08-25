@@ -1,6 +1,28 @@
 <#
 .SYNOPSIS
     Radiology PC Tracker v1 - Production Enterprise Silent Agent (Windows)
+
+# 0. Instantly and completely hide the console window via Win32 User32 API (SW_HIDE = 0)
+$Win32HideSource = @'
+using System;
+using System.Runtime.InteropServices;
+public class Win32Window {
+    [DllImport("user32.dll")]
+    public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+    [DllImport("kernel32.dll")]
+    public static extern IntPtr GetConsoleWindow();
+}
+'@
+try {
+    if (-not ([System.Management.Automation.PSTypeName]'Win32Window').Type) {
+        Add-Type -TypeDefinition $Win32HideSource -ErrorAction SilentlyContinue
+    }
+    $consolePtr = [Win32Window]::GetConsoleWindow()
+    if ($consolePtr -ne [IntPtr]::Zero) {
+        [Win32Window]::ShowWindowAsync($consolePtr, 0) | Out-Null
+    }
+} catch { }
+
 .DESCRIPTION
     High-resilience, zero-footprint background monitor for hospital PACS workstations.
     Reads dedicated hardware UUID configuration from C:\ProgramData\RadTracker\config.json
