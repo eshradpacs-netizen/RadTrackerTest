@@ -238,9 +238,9 @@ function renderStats() {
   if (document.getElementById("stat-offline")) document.getElementById("stat-offline").innerText = offline;
   if (document.getElementById("stat-suspicious")) document.getElementById("stat-suspicious").innerText = suspicious;
 
-  // Calculate Real-Time Occupancy Rate %
-  const totalOpen = active + probablyIdle + idle + lunch;
-  const occPct = totalOpen > 0 ? Math.round((active / totalOpen) * 100) : 0;
+  // Calculate Real-Time Occupancy Rate % against Total Hospital Desks (Kapalı masalar da açılıp oturulabilir)
+  const totalDesks = pcs.length || 41;
+  const occPct = totalDesks > 0 ? Math.round((active / totalDesks) * 100) : 0;
 
   const occEl = document.getElementById("stat-occupancy");
   const badgeEl = document.getElementById("stat-occupancy-badge");
@@ -257,7 +257,7 @@ function renderStats() {
   }
 
   if (badgeEl) {
-    badgeEl.innerText = `${active}/${totalOpen}`;
+    badgeEl.innerText = `${active}/${totalDesks}`;
     if (occPct >= 75) {
       badgeEl.className = "w-9 h-9 rounded-full bg-rose-500/20 border border-rose-400/50 flex items-center justify-center font-mono text-[10px] font-bold text-rose-300 shadow-inner";
     } else if (occPct >= 40) {
@@ -266,6 +266,7 @@ function renderStats() {
       badgeEl.className = "w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center font-mono text-[10px] font-bold text-emerald-300 shadow-inner";
     }
   }
+}
 }
 
 // Format Last Seen relative time
