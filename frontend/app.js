@@ -239,7 +239,7 @@ function renderStats() {
   if (document.getElementById("stat-suspicious")) document.getElementById("stat-suspicious").innerText = suspicious;
 
   // Calculate Real-Time Occupancy Rate % against Total Hospital Desks (Kapalı masalar da açılıp oturulabilir)
-  const totalDesks = pcs.length || 41;
+  const totalDesks = pcs.length || 44;
   const occPct = totalDesks > 0 ? Math.round((active / totalDesks) * 100) : 0;
 
   const occEl = document.getElementById("stat-occupancy");
