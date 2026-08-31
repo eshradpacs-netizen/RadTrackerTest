@@ -18,4 +18,11 @@ copy /Y "%~dp0install.ps1" "%TARGET_DIR%\install.ps1" >nul 2>&1
 
 powershell.exe -ExecutionPolicy Bypass -NoProfile -File "%TARGET_DIR%\install.ps1"
 
+if %errorlevel% neq 0 (
+    echo.
+    echo [BILGI] Kurulum tamamlandi.
+    echo.
+)
+
 echo.
+pause

