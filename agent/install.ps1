@@ -104,16 +104,12 @@ $uuidMap = @{
     '4_10' = @{ id = '3709a075-ffa2-4724-9d78-74684c95882b'; name = 'Genel PACS Oda 4 PC 10'; room = 'Genel PACS Oda 4' }
 
     '5_1' = @{ id = 'e092e2c2-5348-4724-9a00-5d37a4486176'; name = 'Genel PACS Oda 5 PC 1'; room = 'Genel PACS Oda 5' }
-    
     '6_1' = @{ id = '6c5f9782-8754-4d33-a647-b2e4100269ce'; name = 'Toplanti Odasi PC 1'; room = 'Toplanti Odasi' }
-
     '7_1' = @{ id = '3178e41d-97f6-4cdf-b170-503cbf9343bc'; name = 'KVC PACS Oda 1 PC 1'; room = 'KVC PACS Odasi' }
     '7_2' = @{ id = '1259338b-c73d-4629-ae01-115ad7ccecb2'; name = 'KVC PACS Oda 1 PC 2'; room = 'KVC PACS Odasi' }
-
     '8_1' = @{ id = 'kd-pacs-01-uuid-0001'; name = 'Kadin Dogum PACS Oda 1 PC 1'; room = 'Kadin Dogum PACS Odasi' }
     '8_2' = @{ id = 'kd-pacs-01-uuid-0002'; name = 'Kadin Dogum PACS Oda 1 PC 2'; room = 'Kadin Dogum PACS Odasi' }
     '8_3' = @{ id = 'kd-pacs-01-uuid-0003'; name = 'Kadin Dogum PACS Oda 1 PC 3'; room = 'Kadin Dogum PACS Odasi' }
-
     '9_1' = @{ id = 'noroloji-pacs-01-uuid-0001'; name = 'Noroloji PACS Oda 1 PC 1'; room = 'Noroloji PACS Odasi' }
     '9_2' = @{ id = 'noroloji-pacs-01-uuid-0002'; name = 'Noroloji PACS Oda 1 PC 2'; room = 'Noroloji PACS Odasi' }
     '9_3' = @{ id = 'noroloji-pacs-01-uuid-0003'; name = 'Noroloji PACS Oda 1 PC 3'; room = 'Noroloji PACS Odasi' }
@@ -134,7 +130,23 @@ $cfgObj = @{
 }
 
 $cfgJson = $cfgObj | ConvertTo-Json -Compress
-Set-Content -Path $TargetCfg -Value $cfgJson -Encoding UTF8
+
+# Save config to multiple resilient paths
+$saveLocations = @(
+    "C:\ProgramData\RadTracker",
+    "$env:APPDATA\RadTracker",
+    "$env:LOCALAPPDATA\RadTracker"
+)
+
+foreach ($loc in $saveLocations) {
+    try {
+        if (-not (Test-Path $loc)) { New-Item -ItemType Directory -Path $loc -Force -ErrorAction SilentlyContinue | Out-Null }
+        Set-Content -Path "$loc\config.json" -Value $cfgJson -Encoding UTF8 -Force -ErrorAction SilentlyContinue
+        if (Test-Path $SourcePs1) {
+            Copy-Item -Path $SourcePs1 -Destination "$loc\agent.ps1" -Force -ErrorAction SilentlyContinue
+        }
+    } catch { }
+}
 
 $ip = (Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object { $_.InterfaceAlias -notmatch 'Loopback|vEthernet|VirtualBox' -and $_.IPAddress -notlike '169.254.*' } | Select-Object -First 1).IPAddress
 $hostn = $env:COMPUTERNAME
@@ -166,18 +178,32 @@ try {
     } | Stop-Process -Force -ErrorAction SilentlyContinue
 } catch { }
 
-# 1. Clean up any rogue Registry Run keys (Registry Run keys cause visible console popups on boot)
+# 1. Clean registry run keys
 try {
     Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "RadTrackerAgent" -ErrorAction SilentlyContinue | Out-Null
     Remove-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "RadTrackerAgent" -ErrorAction SilentlyContinue | Out-Null
 } catch { }
 
-# 2. Register Official Windows Task Scheduler (100% Invisible, Hidden Task, Starts at Boot/Logon)
+# 2. Register Multi-Layer Auto-Start:
+# Layer A: Windows Scheduled Task (Runs on system logon)
 $taskActionCmd = "powershell.exe -ExecutionPolicy Bypass -NonInteractive -WindowStyle Hidden -NoProfile -File `"$TargetPs1`""
 try {
     schtasks /Delete /TN $TaskName /F 2>$null | Out-Null
     schtasks /Create /F /TN $TaskName /SC ONLOGON /RL HIGHEST /TR "$taskActionCmd" 2>$null | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        schtasks /Create /F /TN $TaskName /SC ONLOGON /TR "$taskActionCmd" 2>$null | Out-Null
+    }
     schtasks /Run /TN $TaskName 2>$null | Out-Null
+} catch { }
+
+# Layer B: Windows User Startup VBS Launcher (Guaranteed 100% Invisible, zero admin rights needed, runs on every user logon)
+try {
+    $startupFolder = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
+    if (Test-Path $startupFolder) {
+        $vbsPath = "$startupFolder\RadTrackerAgent.vbs"
+        $vbsContent = "Set WshShell = CreateObject(""WScript.Shell"")" + "`r`n" + "WshShell.Run ""powershell.exe -ExecutionPolicy Bypass -NonInteractive -WindowStyle Hidden -NoProfile -File """"" & "$TargetPs1" & """"""", 0, False"
+        [System.IO.File]::WriteAllText($vbsPath, $vbsContent, [System.Text.Encoding]::ASCII)
+    }
 } catch { }
 
 # 3. Start background runner now silently
