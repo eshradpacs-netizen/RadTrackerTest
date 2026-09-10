@@ -6,7 +6,7 @@
 
 param (
     [string]$ServerUrl = "https://esh-radtracker.onrender.com",
-    [int]$Interval = 10,
+    [int]$Interval = 15,
     [string]$AgentId = ""
 )
 

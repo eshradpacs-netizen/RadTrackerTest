@@ -14,6 +14,7 @@ from typing import Dict, Any, List, Optional
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Depends, Header, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
 
@@ -37,6 +38,7 @@ app = FastAPI(
 )
 
 # CORS Setup
+app.add_middleware(GZipMiddleware, minimum_size=500)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -44,6 +46,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def add_cache_headers(request: Request, call_next):
+    response = await call_next(request)
+    path = request.url.path
+    if path.endswith((".css", ".js", ".png", ".jpg", ".svg", ".woff2")):
+        response.headers["Cache-Control"] = "public, max-age=604800, immutable"
+    elif path.endswith((".html", "/")):
+        response.headers["Cache-Control"] = "no-cache"
+    return response
 
 # Background Task for TTL Timeout Checks & Telegram-DB Sync
 async def background_ttl_monitor():
@@ -116,10 +128,11 @@ async def api_post_heartbeat(payload: HeartbeatPayload):
         idle_sec=payload.idleTimeSeconds,
         suspicious=payload.suspicious
     )
-    # Broadcast to all open WebSockets
-    all_pcs = state_manager.get_all_computers()
-    await state_manager.ws_manager.broadcast({"type": "status_update", "computers": all_pcs})
-    return {"success": True, "message": "Heartbeat processed", "pc": res["pc"]}
+    # Bandwidth Optimization: Only broadcast full state if PC status actually changed
+    if res["status_changed"]:
+        all_pcs = state_manager.get_all_computers()
+        await state_manager.ws_manager.broadcast({"type": "status_update", "computers": all_pcs})
+    return {"ok": 1, "s": res["new_status"]}
 
 @app.get("/api/heartbeat")
 async def api_get_heartbeat(
@@ -141,9 +154,11 @@ async def api_get_heartbeat(
         idle_sec=idleTimeSeconds,
         suspicious=suspicious
     )
-    all_pcs = state_manager.get_all_computers()
-    await state_manager.ws_manager.broadcast({"type": "status_update", "computers": all_pcs})
-    return {"success": True, "message": "Heartbeat processed", "pc": res["pc"]}
+    # Bandwidth Optimization: Only broadcast full state if PC status actually changed
+    if res["status_changed"]:
+        all_pcs = state_manager.get_all_computers()
+        await state_manager.ws_manager.broadcast({"type": "status_update", "computers": all_pcs})
+    return {"ok": 1, "s": res["new_status"]}
 
 # -----------------------------------------------------------------------------
 # 3. Public API Endpoints

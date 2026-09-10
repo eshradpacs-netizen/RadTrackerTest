@@ -69,7 +69,7 @@ class PCStateManager:
         last_seen_diff = now_ts - pc.get("lastSeenTimestamp", 0.0)
         
         # If no heartbeat in last 25 seconds, mark offline
-        if last_seen_diff >= 25.0:
+        if last_seen_diff >= 40.0:
             return "offline"
             
         idle_sec = int(pc.get("idleTimeSeconds", 0))
