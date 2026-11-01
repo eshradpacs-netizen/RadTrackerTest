@@ -128,8 +128,8 @@ const PC_ZUMRE_MAP = {
 
   // NÖRO PACS • 3 İSTASYON
   'Nöroloji PACS Oda 1 PC 1': { label: 'Esnek (Nöro)', primary: 'NORO', categories: ['NORO'], note: 'Nöro PACS • Esnek İstasyon' },
-  'Nöroloji PACS Oda 1 PC 2': { label: 'Kasım: Esnek / Aralık+: Selma', primary: 'NORO', categories: ['NORO', 'ABD'], note: 'Kasım: Esnek • Aralık+: Selma Ekibi' },
-  'Nöroloji PACS Oda 1 PC 3': { label: 'Selma Ekibi', primary: 'ABD', categories: ['ABD', 'NORO'], note: 'Nöro PACS • Selma Ekibi' },
+  'Nöroloji PACS Oda 1 PC 2': { label: 'Kasım: Esnek / Aralık+: Selma Hoca Ekibi', primary: 'NORO', categories: ['NORO', 'ABD'], note: 'Kasım: Esnek • Aralık+: Selma Hoca Ekibi' },
+  'Nöroloji PACS Oda 1 PC 3': { label: 'Selma Hoca Ekibi', primary: 'ABD', categories: ['ABD', 'NORO'], note: 'Nöro PACS • Selma Hoca Ekibi' },
 
   // KADIN DOĞUM PACS • GÜNLÜK DESTEK
   'Kadın Doğum PACS Oda 1 PC 1': { label: 'Kadın Doğum', primary: 'DESTEK', categories: ['DESTEK'], note: 'Kadın Doğum PACS • Günlük Destek' },
