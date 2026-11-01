@@ -55,6 +55,133 @@ var searchQuery = '';
 var socket = null;
 var selectedPc = null;
 
+// ============================================================================
+// RADYOLOJİ • ZÜMRE OTURMA PLANI METADATA MATRİSİ
+// ============================================================================
+var activeZumreFilter = 'ALL';
+
+const ZUMRE_CATEGORY_STYLES = {
+  'NORO':   { name: 'Nöro',          icon: '🧠', badgeClass: 'bg-sky-500/20 text-sky-300 border-sky-500/40' },
+  'ABD':    { name: 'Abdomen',       icon: '🟡', badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40' },
+  'MSK':    { name: 'MSK',           icon: '🦴', badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' },
+  'KVC':    { name: 'KVC',           icon: '💜', badgeClass: 'bg-purple-500/20 text-purple-300 border-purple-500/40' },
+  'TOR':    { name: 'Toraks',        icon: '🫁', badgeClass: 'bg-rose-500/20 text-rose-300 border-rose-500/40' },
+  'ACIL':   { name: 'Acil',          icon: '🚨', badgeClass: 'bg-teal-500/20 text-teal-300 border-teal-500/40' },
+  'KONV':   { name: 'Konvansiyonel', icon: '📷', badgeClass: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40' },
+  'DESTEK': { name: 'Kadın Doğum / Destek', icon: '🤰', badgeClass: 'bg-pink-500/20 text-pink-300 border-pink-500/40' }
+};
+
+const PC_ZUMRE_MAP = {
+  // ODA 1 • KIDEMLİ MERKEZİ
+  'Genel PACS Oda 1 PC 1': { label: 'Nöro', primary: 'NORO', categories: ['NORO'], note: 'Oda 1 • Kıdemli Merkezi' },
+  'Genel PACS Oda 1 PC 2': { label: 'Nöro', primary: 'NORO', categories: ['NORO'], note: 'Oda 1 • Kıdemli Merkezi' },
+  'Genel PACS Oda 1 PC 3': { label: '🖥️ ÇİFT • NÖRO 6', primary: 'NORO', categories: ['NORO'], isDual: true, note: 'Sabit Çift Monitörlü Kıdemli İstasyonu' },
+  'Genel PACS Oda 1 PC 4': { label: 'Nöro', primary: 'NORO', categories: ['NORO'], note: 'Oda 1 • Kıdemli Merkezi' },
+  'Genel PACS Oda 1 PC 5': { label: 'ABD', primary: 'ABD', categories: ['ABD'], note: 'Oda 1 • Kıdemli Merkezi' },
+  'Genel PACS Oda 1 PC 6': { label: 'ABD', primary: 'ABD', categories: ['ABD'], note: 'Oda 1 • Kıdemli Merkezi' },
+  'Genel PACS Oda 1 PC 7': { label: '🖥️ ÇİFT • ABD 6', primary: 'ABD', categories: ['ABD'], isDual: true, note: 'Sabit Çift Monitörlü Kıdemli İstasyonu' },
+  'Genel PACS Oda 1 PC 8': { label: 'ABD', primary: 'ABD', categories: ['ABD'], note: 'Oda 1 • Kıdemli Merkezi' },
+
+  // ODA 2 • NÖRO
+  'Genel PACS Oda 2 PC 1': { label: 'Nöro', primary: 'NORO', categories: ['NORO'], note: 'Oda 2 • Nöro Zümresi' },
+  'Genel PACS Oda 2 PC 2': { label: 'Nöro', primary: 'NORO', categories: ['NORO'], note: 'Oda 2 • Nöro Zümresi' },
+  'Genel PACS Oda 2 PC 3': { label: 'Nöro', primary: 'NORO', categories: ['NORO'], note: 'Oda 2 • Nöro Zümresi' },
+  'Genel PACS Oda 2 PC 4': { label: 'Nöro', primary: 'NORO', categories: ['NORO'], note: 'Oda 2 • Nöro Zümresi' },
+  'Genel PACS Oda 2 PC 5': { label: 'Nöro', primary: 'NORO', categories: ['NORO'], note: 'Oda 2 • Nöro Zümresi' },
+  'Genel PACS Oda 2 PC 6': { label: 'Nöro', primary: 'NORO', categories: ['NORO'], note: 'Oda 2 • Nöro Zümresi' },
+  'Genel PACS Oda 2 PC 7': { label: 'Nöro', primary: 'NORO', categories: ['NORO'], note: 'Oda 2 • Nöro Zümresi' },
+  'Genel PACS Oda 2 PC 8': { label: 'Nöro', primary: 'NORO', categories: ['NORO'], note: 'Oda 2 • Nöro Zümresi' },
+
+  // ODA 3 • ABD / ACİL BT / KONV. (14 İstasyon)
+  'Genel PACS Oda 3 PC 1':  { label: 'ABD', primary: 'ABD', categories: ['ABD'], note: 'Oda 3 • Abdomen' },
+  'Genel PACS Oda 3 PC 2':  { label: 'ABD / NR', primary: 'ABD', categories: ['ABD', 'NORO'], note: '1. Öncelik: Abdomen • Boşsa: Nöro' },
+  'Genel PACS Oda 3 PC 3':  { label: 'ABD / NR', primary: 'ABD', categories: ['ABD', 'NORO'], note: '1. Öncelik: Abdomen • Boşsa: Nöro' },
+  'Genel PACS Oda 3 PC 4':  { label: 'ABD / NR', primary: 'ABD', categories: ['ABD', 'NORO'], note: '1. Öncelik: Abdomen • Boşsa: Nöro' },
+  'Genel PACS Oda 3 PC 5':  { label: 'ABD', primary: 'ABD', categories: ['ABD'], note: 'Oda 3 • Abdomen' },
+  'Genel PACS Oda 3 PC 6':  { label: 'ABD', primary: 'ABD', categories: ['ABD'], note: 'Oda 3 • Abdomen' },
+  'Genel PACS Oda 3 PC 7':  { label: 'ABD', primary: 'ABD', categories: ['ABD'], note: 'Oda 3 • Abdomen' },
+  'Genel PACS Oda 3 PC 8':  { label: 'ABD', primary: 'ABD', categories: ['ABD'], note: 'Oda 3 • Abdomen' },
+  'Genel PACS Oda 3 PC 9':  { label: 'Acil BT / ABD', primary: 'ACIL', categories: ['ACIL', 'ABD'], note: '1. Öncelik: Acil BT • Boşsa: Abdomen' },
+  'Genel PACS Oda 3 PC 10': { label: 'Acil BT / ABD', primary: 'ACIL', categories: ['ACIL', 'ABD'], note: '1. Öncelik: Acil BT • Boşsa: Abdomen' },
+  'Genel PACS Oda 3 PC 11': { label: 'ABD', primary: 'ABD', categories: ['ABD'], note: 'Oda 3 • Abdomen' },
+  'Genel PACS Oda 3 PC 12': { label: 'NR / ABD', primary: 'NORO', categories: ['NORO', 'ABD'], note: '1. Öncelik: Nöro • Boşsa: Abdomen' },
+  'Genel PACS Oda 3 PC 13': { label: 'Konv. / NR', primary: 'KONV', categories: ['KONV', 'NORO'], note: '1. Öncelik: Konvansiyonel • Boşsa: Nöro' },
+  'Genel PACS Oda 3 PC 14': { label: 'Konv. / NR', primary: 'KONV', categories: ['KONV', 'NORO'], note: '1. Öncelik: Konvansiyonel • Boşsa: Nöro' },
+
+  // ODA 4 • MSK / KVC / TORAKS (10 İstasyon)
+  'Genel PACS Oda 4 PC 1':  { label: 'MSK', primary: 'MSK', categories: ['MSK'], note: 'Oda 4 • MSK Zümresi' },
+  'Genel PACS Oda 4 PC 2':  { label: 'MSK', primary: 'MSK', categories: ['MSK'], note: 'Oda 4 • MSK Zümresi' },
+  'Genel PACS Oda 4 PC 3':  { label: '⭐ MSK Kıdemli', primary: 'MSK', categories: ['MSK'], note: 'Oda 4 • MSK Kıdemli İstasyonu' },
+  'Genel PACS Oda 4 PC 4':  { label: 'MSK / KVC', primary: 'MSK', categories: ['MSK', 'KVC'], note: '1. Öncelik: MSK • Boşsa: KVC' },
+  'Genel PACS Oda 4 PC 5':  { label: 'MSK / KVC', primary: 'MSK', categories: ['MSK', 'KVC'], note: '1. Öncelik: MSK • Boşsa: KVC' },
+  'Genel PACS Oda 4 PC 6':  { label: 'TOR / KVC', primary: 'TOR', categories: ['TOR', 'KVC'], note: '1. Öncelik: Toraks • Boşsa: KVC' },
+  'Genel PACS Oda 4 PC 7':  { label: 'TOR / KVC', primary: 'TOR', categories: ['TOR', 'KVC'], note: '1. Öncelik: Toraks • Boşsa: KVC' },
+  'Genel PACS Oda 4 PC 8':  { label: 'KVC / TOR', primary: 'KVC', categories: ['KVC', 'TOR'], note: '1. Öncelik: KVC • Boşsa: Toraks' },
+  'Genel PACS Oda 4 PC 9':  { label: 'KVC / TOR', primary: 'KVC', categories: ['KVC', 'TOR'], note: '1. Öncelik: KVC • Boşsa: Toraks' },
+  'Genel PACS Oda 4 PC 10': { label: '⭐ KVC Kıdemli', primary: 'KVC', categories: ['KVC'], note: 'Oda 4 • KVC Kıdemli İstasyonu' },
+
+  // ODA 5 • ACİL — SABİT
+  'Genel PACS Oda 5 PC 1':  { label: 'Acil (Sabit)', primary: 'ACIL', categories: ['ACIL'], note: 'Oda 5 • Sabit Acil İstasyonu' },
+
+  // TOPLANTI ODASI • ESNEK
+  'Toplantı Odası PC 1':    { label: 'ACİL / TOR', primary: 'ACIL', categories: ['ACIL', 'TOR'], note: '1. Öncelik: Acil • Boşsa: Toraks' },
+
+  // NÖRO PACS • 3 İSTASYON
+  'Nöroloji PACS Oda 1 PC 1': { label: 'Esnek (Nöro)', primary: 'NORO', categories: ['NORO'], note: 'Nöro PACS • Esnek İstasyon' },
+  'Nöroloji PACS Oda 1 PC 2': { label: 'Kasım: Esnek / Aralık+: Selma', primary: 'NORO', categories: ['NORO', 'ABD'], note: 'Kasım: Esnek • Aralık+: Selma Ekibi' },
+  'Nöroloji PACS Oda 1 PC 3': { label: 'Selma Ekibi', primary: 'ABD', categories: ['ABD', 'NORO'], note: 'Nöro PACS • Selma Ekibi' },
+
+  // KADIN DOĞUM PACS • GÜNLÜK DESTEK
+  'Kadın Doğum PACS Oda 1 PC 1': { label: 'Kadın Doğum', primary: 'DESTEK', categories: ['DESTEK'], note: 'Kadın Doğum PACS • Günlük Destek' },
+  'Kadın Doğum PACS Oda 1 PC 2': { label: 'Kadın Doğum', primary: 'DESTEK', categories: ['DESTEK'], note: 'Kadın Doğum PACS • Günlük Destek' },
+  'Kadın Doğum PACS Oda 1 PC 3': { label: 'Boşsa Ek Kapasite', primary: 'DESTEK', categories: ['DESTEK'], note: 'Kadın Doğum PACS • Boşsa Ek Kapasite' },
+
+  // KVC PACS ODASI
+  'KVC PACS Oda 1 PC 1': { label: 'KVC', primary: 'KVC', categories: ['KVC'], note: 'KVC PACS Odası' },
+  'KVC PACS Oda 1 PC 2': { label: 'KVC', primary: 'KVC', categories: ['KVC'], note: 'KVC PACS Odası' }
+};
+
+function getPcZumreInfo(pc) {
+  if (!pc) return { label: 'Genel', primary: 'NORO', categories: [], badgeClass: 'bg-slate-700 text-slate-300 border-slate-600', icon: '🩺' };
+  const fn = pc.friendlyName || pc.hostname || '';
+  const info = PC_ZUMRE_MAP[fn];
+  if (!info) return { label: 'Esnek', primary: 'NORO', categories: [], badgeClass: 'bg-slate-700 text-slate-300 border-slate-600', icon: '🩺' };
+  const style = ZUMRE_CATEGORY_STYLES[info.primary] || ZUMRE_CATEGORY_STYLES['NORO'];
+  return {
+    ...info,
+    icon: style.icon,
+    badgeClass: info.isDual ? 'bg-amber-400/25 text-amber-200 border-amber-400 font-black shadow-sm shadow-amber-500/20' : style.badgeClass
+  };
+}
+
+window.filterByZumre = function(zumreCode) {
+  if (activeZumreFilter === zumreCode && zumreCode !== 'ALL') {
+    activeZumreFilter = 'ALL';
+  } else {
+    activeZumreFilter = zumreCode;
+  }
+
+  // Update Zümre Filter buttons active visual state
+  document.querySelectorAll('.zumre-filter-btn').forEach(btn => {
+    const code = btn.getAttribute('data-zumre');
+    if (code === activeZumreFilter) {
+      btn.classList.add('ring-2', 'ring-cyan-400', 'scale-105');
+      if (code === 'ALL') {
+        btn.className = 'zumre-filter-btn active px-2.5 py-1 rounded-lg text-[11px] font-bold bg-cyan-500 text-white shadow transition-all whitespace-nowrap ring-2 ring-cyan-300';
+      }
+    } else {
+      btn.classList.remove('ring-2', 'ring-cyan-400', 'scale-105', 'active');
+      if (code === 'ALL') {
+        btn.className = 'zumre-filter-btn px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition-all whitespace-nowrap';
+      }
+    }
+  });
+
+  renderGrid();
+  updateKrokiColors();
+};
+
+
 const ROOM_TO_KROKI_LAYOUT = {
   'GENEL_PACS': 'kroki-pacs-raporlama',
   'Genel PACS Oda 1': 'kroki-pacs-raporlama',
@@ -309,16 +436,24 @@ function renderGrid() {
       matchStatus = (p.status === activeStatusFilter);
     }
 
-    // 3. Search Query Filter
+    // 3. Zümre Filter
+    const zInfo = getPcZumreInfo(p);
+    let matchZumre = true;
+    if (activeZumreFilter !== 'ALL') {
+      matchZumre = zInfo.categories && zInfo.categories.includes(activeZumreFilter);
+    }
+
+    // 4. Search Query Filter (includes Zümre label search!)
     const q = searchQuery.toLowerCase().trim();
     const matchQuery = !q || 
       (p.friendlyName && p.friendlyName.toLowerCase().includes(q)) ||
       (p.hostname && p.hostname.toLowerCase().includes(q)) ||
       (p.username && p.username.toLowerCase().includes(q)) ||
       (p.ip && p.ip.includes(q)) ||
-      (p.room && p.room.toLowerCase().includes(q));
+      (p.room && p.room.toLowerCase().includes(q)) ||
+      (zInfo.label && zInfo.label.toLowerCase().includes(q));
 
-    return matchRoom && matchStatus && matchQuery;
+    return matchRoom && matchStatus && matchZumre && matchQuery;
   });
 
   if (filtered.length === 0) {
@@ -365,8 +500,11 @@ function renderGrid() {
     card.innerHTML = `
       <div class="flex items-start justify-between mb-3">
         <div>
-          <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-800/80 text-slate-300 border border-slate-700/50">${pc.room || 'Genel'}</span>
-          <h3 class="text-base font-bold text-white mt-1">${pc.friendlyName || pc.hostname}</h3>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-800/90 text-slate-300 border border-slate-700/60">${pc.room || 'Genel'}</span>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-md border ${getPcZumreInfo(pc).badgeClass}" title="${getPcZumreInfo(pc).note || ''}">${getPcZumreInfo(pc).icon} ${getPcZumreInfo(pc).label}</span>
+          </div>
+          <h3 class="text-base font-bold text-white mt-1.5">${pc.friendlyName || pc.hostname}</h3>
         </div>
         <span class="text-2xl">${cfg.icon}</span>
       </div>
@@ -412,6 +550,13 @@ async function openModal(pc) {
   const rName = pc.room || "Genel";
   const roomEl = document.getElementById("modal-room-text");
   if (roomEl) roomEl.innerText = rName.toLowerCase().endsWith("odası") ? rName : `${rName} Odası`;
+
+  const zModalEl = document.getElementById("modal-zumre-badge");
+  if (zModalEl) {
+    const zInfo = getPcZumreInfo(pc);
+    zModalEl.className = `text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${zInfo.badgeClass}`;
+    zModalEl.innerText = `${zInfo.icon} Zümre: ${zInfo.label}${zInfo.note ? ' (' + zInfo.note + ')' : ''}`;
+  }
 
   const userEl = document.getElementById("modal-user");
   if (userEl) userEl.innerText = pc.username && pc.username !== 'unknown' ? pc.username : 'Belirtilmedi';
@@ -642,6 +787,9 @@ const KROKI_MAP = {
   'ws-t-09': 'Genel PACS Oda 3 PC 9',
   'ws-t-10': 'Genel PACS Oda 3 PC 10',
   'ws-t-11': 'Genel PACS Oda 3 PC 11',
+  'ws-t-12': 'Genel PACS Oda 3 PC 12',
+  'ws-t-13': 'Genel PACS Oda 3 PC 13',
+  'ws-t-14': 'Genel PACS Oda 3 PC 14',
   'ws-b-01': 'Genel PACS Oda 4 PC 1',
   'ws-b-02': 'Genel PACS Oda 4 PC 2',
   'ws-b-03': 'Genel PACS Oda 4 PC 3',
@@ -715,6 +863,17 @@ function updateKrokiColors() {
       if (statusSpan && statusSpan.parentElement && statusSpan.parentElement !== el) {
         statusSpan.className = "text-[10px] text-slate-500 font-medium block";
         statusSpan.innerText = `${friendly} • ⚪ Çevrimdışı`;
+      }
+    }
+
+    // Apply Zümre Filter Highlighting / Dimming on Kroki
+    const zInfo = getPcZumreInfo({ friendlyName: friendly });
+    el.classList.remove('zumre-dimmed', 'zumre-highlighted');
+    if (activeZumreFilter !== 'ALL') {
+      if (zInfo.categories && zInfo.categories.includes(activeZumreFilter)) {
+        el.classList.add('zumre-highlighted');
+      } else {
+        el.classList.add('zumre-dimmed');
       }
     }
 
