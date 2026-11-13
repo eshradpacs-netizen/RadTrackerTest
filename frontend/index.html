@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=760000">
+  <link rel="stylesheet" href="styles.css?v=770000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative w-full max-w-full overflow-x-hidden">
 
@@ -184,7 +184,6 @@
         <button class="room-tab px-3.5 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all whitespace-nowrap" data-room="KROKI">🗺️ Kroki</button>
         <button class="room-tab px-3.5 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all whitespace-nowrap" data-room="GENEL_PACS">🏛️ Genel PACS (Ana Kat)</button>
         <button class="room-tab px-3.5 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all whitespace-nowrap" data-room="Nöroloji PACS Odası">🧠 Nöroloji PACS</button>
-        <button class="room-tab px-3.5 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all whitespace-nowrap" data-room="KVC PACS Odası">❤️ KVC PACS</button>
         <button class="room-tab px-3.5 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all whitespace-nowrap" data-room="Kadın Doğum PACS Odası">🤰 Kadın Doğum PACS</button>
       </div>
     </section>
@@ -215,9 +214,6 @@
         </button>
         <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-noroloji">
           🧠 Nöroloji PACS
-        </button>
-        <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-cassiopeia">
-          ❤️ KVC PACS
         </button>
         <button class="kroki-layout-btn px-3.5 py-2 rounded-xl font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all border border-slate-700" data-layout="kroki-kadin-dogum-pacs">
           🤰 Kadın Doğum PACS
@@ -449,43 +445,6 @@
         </div> <!-- /kroki-scale-target -->
       </div> <!-- /kroki-scroll-area -->
     </div> <!-- /kroki-pacs-raporlama -->
-
-      <!-- Layout 2: KVC PACS Odası -->
-      <div class="kroki-view-wrapper hidden" id="kroki-cassiopeia">
-        <div class="glass-card dept-kroki-container border border-rose-500/40 rounded-3xl p-6 sm:p-8 max-w-xl mx-auto space-y-6">
-          <div class="text-center space-y-1.5">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-rose-500/20 to-red-500/20 border border-rose-500/50 text-rose-300 text-xs sm:text-sm font-black shadow-lg shadow-rose-500/20">
-              ❤️ KVC PACS Odası Krokisi
-            </div>
-            <p class="text-xs text-slate-300 font-medium">Kalp Damar Cerrahisi PACS Raporlama Odası</p>
-          </div>
-
-          <!-- Room Architectural Box -->
-          <div class="p-6 sm:p-7 rounded-3xl kroki-room-box room-theme-rose max-w-md mx-auto">
-            <!-- Room Pill Header -->
-            <div class="absolute -top-4 left-6 px-3.5 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-lg shadow-rose-600/50 border border-rose-400/60">
-              KVC PACS (ODA 1)
-            </div>
-
-            <!-- Door Indicator -->
-            <div class="flex justify-between items-center mb-6 text-xs text-rose-200/80 font-bold px-2 border-b border-rose-500/30 pb-2.5">
-              <span class="flex items-center gap-1.5 text-amber-400">🚪 Giriş Kapısı</span>
-              <span class="text-slate-300">1 Çalışma İstasyonu</span>
-            </div>
-
-            <!-- Single Desk Centered -->
-            <div class="flex justify-center">
-              <div class="ws kroki-desk-card p-5 rounded-2xl bg-slate-900/90 border border-rose-500/30 hover:border-rose-400 flex flex-col items-center gap-2.5 w-56" id="Cassiopeia-β" title="KVC PACS Oda 1 PC 1">
-                <div class="w-14 h-14 text-xl font-black flex items-center justify-center rounded-2xl ws-badge-rose pointer-events-none">1</div>
-                <div class="text-center pointer-events-none">
-                  <span class="text-xs font-bold text-slate-100 block">Ana Masa</span>
-                  <span class="text-[10px] text-rose-300 font-semibold">KVC PACS PC 1</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- Layout 3: Kadın Doğum PACS Odası -->
       <div class="kroki-view-wrapper hidden" id="kroki-kadin-dogum-pacs">
@@ -742,6 +701,6 @@
   </div>
 
   <!-- Main JS Script -->
-  <script src="app.js?v=760000"></script>
+  <script src="app.js?v=770000"></script>
 </body>
 </html>

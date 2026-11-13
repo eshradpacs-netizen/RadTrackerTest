@@ -66,7 +66,6 @@ const ROOM_TO_KROKI_LAYOUT = {
   'Genel PACS Oda 5': 'kroki-pacs-raporlama',
   'Toplantı Odası': 'kroki-pacs-raporlama',
   'Nöroloji PACS Odası': 'kroki-noroloji',
-  'KVC PACS Odası': 'kroki-cassiopeia',
   'Kadın Doğum PACS Odası': 'kroki-kadin-dogum-pacs',
 };
 
@@ -241,7 +240,7 @@ function renderStats() {
   if (document.getElementById("stat-suspicious")) document.getElementById("stat-suspicious").innerText = suspicious;
 
   // Calculate Real-Time Occupancy Rate % against Total Hospital Desks (Kapalı masalar da açılıp oturulabilir)
-  const totalDesks = pcs.length || 44;
+  const totalDesks = pcs.length || 48;
   const occPct = totalDesks > 0 ? Math.round((active / totalDesks) * 100) : 0;
 
   const occEl = document.getElementById("stat-occupancy");
@@ -611,7 +610,6 @@ const KROKI_MAP = {
   'KD-PACS-01': 'Kadın Doğum PACS Oda 1 PC 1',
   'KD-PACS-02': 'Kadın Doğum PACS Oda 1 PC 2',
   'KD-PACS-03': 'Kadın Doğum PACS Oda 1 PC 3',
-  'Cassiopeia-β': 'KVC PACS Oda 1 PC 1',
   'Perseus-β': 'Toplantı Odası PC 1',
   'Perseus-α': 'Toplantı Odası PC 2',
   'Perseus-γ': 'Toplantı Odası PC 3',
@@ -814,8 +812,6 @@ function showPCLocationOnKroki(pcId) {
 
   if (name.includes("nöroloji") || room.includes("nöroloji")) {
     targetLayout = "kroki-noroloji";
-  } else if (name.includes("kvc") || room.includes("kvc")) {
-    targetLayout = "kroki-cassiopeia";
   } else if (name.includes("kadın doğum toplantı") || (room.includes("kadın doğum") && room.includes("toplantı"))) {
     targetLayout = "kroki-kadin-dogum";
   } else if (name.includes("kadın doğum") || room.includes("kadın doğum")) {

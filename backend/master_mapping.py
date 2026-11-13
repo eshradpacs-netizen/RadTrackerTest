@@ -8,7 +8,6 @@ MASTER_PC_MAPPING = {
     "noroloji-pacs-01-uuid-0002": {"friendlyName": "Nöroloji PACS Oda 1 PC 2", "room": "Nöroloji PACS Odası", "hostname": "desktop-noropacs2", "ip": "10.86.155.102"},
     "noroloji-pacs-01-uuid-0003": {"friendlyName": "Nöroloji PACS Oda 1 PC 3", "room": "Nöroloji PACS Odası", "hostname": "desktop-noropacs3", "ip": "10.86.155.103"},
 
-    "3178e41d-97f6-4cdf-b170-503cbf9343bc": {"friendlyName": "KVC PACS Oda 1 PC 1", "room": "KVC PACS Odası", "hostname": "desktop-2t9o3va", "ip": "10.86.166.8"},
     "b94f7242-d702-43fb-8c48-0a757f8e5844": {"friendlyName": "Genel PACS Oda 1 PC 1", "room": "Genel PACS Oda 1", "hostname": "desktop-2t9o3va", "ip": "10.86.145.220"},
     "b9e2ce81-48fc-4da1-aec0-49e9cf917149": {"friendlyName": "Genel PACS Oda 1 PC 2", "room": "Genel PACS Oda 1", "hostname": "desktop-29tpr3e", "ip": "10.86.145.94"},
     "54752286-42a1-42f8-956b-166be2534c30": {"friendlyName": "Genel PACS Oda 1 PC 3", "room": "Genel PACS Oda 1", "hostname": "desktop-76i9q51", "ip": "10.86.145.188"},
@@ -88,7 +87,6 @@ HOSTNAME_TO_ID_MAPPING = {
 }
 
 IP_TO_ID_MAPPING = {
-    "10.86.166.8": "3178e41d-97f6-4cdf-b170-503cbf9343bc",
     "10.86.145.220": "b94f7242-d702-43fb-8c48-0a757f8e5844",
     "10.86.145.13": "1307ea69-e2fd-4af6-9a68-3ad45b3a0599",
     "10.86.145.90": "63dacfd7-2785-46d6-84a6-5203201a5eba",
@@ -97,7 +95,6 @@ IP_TO_ID_MAPPING = {
     "10.86.145.108": "fc796cf6-1bc1-4792-822f-5fbb8cabeea8",
     "10.86.145.17": "2b24ef48-9b49-4609-85ff-a5d63e03cc07",
     "10.86.145.131": "a01f0ce3-8377-41bb-8ba7-cf183256a1b7",
-    "10.86.165.179": "3178e41d-97f6-4cdf-b170-503cbf9343bc",
     "10.86.146.6": "8f8a4aa4-02e0-4498-bfc2-a4f84df0d9a0",
     "10.86.145.140": "59a700e4-4579-42c9-8e98-33d7172cb89d"
 }
@@ -106,8 +103,6 @@ def resolve_agent_id(agent_id: str, hostname: str = "", ip: str = "") -> str:
     """Bulletproof ID resolver: resolves normalized Agent UUID by ID, IP, or Hostname."""
     if agent_id and agent_id.strip():
         target = agent_id.strip().lower()
-        if target == "1259338b-c73d-4629-ae01-115ad7ccecb2":
-            return "3178e41d-97f6-4cdf-b170-503cbf9343bc"
         for key in MASTER_PC_MAPPING:
             if target == key.lower() or (len(target) >= 28 and key.lower().startswith(target)):
                 return key
