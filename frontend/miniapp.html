@@ -11,7 +11,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css?v=750000">
+  <link rel="stylesheet" href="styles.css?v=760000">
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 pb-16 relative w-full max-w-full overflow-x-hidden">
 
@@ -470,24 +470,16 @@
             <!-- Door Indicator -->
             <div class="flex justify-between items-center mb-6 text-xs text-rose-200/80 font-bold px-2 border-b border-rose-500/30 pb-2.5">
               <span class="flex items-center gap-1.5 text-amber-400">🚪 Giriş Kapısı</span>
-              <span class="text-slate-300">2 Çalışma İstasyonu</span>
+              <span class="text-slate-300">1 Çalışma İstasyonu</span>
             </div>
 
-            <!-- Desks Grid -->
-            <div class="grid grid-cols-2 gap-4">
-              <div class="ws kroki-desk-card p-4 rounded-2xl bg-slate-900/90 border border-rose-500/30 hover:border-rose-400 flex flex-col items-center gap-2.5" id="Cassiopeia-β" title="KVC PACS Oda 1 PC 1">
+            <!-- Single Desk Centered -->
+            <div class="flex justify-center">
+              <div class="ws kroki-desk-card p-5 rounded-2xl bg-slate-900/90 border border-rose-500/30 hover:border-rose-400 flex flex-col items-center gap-2.5 w-56" id="Cassiopeia-β" title="KVC PACS Oda 1 PC 1">
                 <div class="w-14 h-14 text-xl font-black flex items-center justify-center rounded-2xl ws-badge-rose pointer-events-none">1</div>
                 <div class="text-center pointer-events-none">
-                  <span class="text-xs font-bold text-slate-100 block">Sol Masa</span>
+                  <span class="text-xs font-bold text-slate-100 block">Ana Masa</span>
                   <span class="text-[10px] text-rose-300 font-semibold">KVC PACS PC 1</span>
-                </div>
-              </div>
-
-              <div class="ws kroki-desk-card p-4 rounded-2xl bg-slate-900/90 border border-rose-500/30 hover:border-rose-400 flex flex-col items-center gap-2.5" id="Cassiopeia-α" title="KVC PACS Oda 1 PC 2">
-                <div class="w-14 h-14 text-xl font-black flex items-center justify-center rounded-2xl ws-badge-rose pointer-events-none">2</div>
-                <div class="text-center pointer-events-none">
-                  <span class="text-xs font-bold text-slate-100 block">Sağ Masa</span>
-                  <span class="text-[10px] text-rose-300 font-semibold">KVC PACS PC 2</span>
                 </div>
               </div>
             </div>
@@ -750,6 +742,6 @@
   </div>
 
   <!-- Main JS Script -->
-  <script src="app.js?v=750000"></script>
+  <script src="app.js?v=760000"></script>
 </body>
 </html>

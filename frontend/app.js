@@ -612,7 +612,6 @@ const KROKI_MAP = {
   'KD-PACS-02': 'Kadın Doğum PACS Oda 1 PC 2',
   'KD-PACS-03': 'Kadın Doğum PACS Oda 1 PC 3',
   'Cassiopeia-β': 'KVC PACS Oda 1 PC 1',
-  'Cassiopeia-α': 'KVC PACS Oda 1 PC 2',
   'Perseus-β': 'Toplantı Odası PC 1',
   'Perseus-α': 'Toplantı Odası PC 2',
   'Perseus-γ': 'Toplantı Odası PC 3',

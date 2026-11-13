@@ -47,7 +47,7 @@ Write-Host " [3]  Genel PACS Oda 3 (PC 1 - 14)" -ForegroundColor Gray
 Write-Host " [4]  Genel PACS Oda 4 (PC 1 - 10)" -ForegroundColor Gray
 Write-Host " [5]  Genel PACS Oda 5 (Tek Masa)" -ForegroundColor Gray
 Write-Host " [6]  Toplanti Odasi (PC 1 - Tek Masa)" -ForegroundColor Gray
-Write-Host " [7]  KVC PACS Odasi (PC 1 - 2)" -ForegroundColor Gray
+Write-Host " [7]  KVC PACS Odasi (PC 1 - Tek Masa)" -ForegroundColor Gray
 Write-Host " [8]  Kadin Dogum PACS Odasi (PC 1 - 3)" -ForegroundColor Gray
 Write-Host " [9]  Noroloji PACS Odasi (PC 1 - 3)" -ForegroundColor Gray
 Write-Host "----------------------------------------------------------------------------" -ForegroundColor DarkCyan
@@ -60,7 +60,7 @@ elseif ($odaSec -eq "2") { $masaSek = Read-Host "Genel PACS Oda 2 icindeki Masa 
 elseif ($odaSec -eq "3") { $masaSek = Read-Host "Genel PACS Oda 3 icindeki Masa Numarasi [1-14]" }
 elseif ($odaSec -eq "4") { $masaSek = Read-Host "Genel PACS Oda 4 icindeki Masa Numarasi [1-10]" }
 elseif ($odaSec -eq "6") { $masaSek = "1" }
-elseif ($odaSec -eq "7") { $masaSek = Read-Host "KVC PACS Odasi icindeki Masa Numarasi [1-2]" }
+elseif ($odaSec -eq "7") { $masaSek = "1" }
 elseif ($odaSec -eq "8") { $masaSek = Read-Host "Kadin Dogum PACS Odasi icindeki Masa Numarasi [1-3]" }
 elseif ($odaSec -eq "9") { $masaSek = Read-Host "Noroloji PACS Odasi icindeki Masa Numarasi [1-3]" }
 
@@ -112,7 +112,6 @@ $uuidMap = @{
     '5_1' = @{ id = 'e092e2c2-5348-4724-9a00-5d37a4486176'; name = 'Genel PACS Oda 5 PC 1'; room = 'Genel PACS Oda 5' }
     '6_1' = @{ id = '6c5f9782-8754-4d33-a647-b2e4100269ce'; name = 'Toplanti Odasi PC 1'; room = 'Toplanti Odasi' }
     '7_1' = @{ id = '3178e41d-97f6-4cdf-b170-503cbf9343bc'; name = 'KVC PACS Oda 1 PC 1'; room = 'KVC PACS Odasi' }
-    '7_2' = @{ id = '1259338b-c73d-4629-ae01-115ad7ccecb2'; name = 'KVC PACS Oda 1 PC 2'; room = 'KVC PACS Odasi' }
     '8_1' = @{ id = 'kd-pacs-01-uuid-0001'; name = 'Kadin Dogum PACS Oda 1 PC 1'; room = 'Kadin Dogum PACS Odasi' }
     '8_2' = @{ id = 'kd-pacs-01-uuid-0002'; name = 'Kadin Dogum PACS Oda 1 PC 2'; room = 'Kadin Dogum PACS Odasi' }
     '8_3' = @{ id = 'kd-pacs-01-uuid-0003'; name = 'Kadin Dogum PACS Oda 1 PC 3'; room = 'Kadin Dogum PACS Odasi' }
